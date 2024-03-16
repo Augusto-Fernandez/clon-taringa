@@ -4,8 +4,10 @@ export default function Home() {
   return (
     <main className="flex min-h-screen items-stretch justify-between p-5 bg-slate-300 mx-20 rounded-lg space-x-10">
       <div className="w-1/2 flex-grow">
-        <div className="h-10">
-          <p>Crear Post</p>
+        <div className="h-14">
+          <button className="btn text-base font-semibold glass w-1/4 bg-green-500 border-1 border-green-300/80 text-white hover:bg-green-600">
+            + Crear Post
+          </button>
         </div>
         <div className="bg-red-800 p-3 space-y-3 rounded-md">
           <PostCard/>
