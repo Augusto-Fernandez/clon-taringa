@@ -4,7 +4,7 @@ export default function CreatePost (){
             <div className="mx-60 p-5 space-y-5">
                 <h1 className="text-slate-600 font-semibold text-4xl">Crear Post</h1>
                 <div className="flex space-x-3">
-                    <div className="w-2/3 bg-white rounded-t-md border border-gray-400">
+                    <div className="w-2/3 bg-white rounded-md border border-gray-400">
                         <input type="text" placeholder="Título (obligatorio)" className="input h-14 hover:no-animation focus:outline-none w-full" />
                         <div className="bg-gray-100 pl-4">
                             <div className="flex h-14 p-4 space-x-10">
