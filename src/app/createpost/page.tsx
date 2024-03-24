@@ -1,3 +1,6 @@
+import { redirect } from "next/navigation";
+import { prisma } from "../lib/db/prisma";
+
 import PostAuthorship from "./PostAuthorship";
 import SelectCategoty from "./SelectCategory";
 
@@ -8,19 +11,31 @@ export const metadata = {
 async function createPost(formData:FormData) {
     "use server";
 
-    const tituloPost = formData.get("tituloPost");
-    const cuerpoPost = formData.get("cuerpoPost");
-    const autor = formData.get("autor");
-    const categoria = formData.get("categoria");
-    const nsfw = formData.get("nsfw");
+    const title = formData.get("tituloPost")?.toString();
+    const body = formData.get("cuerpoPost")?.toString();
+    const category = formData.get("categoria")?.toString();
+    
+    let link = formData.get("autor")?.toString();
 
-    const dto = {
-        tituloPost, cuerpoPost, autor, categoria, nsfw
+    if(formData.get("autor")==="on"){
+        link = "none";
     }
 
-    console.log(dto);
+    let nsfw = false;
 
-    //import { redirect } from "next/navigation";
+    if(formData.get("nsfw")==="on"){
+        nsfw = true;
+    }
+
+    if(!title || !body || !category){
+        throw Error("Missing Required Fields");
+    }
+
+    await prisma.post.create({
+        data: {title, body, category, link, nsfw}
+    });
+
+    redirect("/");
 }
 
 export default async function CreatePost (){
