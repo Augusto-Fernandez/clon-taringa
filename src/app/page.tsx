@@ -1,8 +1,13 @@
 import Link from "next/link";
 
 import PostCard from "@/components/PostCard";
+import { prisma } from "./lib/db/prisma";
 
-export default function Home() {
+export default async function Home() {
+  const posts = await prisma.post.findMany({
+    orderBy: {id: "desc"}
+  })
+  
   return (
     <main className="flex min-h-screen items-stretch justify-between p-5 bg-slate-300 mx-20 rounded-lg space-x-10">
       <div className="w-1/2 flex-grow">
@@ -14,16 +19,11 @@ export default function Home() {
           </Link>
         </div>
         <div className="bg-red-800 p-3 space-y-3 rounded-md">
-          <PostCard/>
-          <PostCard/>
-          <PostCard/>
-          <PostCard/>
-          <PostCard/>
-          <PostCard/>
-          <PostCard/>
-          <PostCard/>
-          <PostCard/>
-          <PostCard/>
+          {
+            posts.map(post => (
+              <PostCard post={post} key={post.id}/>
+            ))
+          }
         </div>
         <div className="h-10">
           <p>Boton para cambiar pagina</p>
