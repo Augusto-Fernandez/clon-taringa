@@ -1,10 +1,21 @@
 import Link from "next/link";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import PostCard from "@/components/PostCard";
 import SelectCategoty from "@/components/SelectCategory";
 
-import { prisma } from "./lib/db/prisma";
+import { prisma } from "../lib/db/prisma";
+
+interface SortPostsProps {
+  searchParams: { query: string };
+}
+
+export function generateMetadata({searchParams: { query }}: SortPostsProps): Metadata {
+  return { 
+    title: `Categoria ${query} - Taringa`,
+  };
+}
 
 async function sortPosts(formData:FormData) {
   "use server";
@@ -16,10 +27,15 @@ async function sortPosts(formData:FormData) {
   }
 }
 
-export default async function Home() {
+export default async function SortedPosts({searchParams: { query }}: SortPostsProps) {
   const posts = await prisma.post.findMany({
-    orderBy: {id: "desc"}
-  })
+    where: {
+        OR: [
+            { category: { contains: query, mode: "insensitive" } }
+        ],
+    },
+    orderBy: { id: "desc" }
+  });
   
   return (
     <main className="flex min-h-screen items-stretch justify-between p-5 bg-slate-300 mx-20 rounded-lg space-x-10">
