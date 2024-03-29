@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "../lib/db/prisma";
 
 import PostAuthorship from "./PostAuthorship";
-import SelectCategoty from "./SelectCategory";
+import SelectCategoty from "@/components/SelectCategory";
 
 export const metadata = {
     title: "Create Post"
@@ -70,7 +70,10 @@ export default async function CreatePost (){
                         <div className="w-1/3 bg-white rounded-md border border-gray-400">
                             <p className="border border-b-gray-300 h-14 p-4 text-slate-600 font-semibold">Completar post</p>
                             <PostAuthorship/>
-                            <SelectCategoty/>
+                            <div className="flex p-4 space-x-8">
+                                <p className="py-4 text-slate-600 text-sm">Categoria:</p>
+                                <SelectCategoty/>
+                            </div>
                             <div className="flex pl-4 space-x-16">
                                 <label className="text-slate-600 text-sm">NSFW</label> 
                                 <input
