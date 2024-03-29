@@ -1,6 +1,8 @@
 import Link from "next/link";
 
 import PostCard from "@/components/PostCard";
+import SelectCategoty from "@/components/SelectCategory";
+
 import { prisma } from "./lib/db/prisma";
 
 export default async function Home() {
@@ -11,11 +13,22 @@ export default async function Home() {
   return (
     <main className="flex min-h-screen items-stretch justify-between p-5 bg-slate-300 mx-20 rounded-lg space-x-10">
       <div className="w-1/2 flex-grow">
-        <div className="h-14">
+        <div className="h-14 flex justify-between">
+          <form>
+            <div className="flex space-x-16">
+              <p className="p-3 text-xl font-bold">Posts</p>
+              <div className="flex">
+                <SelectCategoty/>
+                <button type="submit" className="btn">
+                  O
+                </button>
+              </div>
+            </div>
+          </form>
           <Link href={"/createpost"}>
-            <button className="btn text-base font-semibold glass w-1/4 bg-green-500 border border-green-300/80 text-white hover:bg-green-600">
-              + Crear Post
-            </button>
+              <button className="btn text-base font-semibold glass bg-green-500 border border-green-300/80 text-white hover:bg-green-600">
+                  + Crear Post
+              </button>
           </Link>
         </div>
         <div className="bg-red-800 p-3 space-y-3 rounded-md">
