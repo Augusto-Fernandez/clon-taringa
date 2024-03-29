@@ -58,12 +58,14 @@ export default async function SortedPosts({searchParams: { query }}: SortPostsPr
               </button>
           </Link>
         </div>
-        <div className="bg-red-800 p-3 space-y-3 rounded-md">
-          {
+        <div className="bg-red-800 min-h-lvh max-h-lvh p-3 space-y-3 rounded-md">
+          {posts.length === 0 ? (
+            <p className="p-10 text-3xl font-semibold">Aún no hay posts en esta categoria</p>
+            ) : (
             posts.map(post => (
               <PostCard post={post} key={post.id}/>
             ))
-          }
+          )}
         </div>
         <div className="h-10">
           <p>Boton para cambiar pagina</p>
