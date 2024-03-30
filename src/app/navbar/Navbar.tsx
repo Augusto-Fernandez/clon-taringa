@@ -1,4 +1,15 @@
 import Link from "next/link"
+import { redirect } from "next/navigation";
+
+async function searchPosts(formData: FormData) {
+    "use server";
+
+    const searchQuery = formData.get("searchQuery")?.toString();
+
+    if (searchQuery) {
+        redirect("/search?query=" + searchQuery);
+    }
+}
 
 export default async function Navbar() {
     return (
@@ -19,9 +30,12 @@ export default async function Navbar() {
                 <Link href="/" className="btn-ghost text-xl normal-case">
                     Perfil
                 </Link>
-                <div className="form-control">
-                    <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" />
-                </div>
+                <form action={searchPosts}>
+                    <input type="text" placeholder="Buscar Post" name="searchQuery" className="input input-bordered w-24 md:w-auto"/>
+                    <button type="submit" className="btn">
+                        O
+                    </button>
+                </form>
             </div>
         </div>
     )
