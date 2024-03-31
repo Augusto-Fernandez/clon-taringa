@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 
 import PostCard from "@/components/PostCard";
 import SelectCategoty from "@/components/SelectCategory";
+import PaginationBar from "@/components/PaginationBar";
 
 import { prisma } from "./lib/db/prisma";
 
@@ -16,7 +17,16 @@ async function sortPosts(formData:FormData) {
   }
 }
 
-export default async function Home() {
+interface HomeProps{
+  searchParams: {page: string};
+}
+
+export default async function Home({searchParams:{page = "1"}}: HomeProps) {
+  const currentPage = parseInt(page);
+  const pageSize = 10;
+  const totalPostCount = await prisma.post.count();
+  const totalPages = Math.ceil(totalPostCount/pageSize)
+  
   const posts = await prisma.post.findMany({
     orderBy: {id: "desc"}
   })
@@ -50,7 +60,11 @@ export default async function Home() {
           }
         </div>
         <div className="h-10">
-          <p>Boton para cambiar pagina</p>
+          {
+            totalPages>1 && (
+              <PaginationBar currentPage={currentPage} totalPages={totalPages}/>
+            )
+          }
         </div>
       </div>
       <div className="w-1/4 flex-grow rounded-md space-y-10">

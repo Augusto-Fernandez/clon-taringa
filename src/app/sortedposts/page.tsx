@@ -4,11 +4,12 @@ import { redirect } from "next/navigation";
 
 import PostCard from "@/components/PostCard";
 import SelectCategoty from "@/components/SelectCategory";
+import PaginationBar from "@/components/PaginationBar";
 
 import { prisma } from "../lib/db/prisma";
 
 interface SortPostsProps {
-  searchParams: { query: string };
+  searchParams: { query: string, page: string };
 }
 
 export function generateMetadata({searchParams: { query }}: SortPostsProps): Metadata {
@@ -27,12 +28,17 @@ async function sortPosts(formData:FormData) {
   }
 }
 
-export default async function SortedPosts({searchParams: { query }}: SortPostsProps) {
+export default async function SortedPosts({searchParams: { query, page = "1" }}: SortPostsProps) {
+  const currentPage = parseInt(page);
+  const pageSize = 10;
+  const totalPostCount = await prisma.post.count();
+  const totalPages = Math.ceil(totalPostCount/pageSize);
+  
   const posts = await prisma.post.findMany({
     where: {
-        OR: [
-            { category: { contains: query, mode: "insensitive" } }
-        ],
+      OR: [
+        { category: { contains: query, mode: "insensitive" } }
+      ],
     },
     orderBy: { id: "desc" }
   });
@@ -68,7 +74,11 @@ export default async function SortedPosts({searchParams: { query }}: SortPostsPr
           )}
         </div>
         <div className="h-10">
-          <p>Boton para cambiar pagina</p>
+          {
+            totalPages>1 && (
+              <PaginationBar currentPage={currentPage} totalPages={totalPages}/>
+            )
+          }
         </div>
       </div>
       <div className="w-1/4 flex-grow rounded-md space-y-10">
