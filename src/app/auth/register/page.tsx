@@ -1,24 +1,32 @@
 "use client"
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
+
+type Inputs = {
+    username: string
+    email: string;
+    password: string;
+    confirmPassword: string;
+};
 
 export default function RegisterPage() {
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
 
-    const onSubmit = handleSubmit((data) => {
+    const onSubmit:SubmitHandler<Inputs> = async (data) => {
         if (data.password !== data.confirmPassword) {
             return alert("Contraseñas no coinciden");
         }
 
-        console.log(data)
-    });
+        console.log(JSON.stringify(data));
+    };
 
     return (
         <div className="min-h-screen max-h-screen flex justify-center items-center bg-gray-100">
-            <form onSubmit={onSubmit} className="w-1/4 bg-white p-10 rounded-md border border-gray-400">
+            <form onSubmit={handleSubmit(onSubmit)} className="w-1/4 bg-white p-10 rounded-md border border-gray-400">
                 <h1 className="text-slate-600 font-bold text-4xl mb-4">Crear Usuario</h1>
                 <div className="mb-4 space-y-2">
                     <label htmlFor="username" className="text-slate-600 block text-sm">Nombre de usuario:</label>
                     <input
+                        id="username"
                         type="text"
                         className="input p-3 rounded block w-full border border-gray-300 hover:no-animation focus:outline-non"
                         placeholder="Nombre de Usuario"
@@ -38,6 +46,7 @@ export default function RegisterPage() {
                 <div className="mb-4 space-y-2">
                     <label htmlFor="email" className="text-slate-600 block text-sm">Email:</label>
                     <input
+                        id="email"
                         type="email"
                         className="input p-3 rounded block w-full border border-gray-300 hover:no-animation focus:outline-non"
                         placeholder="Email"
@@ -57,6 +66,7 @@ export default function RegisterPage() {
                 <div className="mb-4 space-y-2">
                     <label htmlFor="password" className="text-slate-600 block text-sm">Contraseña:</label>
                     <input
+                        id="password"
                         type="password"
                         className="input p-3 rounded block w-full border border-gray-300 hover:no-animation focus:outline-non"
                         placeholder="********"
@@ -76,6 +86,7 @@ export default function RegisterPage() {
                 <div className="mb-4 space-y-2">
                     <label htmlFor="confirmPassword" className="text-slate-600 mb-2 block text-sm">Confirmar Contraseña:</label>
                     <input
+                        id="confirmPassword"
                         type="password"
                         className="input p-3 rounded block mb-2 w-full border border-gray-300 hover:no-animation focus:outline-non"
                         placeholder="********"
@@ -92,7 +103,7 @@ export default function RegisterPage() {
                         </span>
                     )}
                 </div>
-                <button className="btn w-full text-base font-semibold bg-green-500 border border-green-300/80 text-white hover:bg-green-600 mt-2">
+                <button type="submit" className="btn w-full text-base font-semibold bg-green-500 border border-green-300/80 text-white hover:bg-green-600 mt-2">
                     Registrar
                 </button>
             </form>
