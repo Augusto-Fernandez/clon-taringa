@@ -14,8 +14,21 @@ model Post {
   category String
   link String?
   nsfw Boolean
+  author User @relation(fields: [userId], references: [id])
+  userId String @db.ObjectId
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-   @@map("posts")
+  @@map("posts")
+}
+
+model User {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userName String @unique
+  email String @unique
+  password String
+  isAdmin Boolean
+  posts Post[]
+
+  @@map("users")
 }

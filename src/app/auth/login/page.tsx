@@ -1,5 +1,8 @@
 "use client"
 import { SubmitHandler, useForm } from "react-hook-form";
+import {useRouter} from 'next/navigation'
+import {useState} from 'react'
+import { signIn } from "next-auth/react";
 
 type Inputs = {
     username: string
@@ -8,9 +11,22 @@ type Inputs = {
 
 export default function LoginPage() {
     const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
+    const router = useRouter()
+    const [error, setError] = useState<string | null>(null)
 
     const onSubmit:SubmitHandler<Inputs> = async (data) => {
-        console.log(JSON.stringify(data));
+        const res = await signIn("credentials", {
+            username: data.username,
+            password: data.password,
+            redirect: false,
+        });
+
+        if (res?.error) {
+            setError(res.error)
+        } else {
+            router.push("/")
+            router.refresh()
+        }
     };
 
     return (

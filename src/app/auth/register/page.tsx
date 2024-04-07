@@ -19,7 +19,21 @@ export default function RegisterPage() {
             return alert("Contraseñas no coinciden");
         }
 
-        router.push("/auth/login");
+        const res = await fetch("/api/register", {
+            method: "POST",
+            body: JSON.stringify({
+                username: data.username,
+                email: data.email,
+                password: data.password,
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if(res.ok){
+            router.push("/auth/login");
+        }
     };
 
     return (
