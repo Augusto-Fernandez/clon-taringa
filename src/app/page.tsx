@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import PostCard from "@/components/PostCard";
 import SelectCategoty from "@/components/SelectCategory";
 import PaginationBar from "@/components/PaginationBar";
+import SearchButton from "@/components/SearchButton";
 
 import { prisma } from "./lib/db/prisma";
 
@@ -38,11 +39,9 @@ export default async function Home({searchParams:{page = "1"}}: HomeProps) {
           <form action={sortPosts}>
             <div className="flex space-x-16">
               <p className="p-3 text-xl font-bold">Posts</p>
-              <div className="flex">
+              <div className="flex items-center space-x-1">
                 <SelectCategoty/>
-                <button type="submit" className="btn">
-                  O
-                </button>
+                <SearchButton/>
               </div>
             </div>
           </form>

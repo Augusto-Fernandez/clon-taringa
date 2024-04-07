@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 
 import UserMenu from "./UserMenu";
+import SearchButton from "@/components/SearchButton";
 
 async function searchPosts(formData: FormData) {
     "use server";
@@ -25,11 +26,9 @@ export default async function Navbar() {
             </div>
             <div className="gap-2">
                 <UserMenu session={session}/>
-                <form action={searchPosts}>
+                <form action={searchPosts} className="flex justify-center items-center space-x-1">
                     <input type="text" placeholder="Buscar Post" name="searchQuery" className="input input-bordered w-24 md:w-auto"/>
-                    <button type="submit" className="btn">
-                        O
-                    </button>
+                    <SearchButton/>
                 </form>
             </div>
         </div>
