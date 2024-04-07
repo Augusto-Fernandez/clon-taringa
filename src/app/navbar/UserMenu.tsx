@@ -5,6 +5,9 @@ import { Session } from "next-auth";
 import { signIn, signOut } from "next-auth/react";
 
 import profilePicPlaceholder from "../../../public/profilePicPlaceholder.png"
+import NotificationIcon from "@/components/svgs/NotificationIcon";
+import MessageIcon from "@/components/svgs/MessageIcon";
+import FavoritedIcon from "@/components/svgs/FavoritedIcon";
 
 interface UserMenuButtonProps {
     session: Session | null;
@@ -16,39 +19,44 @@ export default function UserMenu({session}:UserMenuButtonProps){
     return(
         <>
             {
-                user ? (<>
-                    <Link href="/" className="btn-ghost text-xl normal-case">
-                        Ojo
-                    </Link>
-                    <Link href="/" className="btn-ghost text-xl normal-case">
-                        Mail
-                    </Link>
-                    <Link href="/" className="btn-ghost text-xl normal-case">
-                        Favoritos
-                    </Link>
-                    <Link href="/" className="btn-ghost text-xl normal-case">
-                        Perfil
-                    </Link>
-                    <div className="dropdown dropdown-end">
-                        <Image
-                            tabIndex={0} 
-                            role="button"
-                            src={user?.image || profilePicPlaceholder}
-                            alt="Profile picture"
-                            width={40}
-                            height={40}
-                            className="w-10 rounded-full"
-                        />
-                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-36 space-y-1">
-                            <li>
-                                <button className="btn">Perfil</button>
-                            </li>
-                            <li>
-                                <button className="btn" onClick={() => signOut({ callbackUrl: "/" })}>Cerrar Sesión</button>
-                            </li>
-                        </ul>
-                    </div>
-                </>) 
+                user ? (
+                    <ul className="flex justify-center items-center h-12 bg-green-400 border border-slate-300 rounded-l-lg rounded-r-2xl">
+                        <li className="border-r border-r-slate-300 p-2">
+                            <Link href="/">
+                                <NotificationIcon/>
+                            </Link>
+                        </li>
+                        <li className="border-r border-r-slate-300 p-2">
+                            <Link href="/">
+                                <MessageIcon />
+                            </Link>
+                        </li>
+                        <li  className="p-2">
+                            <Link href="/" className="">
+                                <FavoritedIcon/>
+                            </Link>
+                        </li>
+                        <li className="dropdown dropdown-end ">
+                            <Image
+                                tabIndex={0} 
+                                role="button"
+                                src={user?.image || profilePicPlaceholder}
+                                alt="Profile picture"
+                                width={40}
+                                height={40}
+                                className="w-10 rounded-full"
+                            />
+                            <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-36 space-y-1">
+                                <li>
+                                    <button className="btn">Perfil</button>
+                                </li>
+                                <li>
+                                    <button className="btn" onClick={() => signOut({ callbackUrl: "/" })}>Cerrar Sesión</button>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                ) 
                     : 
                 (
                     <button 

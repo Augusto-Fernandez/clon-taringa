@@ -23,7 +23,7 @@ export default async function Navbar() {
             <div className="flex-1">
                 <a className="btn btn-ghost text-xl">Taringa</a>
             </div>
-            <div className="flex-none gap-2">
+            <div className="gap-2">
                 <UserMenu session={session}/>
                 <form action={searchPosts}>
                     <input type="text" placeholder="Buscar Post" name="searchQuery" className="input input-bordered w-24 md:w-auto"/>
