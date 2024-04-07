@@ -4,6 +4,8 @@ import {useRouter} from 'next/navigation'
 import {useState} from 'react'
 import { signIn } from "next-auth/react";
 
+import UserButton from "@/components/UserButton";
+
 type Inputs = {
     username: string
     password: string;
@@ -71,9 +73,7 @@ export default function LoginPage() {
                         </span>
                     )}
                 </div>
-                <button type="submit" className="btn w-full text-base font-semibold bg-green-500 border border-green-300/80 text-white hover:bg-green-600 mt-2">
-                    Ingresar
-                </button>
+                <UserButton content="Ingresar"/>
             </form>
         </div>
     );
