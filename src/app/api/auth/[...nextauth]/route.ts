@@ -26,7 +26,7 @@ export const authOptions = {
 
                 return {
                     id: userFound.id,
-                    username: userFound.userName,
+                    name: userFound.userName,
                     email: userFound.email,
                 }
             },

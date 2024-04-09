@@ -48,7 +48,7 @@ export default function UserMenu({session}:UserMenuButtonProps){
                             />
                             <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-36 space-y-1">
                                 <li>
-                                    <button className="btn">Perfil</button>
+                                    <Link href={"/profile?query="+user.name} className="btn">Perfil</Link>
                                 </li>
                                 <li>
                                     <button className="btn" onClick={() => signOut({ callbackUrl: "/" })}>Cerrar Sesión</button>
