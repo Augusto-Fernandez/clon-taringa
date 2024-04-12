@@ -13,7 +13,6 @@ export default function PostAuthorship (){
         <>
         <div className="flex p-4 space-x-3">
             <input 
-                name="autor"
                 type="checkbox"
                 className="checkbox"
                 checked={isChecked} 
@@ -23,7 +22,7 @@ export default function PostAuthorship (){
         </div>
             <label className="text-slate-600 pl-4 py-2 text-sm">Acreditar informacion de terceros utilizada.</label>
             <input 
-                name="autor"
+                name="link"
                 required
                 type="text" 
                 placeholder="http://" 

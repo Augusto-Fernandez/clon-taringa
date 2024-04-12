@@ -51,7 +51,7 @@ export default async function Home({searchParams:{page = "1"}}: HomeProps) {
               </button>
           </Link>
         </div>
-        <div className="bg-red-800 min-h-lvh max-h-lvh p-3 space-y-3 rounded-md">
+        <div className="bg-red-800 min-h-lvh max-h-lvh p-3 rounded-md">
           {
             posts.map(post => (
               <PostCard post={post} key={post.id}/>

@@ -1,5 +1,8 @@
 import { redirect } from "next/navigation";
 import { prisma } from "../lib/db/prisma";
+import { getServerSession } from "next-auth";
+
+import { authOptions } from "../api/auth/[...nextauth]/route";
 
 import PostAuthorship from "./PostAuthorship";
 import SelectCategoty from "@/components/SelectCategory";
@@ -10,6 +13,13 @@ export const metadata = {
 
 async function createPost(formData:FormData) {
     "use server";
+
+    const session = await getServerSession(authOptions);
+    const userFound = await prisma.user.findUnique({
+        where: {
+            userName: session?.user?.name as string
+        }
+    }) 
 
     const title = formData.get("tituloPost")?.toString();
     const body = formData.get("cuerpoPost")?.toString();
@@ -32,7 +42,7 @@ async function createPost(formData:FormData) {
     }
 
     await prisma.post.create({
-        data: {title, body, category, link, nsfw}
+        data: {title, body, category, link, nsfw, author: {connect: {id: userFound?.id}}}
     });
 
     redirect("/");
