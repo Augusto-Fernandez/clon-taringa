@@ -57,9 +57,9 @@ export default async function Post({params:{id}}:PostId) {
                 </div>
                 {
                     post.link && (
-                        <div>
-                            <p>Links externos:</p>
-                            <a href={post.link}></a>
+                        <div className="border-y border-y-gray-100 pl-8 py-4">
+                            <p className="text-slate-600 font-semibold text-lg">Link externo:</p>
+                            <Link href={post.link} className="text-blue-500 underline">{post.link}</Link>
                         </div>
                     )
                 }

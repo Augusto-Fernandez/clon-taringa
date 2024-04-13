@@ -24,12 +24,7 @@ async function createPost(formData:FormData) {
     const title = formData.get("tituloPost")?.toString();
     const body = formData.get("cuerpoPost")?.toString();
     const category = formData.get("categoria")?.toString();
-    
-    let link = null;
-
-    if(formData.get("autor")!=="on"){
-        link = formData.get("autor")?.toString();
-    }
+    const link = formData.get("link")?.toString();
 
     let nsfw = false;
 
