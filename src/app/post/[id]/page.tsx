@@ -3,11 +3,17 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { getServerSession } from "next-auth";
+
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 import formatDate from "@/app/lib/formatDate";
 
 import profilePicPlaceholder from "../../../../public/profilePicPlaceholder.png"
 import postDefaultBanner from "../../../../public/postDefaultBanner.png"
+
+import VoteBox from "./VoteBox";
+import { setVote } from "./actions";
 
 interface PostId {
     params: {
@@ -21,6 +27,67 @@ const getPost = cache(async (id: string) => {
     return post;
 });
 
+    /*
+    const handleVote = async (formData:FormData) =>{
+    "use server"
+
+    const session = await getServerSession(authOptions);
+    const userLogged = await prisma.user.findUnique({
+        where: {
+            userName: session?.user?.name as string
+        }
+    }) 
+
+    const like = formData.get("upvote")?.toString();
+    const dislike = formData.get("downvote")?.toString();
+
+    if(like && like!==undefined){
+        await prisma.vote.create({
+            data: {
+                userId: userLogged?.id as string,
+                postId: like,
+                type:"UP"
+            }
+        })
+    }
+
+    if(dislike && dislike!==undefined){
+        await prisma.vote.create({
+            data: {
+                userId: userLogged?.id as string,
+                postId: dislike,
+                type:"DOWN"
+            }
+        })
+    }
+    if(type === 'UP'){
+        const updatedLikedArray = [...postLikes, userId];
+        
+        await prisma.post.update({
+            where: {
+                id: postId
+            },
+            data: {
+                liked: updatedLikedArray
+            }
+        })
+    }
+
+    if(type === 'DOWN'){
+        const updatedDislikedArray = [...postDislikes, userId];
+        
+        await prisma.post.update({
+            where: {
+                id: postId
+            },
+            data: {
+                disliked: updatedDislikedArray
+            }
+        })
+    }
+}
+    */
+
 export default async function Post({params:{id}}:PostId) {
     const post = await getPost(id);
 
@@ -29,7 +96,14 @@ export default async function Post({params:{id}}:PostId) {
             id: post.userId
         }
     })
-    
+
+    const session = await getServerSession(authOptions);
+    const userLogged = await prisma.user.findUnique({
+        where: {
+            userName: session?.user?.name as string
+        }
+    }) 
+
     return(
         <div className="min-h-screen bg-gray-100 py-6">
             <div className="mx-72 min-h-screen bg-white rounded-3xl border">
@@ -66,10 +140,12 @@ export default async function Post({params:{id}}:PostId) {
                         </div>
                     )
                 }
-                <div className="p-5">
-                    <span>Upvote</span>
-                    <span>Downvote</span>
-                    <span>Cantidad</span>
+                <div className="p-5 flex">
+                    <VoteBox 
+                        postId={post.id}
+                        userId={userLogged?.id as string}
+                        setVote={setVote}
+                    />
                 </div>
             </div>
         </div>
