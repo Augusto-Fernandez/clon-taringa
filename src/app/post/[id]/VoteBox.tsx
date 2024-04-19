@@ -6,17 +6,17 @@ import Downvote from "@/components/svgs/Downvote";
 interface VoteBoxProps {
     postId: string;
     userId: string;
-    setVote: (postId: string, userId: string, type: 'UP' | 'DOWN') => Promise<void>;
+    handleVote: (postId: string, userId: string, type: 'UP' | 'DOWN') => Promise<void>;
 }
 
-export default function VoteBox ({postId, userId, setVote}:VoteBoxProps){
+export default function VoteBox ({postId, userId, handleVote}:VoteBoxProps){
     return(
         <>
             <div className="p-5 flex">
                 <button 
                     className="flex bg-emerald-500"
                     onClick={async () => {
-                        await setVote(postId,userId,"UP")
+                        await handleVote(postId,userId,"UP")
                     }}
                 >
                     <Upvote/>
@@ -25,7 +25,7 @@ export default function VoteBox ({postId, userId, setVote}:VoteBoxProps){
                 <button 
                     className="flex bg-red-500"
                     onClick={async () => {
-                        await setVote(postId,userId, "DOWN")
+                        await handleVote(postId,userId, "DOWN")
                     }}
                 >
                     <Downvote/>

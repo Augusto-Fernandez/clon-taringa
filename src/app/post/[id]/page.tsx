@@ -13,7 +13,7 @@ import profilePicPlaceholder from "../../../../public/profilePicPlaceholder.png"
 import postDefaultBanner from "../../../../public/postDefaultBanner.png"
 
 import VoteBox from "./VoteBox";
-import { setVote } from "./actions";
+import { handleVote } from "./actions";
 
 interface PostId {
     params: {
@@ -27,68 +27,7 @@ const getPost = cache(async (id: string) => {
     return post;
 });
 
-    /*
-    const handleVote = async (formData:FormData) =>{
-    "use server"
-
-    const session = await getServerSession(authOptions);
-    const userLogged = await prisma.user.findUnique({
-        where: {
-            userName: session?.user?.name as string
-        }
-    }) 
-
-    const like = formData.get("upvote")?.toString();
-    const dislike = formData.get("downvote")?.toString();
-
-    if(like && like!==undefined){
-        await prisma.vote.create({
-            data: {
-                userId: userLogged?.id as string,
-                postId: like,
-                type:"UP"
-            }
-        })
-    }
-
-    if(dislike && dislike!==undefined){
-        await prisma.vote.create({
-            data: {
-                userId: userLogged?.id as string,
-                postId: dislike,
-                type:"DOWN"
-            }
-        })
-    }
-    if(type === 'UP'){
-        const updatedLikedArray = [...postLikes, userId];
-        
-        await prisma.post.update({
-            where: {
-                id: postId
-            },
-            data: {
-                liked: updatedLikedArray
-            }
-        })
-    }
-
-    if(type === 'DOWN'){
-        const updatedDislikedArray = [...postDislikes, userId];
-        
-        await prisma.post.update({
-            where: {
-                id: postId
-            },
-            data: {
-                disliked: updatedDislikedArray
-            }
-        })
-    }
-}
-    */
-
-export default async function Post({params:{id}}:PostId) {
+export default async function PostPage({params:{id}}:PostId) {
     const post = await getPost(id);
 
     const author = await prisma.user.findUnique({
@@ -144,7 +83,7 @@ export default async function Post({params:{id}}:PostId) {
                     <VoteBox 
                         postId={post.id}
                         userId={userLogged?.id as string}
-                        setVote={setVote}
+                        handleVote={handleVote}
                     />
                 </div>
             </div>

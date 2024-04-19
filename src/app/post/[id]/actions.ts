@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/app/lib/db/prisma";
 
-export async function setVote(postId: string, userId: string, type:'UP' | 'DOWN') {   
+export async function handleVote(postId: string, userId: string, type:'UP' | 'DOWN') {   
     const previousVote = await prisma.vote.findUnique({
         where: {
             userId: userId,
@@ -21,7 +21,7 @@ export async function setVote(postId: string, userId: string, type:'UP' | 'DOWN'
         })
     }
 
-    if(previousVote?.type !== type){
+    if(previousVote && previousVote?.type !== type){
         await prisma.vote.update({
             where: {
                 userId: userId,
@@ -43,5 +43,5 @@ export async function setVote(postId: string, userId: string, type:'UP' | 'DOWN'
         })
     }
 
-    revalidatePath("/post/[id]");
+    revalidatePath("/post/[id]","page");
 }
