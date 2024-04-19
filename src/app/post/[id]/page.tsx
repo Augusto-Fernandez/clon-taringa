@@ -36,12 +36,36 @@ export default async function PostPage({params:{id}}:PostId) {
         }
     })
 
+    let userId = null
+
     const session = await getServerSession(authOptions);
-    const userLogged = await prisma.user.findUnique({
+    
+    if(session?.user){
+        const userLogged = await prisma.user.findUnique({
+            where: {
+                userName: session?.user?.name as string
+            }
+        })
+        
+        userId = userLogged?.id
+    }
+    
+    const votes = await prisma.vote.findMany({
         where: {
-            userName: session?.user?.name as string
+            postId: post.id
         }
     }) 
+
+    let likes = 0;
+    let dislikes = 0;
+
+    votes.forEach(vote => {
+        if (votes.length > 0 && vote.type === 'UP') {
+            likes++;
+        } else if (votes.length > 0 && vote.type === 'DOWN') {
+            dislikes++;
+        }
+    });
 
     return(
         <div className="min-h-screen bg-gray-100 py-6">
@@ -80,11 +104,20 @@ export default async function PostPage({params:{id}}:PostId) {
                     )
                 }
                 <div className="p-5 flex">
-                    <VoteBox 
-                        postId={post.id}
-                        userId={userLogged?.id as string}
-                        handleVote={handleVote}
-                    />
+                    <div className="p-5 flex">
+                        {
+                            session?.user && (
+                                <VoteBox 
+                                    postId={post.id}
+                                    userId={userId as string}
+                                    likes={likes}
+                                    dislikes={dislikes}
+                                    handleVote={handleVote}
+                                />
+                            )
+                        }
+                        <span>Cantidad</span>
+                    </div>
                 </div>
             </div>
         </div>
