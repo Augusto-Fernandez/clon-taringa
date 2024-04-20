@@ -6,6 +6,7 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 
 import PostAuthorship from "./PostAuthorship";
 import SelectCategoty from "@/components/SelectCategory";
+import UserButton from "@/components/UserButton";
 
 export const metadata = {
     title: "Create Post"
@@ -68,7 +69,7 @@ export default async function CreatePost (){
                             <textarea 
                                 name="cuerpoPost"
                                 required 
-                                className="textarea w-full min-h-96 max-h-96 hover:no-animation focus:outline-none border border-t-gray-300 rounded-t-none h-14" 
+                                className="textarea resize-none w-full min-h-96 max-h-96 hover:no-animation focus:outline-none border border-t-gray-300 rounded-t-none h-14" 
                                 placeholder="Contenido del post (obligatorio)">
                             </textarea>
                         </div>
@@ -88,12 +89,7 @@ export default async function CreatePost (){
                                 />
                             </div>
                             <div className="p-4">
-                                <button 
-                                    type="submit" 
-                                    className="btn w-full text-base font-semibold bg-green-500 border border-green-300/80 text-white hover:bg-green-600"
-                                >
-                                    Publicar
-                                </button>
+                                <UserButton content="Publicar" width="w-full"/>
                             </div>
                         </div>
                     </div>

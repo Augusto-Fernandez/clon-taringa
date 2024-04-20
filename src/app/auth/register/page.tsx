@@ -118,7 +118,7 @@ export default function RegisterPage() {
                         </span>
                     )}
                 </div>
-                <UserButton content="Registrar"/>
+                <UserButton content="Registrar" width="w-full"/>
             </form>
         </div>
     );

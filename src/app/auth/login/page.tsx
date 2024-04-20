@@ -73,7 +73,7 @@ export default function LoginPage() {
                         </span>
                     )}
                 </div>
-                <UserButton content="Ingresar"/>
+                <UserButton content="Ingresar" width="w-full"/>
             </form>
         </div>
     );

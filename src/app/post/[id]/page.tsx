@@ -14,6 +14,7 @@ import postDefaultBanner from "../../../../public/postDefaultBanner.png"
 
 import VoteBox from "./VoteBox";
 import { handleVote } from "./actions";
+import CommentBox from "./CommentBox";
 
 interface PostId {
     params: {
@@ -37,6 +38,7 @@ export default async function PostPage({params:{id}}:PostId) {
     })
 
     let userId = null
+    let userImage = null
 
     const session = await getServerSession(authOptions);
     
@@ -48,6 +50,7 @@ export default async function PostPage({params:{id}}:PostId) {
         })
         
         userId = userLogged?.id
+        userImage = userLogged?.image
     }
     
     const votes = await prisma.vote.findMany({
@@ -120,6 +123,11 @@ export default async function PostPage({params:{id}}:PostId) {
                     </div>
                 </div>
             </div>
+            {
+                session?.user && (
+                    <CommentBox image={userImage as string}/>
+                )
+            }
         </div>
     );
 }
