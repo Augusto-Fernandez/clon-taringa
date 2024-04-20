@@ -13,7 +13,7 @@ import profilePicPlaceholder from "../../../../public/profilePicPlaceholder.png"
 import postDefaultBanner from "../../../../public/postDefaultBanner.png"
 
 import VoteBox from "./VoteBox";
-import { handleVote } from "./actions";
+import { handleVote, handleComment } from "./actions";
 import CommentBox from "./CommentBox";
 
 interface PostId {
@@ -125,7 +125,12 @@ export default async function PostPage({params:{id}}:PostId) {
             </div>
             {
                 session?.user && (
-                    <CommentBox image={userImage as string}/>
+                    <CommentBox 
+                        image={userImage as string}
+                        postId={post.id}
+                        userId={userId as string}
+                        handleComment={handleComment}
+                    />
                 )
             }
         </div>

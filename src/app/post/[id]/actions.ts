@@ -45,3 +45,15 @@ export async function handleVote(postId: string, userId: string, type:'UP' | 'DO
 
     revalidatePath("/post/[id]","page");
 }
+
+export async function handleComment(postId: string, userId: string, message: string) {
+    await prisma.comment.create({
+        data: {
+            userId: userId,
+            postId: postId,
+            message: message
+        }
+    })
+
+    revalidatePath("/post/[id]","page");
+};
