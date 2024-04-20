@@ -15,6 +15,7 @@ import postDefaultBanner from "../../../../public/postDefaultBanner.png"
 import VoteBox from "./VoteBox";
 import { handleVote, handleComment } from "./actions";
 import CommentBox from "./CommentBox";
+import CommentsIcon from "@/components/svgs/CommientsIcon";
 
 interface PostId {
     params: {
@@ -70,6 +71,12 @@ export default async function PostPage({params:{id}}:PostId) {
         }
     });
 
+    const comments = await prisma.comment.findMany({
+        where: {
+            postId: post.id
+        }
+    });
+
     return(
         <div className="min-h-screen bg-gray-100 py-6">
             <div className="mx-72 min-h-screen bg-white rounded-3xl border">
@@ -119,7 +126,10 @@ export default async function PostPage({params:{id}}:PostId) {
                                 />
                             )
                         }
-                        <span>Cantidad</span>
+                        <div className="flex">
+                            <CommentsIcon/>
+                            <span className="pt-1 w-1 pr-5">{comments.length}</span>
+                        </div>
                     </div>
                 </div>
             </div>
