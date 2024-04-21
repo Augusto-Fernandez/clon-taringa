@@ -15,21 +15,21 @@ export default function VoteBox ({postId, userId, likes, dislikes, handleVote}:V
     return(
         <>
             <button 
-                className="flex bg-emerald-500"
+                className="flex bg-emerald-500 rounded-md"
                 onClick={async () => {
                     await handleVote(postId,userId,"UP")
                 }}
             >
-                <Upvote/>
+                <Upvote className="w-8 h-8 rounded-md"/>
                 <span className="text-white pt-1 w-1 pr-5">{likes}</span>
             </button>
             <button 
-                className="flex bg-red-500"
+                className="flex bg-red-500 rounded-md"
                 onClick={async () => {
                     await handleVote(postId,userId, "DOWN")
                 }}
             >
-                <Downvote/>
+                <Downvote className="w-8 h-8 rounded-md"/>
                 <span className="text-white pt-1 w-1 pr-5">{dislikes}</span>
             </button>
         </>

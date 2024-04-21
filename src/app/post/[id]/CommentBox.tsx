@@ -26,7 +26,7 @@ export default function CommentBox ({image, postId, userId, handleComment}:Comme
     };
 
     return(
-        <form onSubmit={createComment} className="mx-72 my-8 rounded-3xl bg-white p-4 flex space-x-4">
+        <form onSubmit={createComment} className="mx-72 my-8 rounded-3xl bg-white p-4 flex space-x-4 border">
             <Image
                 src={image || profilePicPlaceholder}
                 alt="Profile picture"

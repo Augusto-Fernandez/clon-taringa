@@ -16,6 +16,7 @@ import VoteBox from "./VoteBox";
 import { handleVote, handleComment } from "./actions";
 import CommentBox from "./CommentBox";
 import CommentsIcon from "@/components/svgs/CommientsIcon";
+import CommentCard from "./CommentCard";
 
 interface PostId {
     params: {
@@ -114,7 +115,7 @@ export default async function PostPage({params:{id}}:PostId) {
                     )
                 }
                 <div className="p-5 flex">
-                    <div className="p-5 flex">
+                    <div className="p-5 flex space-x-1">
                         {
                             session?.user && (
                                 <VoteBox 
@@ -127,7 +128,7 @@ export default async function PostPage({params:{id}}:PostId) {
                             )
                         }
                         <div className="flex">
-                            <CommentsIcon/>
+                            <CommentsIcon className="w-8 h-8"/>
                             <span className="pt-1 w-1 pr-5">{comments.length}</span>
                         </div>
                     </div>
@@ -141,6 +142,17 @@ export default async function PostPage({params:{id}}:PostId) {
                         userId={userId as string}
                         handleComment={handleComment}
                     />
+                )
+            }
+            {
+                comments.length > 0 && (
+                    <div className="bg-white rounded-3xl mx-72 p-4 space-y-4">
+                        {
+                            comments.map(comment => (
+                                <CommentCard comment={comment} key={comment.id}/>
+                            ))
+                        }
+                    </div>
                 )
             }
         </div>
