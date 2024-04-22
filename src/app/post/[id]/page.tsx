@@ -13,7 +13,7 @@ import profilePicPlaceholder from "../../../../public/profilePicPlaceholder.png"
 import postDefaultBanner from "../../../../public/postDefaultBanner.png"
 
 import VoteBox from "./VoteBox";
-import { handleVote, handleComment } from "./actions";
+import { handleVote, handleComment, handleResponse } from "./actions";
 import CommentBox from "./CommentBox";
 import CommentsIcon from "@/components/svgs/CommientsIcon";
 import CommentCard from "./CommentCard";
@@ -40,7 +40,9 @@ export default async function PostPage({params:{id}}:PostId) {
     })
 
     let userId = null
+    let userName = null
     let userImage = null
+    let isLogged = false
 
     const session = await getServerSession(authOptions);
     
@@ -52,7 +54,9 @@ export default async function PostPage({params:{id}}:PostId) {
         })
         
         userId = userLogged?.id
+        userName = userLogged?.userName
         userImage = userLogged?.image
+        isLogged = true
     }
     
     const votes = await prisma.vote.findMany({
@@ -137,19 +141,29 @@ export default async function PostPage({params:{id}}:PostId) {
             {
                 session?.user && (
                     <CommentBox 
-                        image={userImage as string}
+                        image={userImage as string | null}
                         postId={post.id}
                         userId={userId as string}
+                        userName={userName as string}
                         handleComment={handleComment}
                     />
                 )
             }
             {
                 comments.length > 0 && (
-                    <div className="bg-white rounded-3xl mx-72 p-4 space-y-4">
+                    <div className="bg-white rounded-3xl mt-8 mx-72 p-4 space-y-4">
                         {
                             comments.map(comment => (
-                                <CommentCard comment={comment} key={comment.id}/>
+                                <CommentCard 
+                                    comment={comment} 
+                                    isLogged={isLogged} 
+                                    image={userImage as string | null}
+                                    postId={post.id}
+                                    userId={userId as string}
+                                    userName={userName as string}
+                                    handleResponse={handleResponse}
+                                    key={comment.id}
+                                />
                             ))
                         }
                     </div>

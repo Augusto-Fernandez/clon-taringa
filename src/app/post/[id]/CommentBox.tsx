@@ -7,13 +7,14 @@ import UserButton from "@/components/UserButton";
 import profilePicPlaceholder from "../../../../public/profilePicPlaceholder.png"
 
 interface CommentBoxProps{
-    image: string;
+    image: string | null;
     postId: string;
     userId: string;
-    handleComment: (postId: string, userId: string, message: string) => Promise<void>;
+    userName: string;
+    handleComment: (postId: string, userId: string, userName: string, image: string | null, message: string) => Promise<void>;
 }
 
-export default function CommentBox ({image, postId, userId, handleComment}:CommentBoxProps){
+export default function CommentBox ({image, postId, userId, userName, handleComment}:CommentBoxProps){
     const [comment, setComment] = useState("");
     const handleCommentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setComment(event.target.value);
@@ -21,7 +22,7 @@ export default function CommentBox ({image, postId, userId, handleComment}:Comme
 
     const createComment = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        await handleComment(postId, userId, comment);
+        await handleComment(postId, userId, userName, image, comment);
         setComment("");
     };
 
