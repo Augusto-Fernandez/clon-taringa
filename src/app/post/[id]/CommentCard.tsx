@@ -20,9 +20,12 @@ interface CommentProps{
     userId: string;
     userName: string;
     handleResponse: (postId: string, userId: string, userName: string, image: string | null, message: string, parentId: string) => Promise<void>;
+    commentLikes: number;
+    commentDislikes: number;
+    handleCommentVote: (commentId: string, userId: string, type: 'UP' | 'DOWN') => Promise<void>;
 }
 
-export default function CommentCard({comment, isLogged, image, postId, userId, userName, handleResponse}:CommentProps) {   
+export default function CommentCard({comment, isLogged, image, postId, userId, userName, handleResponse, commentLikes, commentDislikes, handleCommentVote}:CommentProps) {   
     const [responseBox, setResponseBox] = useState(false);
 
     useEffect(() => {
@@ -42,7 +45,7 @@ export default function CommentCard({comment, isLogged, image, postId, userId, u
     };
     
     return(
-        <div className="border-b h-auto">
+        <div className="border-b h-auto pb-2">
             <p className="block text-xs pl-16">Comentario <span className="text-blue-400">#{comment.id}</span></p>
             {
                 comment.parentId && (
@@ -66,14 +69,30 @@ export default function CommentCard({comment, isLogged, image, postId, userId, u
                     <p className="text-slate-800 w-auto min-h-6 h-auto text-lg">{comment.message}</p>
                     {
                         isLogged && (
-                            <div className="flex justify-end space-x-1 pt-4">
+                            <div className="flex justify-end space-x-1 pt-4 h-6">
                                 <button onClick={() => {
                                     setResponseBox(!responseBox)
                                 }}>
                                     <ResponseIcon className="h-6 w-10"/>
                                 </button>
-                                <Upvote className="h-6 w-10 bg-emerald-500 rounded-md"/>
-                                <Downvote className="h-6 w-10 bg-red-500 rounded-md"/>
+                                <button 
+                                    className="bg-emerald-500 rounded-md flex h-6 w-12 justify-center"
+                                    onClick={async () =>{
+                                        await handleCommentVote(comment.id, userId, "UP");
+                                    }}
+                                >
+                                    <Upvote className="h-6 w-6"/>
+                                    <span className="text-white">{commentLikes}</span>
+                                </button>
+                                <button 
+                                    className="bg-red-500 rounded-md flex h-6 w-12 justify-center"
+                                    onClick={async () =>{
+                                        await handleCommentVote(comment.id, userId, "DOWN");
+                                    }}
+                                >
+                                    <Downvote className="h-6 w-6"/>
+                                    <span className="text-white">{commentDislikes}</span>
+                                </button>
                             </div>
                         )
                     }

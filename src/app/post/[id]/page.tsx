@@ -13,10 +13,11 @@ import profilePicPlaceholder from "../../../../public/profilePicPlaceholder.png"
 import postDefaultBanner from "../../../../public/postDefaultBanner.png"
 
 import VoteBox from "./VoteBox";
-import { handleVote, handleComment, handleResponse } from "./actions";
+import { handleVote, handleComment, handleResponse, handleCommentVote } from "./actions";
 import CommentBox from "./CommentBox";
 import CommentsIcon from "@/components/svgs/CommientsIcon";
 import CommentCard from "./CommentCard";
+import { CommentVote } from "@prisma/client";
 
 interface PostId {
     params: {
@@ -81,6 +82,32 @@ export default async function PostPage({params:{id}}:PostId) {
             postId: post.id
         }
     });
+
+    const commentVotesArray:CommentVote[] = [];
+    
+    await Promise.all(comments.map(async (comment) => {
+        const commentsVotes = await prisma.commentVote.findMany({
+            where: {
+                commentId: comment.id
+            }
+        });
+    
+        if (commentsVotes.length > 0) {
+            commentVotesArray.push(...commentsVotes);
+        }
+    }));
+
+    const getCommentVotes = (commentId: string, type: "UP" | "DOWN") =>{
+        let count = 0;
+
+        commentVotesArray.forEach( commentVote =>{
+            if(commentVote.commentId === commentId && commentVote.type === type){
+                count++
+            }
+        });
+
+        return count;
+    }
 
     return(
         <div className="min-h-screen bg-gray-100 py-6">
@@ -162,6 +189,9 @@ export default async function PostPage({params:{id}}:PostId) {
                                     userId={userId as string}
                                     userName={userName as string}
                                     handleResponse={handleResponse}
+                                    commentLikes={getCommentVotes(comment.id, "UP")}
+                                    commentDislikes={getCommentVotes(comment.id, "DOWN")}
+                                    handleCommentVote={handleCommentVote}
                                     key={comment.id}
                                 />
                             ))
