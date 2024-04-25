@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Comment } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
@@ -43,13 +43,29 @@ export default function CommentCard({comment, isLogged, image, postId, userId, u
         setResponse("");
         setResponseBox(false);
     };
+
+    const commentRef = useRef(null);
+
+    const handleResponseClick = () => {
+        const parentCommentCard = document.getElementById(`comment-${comment.parentId}`);
+        if (parentCommentCard) {
+            parentCommentCard.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+    };
     
     return(
-        <div className="border-b h-auto pb-2">
-            <p className="block text-xs pl-16">Comentario <span className="text-blue-400">#{comment.id}</span></p>
+        <div id={`comment-${comment.id}`} ref={commentRef} className="border-b h-auto pb-2">
+            <p className="block text-xs pl-16"
+            >
+                Comentario <span className="text-blue-400">#{comment.id}</span>
+            </p>
             {
                 comment.parentId && (
-                    <p className="block text-xs pl-16">Respuesta a comentario <span className="text-blue-400">#{comment.parentId}</span></p>
+                    <button onClick={handleResponseClick}>
+                        <p className="block text-xs pl-16">
+                            Respuesta a comentario <span className="text-blue-400">#{comment.parentId}</span>
+                        </p>
+                    </button>
                 )
             }
             <div className="flex min-h-28">

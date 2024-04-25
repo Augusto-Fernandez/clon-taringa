@@ -141,7 +141,7 @@ export default async function PostPage({params:{id}}:PostId) {
                     post.link && (
                         <div className="border-y border-y-gray-100 pl-8 py-4">
                             <p className="text-slate-600 font-semibold text-lg">Link externo:</p>
-                            <Link href={post.link} className="text-blue-500 underline">{post.link}</Link>
+                            <a href={post.link} rel="noopener noreferrer" className="text-blue-500 underline">{post.link}</a>
                         </div>
                     )
                 }
