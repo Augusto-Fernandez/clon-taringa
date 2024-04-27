@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Comment } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
@@ -44,8 +44,6 @@ export default function CommentCard({comment, isLogged, image, postId, userId, u
         setResponseBox(false);
     };
 
-    const commentRef = useRef(null);
-
     const handleResponseClick = () => {
         const parentCommentCard = document.getElementById(`comment-${comment.parentId}`);
         if (parentCommentCard) {
@@ -54,7 +52,7 @@ export default function CommentCard({comment, isLogged, image, postId, userId, u
     };
     
     return(
-        <div id={`comment-${comment.id}`} ref={commentRef} className="border-b h-auto pb-2">
+        <div id={`comment-${comment.id}`} className="border-b h-auto pb-2">
             <p className="block text-xs pl-16"
             >
                 Comentario <span className="text-blue-400">#{comment.id}</span>
