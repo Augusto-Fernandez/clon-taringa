@@ -17,7 +17,7 @@ import { handleVote, handleComment, handleResponse, handleCommentVote } from "./
 import CommentBox from "./CommentBox";
 import CommentsIcon from "@/components/svgs/CommientsIcon";
 import CommentCard from "./CommentCard";
-import { CommentVote } from "@prisma/client";
+import { Comment, CommentVote } from "@prisma/client";
 
 interface PostId {
     params: {
@@ -109,6 +109,13 @@ export default async function PostPage({params:{id}}:PostId) {
         return count;
     }
 
+    interface SortedByVotesArray extends Comment {
+        votesDif: number
+    }
+
+    const commentsSortedByVotes:SortedByVotesArray[] = [...comments.map((comment) => ({ ...comment, votesDif: getCommentVotes(comment.id, "UP") - getCommentVotes(comment.id, "DOWN")}))]
+    commentsSortedByVotes.sort((a,b) => b.votesDif - a.votesDif);
+
     return(
         <div className="min-h-screen bg-gray-100 py-6">
             <div className="mx-72 min-h-screen bg-white rounded-3xl border">
@@ -180,7 +187,7 @@ export default async function PostPage({params:{id}}:PostId) {
                 comments.length > 0 && (
                     <div className="bg-white rounded-3xl mt-8 mx-72 p-4 space-y-4">
                         {
-                            comments.map(comment => (
+                            commentsSortedByVotes.map(comment => (
                                 <CommentCard 
                                     comment={comment} 
                                     isLogged={isLogged} 
