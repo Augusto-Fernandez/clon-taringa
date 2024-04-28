@@ -36,6 +36,11 @@ export default async function PostCard({post}:PostProps) {
             <div className="p-3 space-x-4">
                 <span className="font-semibold text-lg">{post.title}</span>
                 <span className="text-blue-600">{author?.userName}</span>
+                {
+                    post.nsfw && (
+                        <span className="badge text-white bg-red-600 text-xs border-red-500 border-2">NSFW</span>
+                    )
+                }
             </div>
             <div className="p-4 space-x-4 flex">
                 <span>{post.category}</span>
