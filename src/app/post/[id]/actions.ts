@@ -116,3 +116,32 @@ export async function handleCommentVote(commentId: string, userId: string, type:
 
     revalidatePath("/post/[id]","page");
 }
+
+export async function savePost(postId: string, userId: string) {
+    const previousSave = await prisma.savedPost.findUnique({
+        where: {
+            userId: userId,
+            postId: postId
+        },
+    });
+
+    if(previousSave){
+        await prisma.savedPost.delete({
+            where: {
+                userId: userId,
+                postId: postId
+            },
+        })
+    }
+
+    if(previousSave === null){
+        await prisma.savedPost.create({
+            data: {
+                userId: userId,
+                postId: postId
+            }
+        })
+    }
+
+    revalidatePath("/post/[id]","page");
+}

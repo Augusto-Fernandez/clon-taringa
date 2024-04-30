@@ -13,11 +13,12 @@ import profilePicPlaceholder from "../../../../public/profilePicPlaceholder.png"
 import postDefaultBanner from "../../../../public/postDefaultBanner.png"
 
 import VoteBox from "./VoteBox";
-import { handleVote, handleComment, handleResponse, handleCommentVote } from "./actions";
+import { handleVote, handleComment, handleResponse, handleCommentVote, savePost } from "./actions";
 import CommentBox from "./CommentBox";
 import CommentsIcon from "@/components/svgs/CommientsIcon";
 import CommentCard from "./CommentCard";
 import { Comment, CommentVote } from "@prisma/client";
+import SavedPostBox from "./SavedPostBox";
 
 interface PostId {
     params: {
@@ -109,6 +110,25 @@ export default async function PostPage({params:{id}}:PostId) {
         return count;
     }
 
+    const saved = await prisma.savedPost.findMany({
+        where: {
+            postId: post.id
+        }
+    })
+
+    let isSaved = false;
+
+    const searchSave = await prisma.savedPost.findUnique({
+        where:{
+            postId: post.id,
+            userId: userId as string
+        }
+    })
+
+    if(searchSave){
+        isSaved = true;
+    }
+
     interface SortedByVotesArray extends Comment {
         votesDif: number
     }
@@ -163,6 +183,19 @@ export default async function PostPage({params:{id}}:PostId) {
                                     dislikes={dislikes}
                                     handleVote={handleVote}
                                 />
+                            )
+                        }
+                        {
+                            session?.user && (
+                                <div className="flex">
+                                    <SavedPostBox 
+                                        postId={post.id}
+                                        userId={userId as string}
+                                        isSaved={isSaved}
+                                        savePost={savePost}
+                                    />
+                                    <span className="text-amber-400 pt-1 w-1 pr-5">{saved.length}</span>
+                                </div>
                             )
                         }
                         <div className="flex">
