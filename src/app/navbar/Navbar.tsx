@@ -5,6 +5,7 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 
 import UserMenu from "./UserMenu";
 import SearchButton from "@/components/SearchButton";
+import Link from "next/link";
 
 async function searchPosts(formData: FormData) {
     "use server";
@@ -22,7 +23,7 @@ export default async function Navbar() {
     return (
         <div className="navbar bg-green-300">
             <div className="flex-1">
-                <a className="btn btn-ghost text-xl">Taringa</a>
+                <Link href="/" className="btn btn-ghost text-xl">Taringa?</Link>
             </div>
             <div className="gap-2">
                 <UserMenu session={session}/>

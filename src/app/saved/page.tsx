@@ -1,24 +1,22 @@
-import { Metadata } from "next";
+import { getServerSession } from "next-auth";
+
+import { authOptions } from "../api/auth/[...nextauth]/route";
 
 import { prisma } from "../lib/db/prisma";
 import { Post } from "@prisma/client";
 
 import PostCard from "@/components/PostCard";
 
-interface SavesPageProps {
-    searchParams: {query: string};
+export const metadata = {
+    title: "Saved Posts"
 }
 
-export function generateMetadata({searchParams: { query }}: SavesPageProps): Metadata {
-    return { 
-        title: `${query} - Taringa?`,
-    };
-}
-
-export default async function SavesPage({searchParams: { query }}: SavesPageProps) {   
+export default async function SavesPage() {   
+    const session = await getServerSession(authOptions);
+    
     const user = await prisma.user.findUnique({
         where: {
-            userName: query
+            userName: session?.user?.name as string
         }
     });
 

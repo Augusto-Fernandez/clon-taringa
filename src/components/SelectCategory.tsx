@@ -16,7 +16,7 @@ export default function SelectCategoty (){
                 required
                 value={categoria}
                 onChange={handleCategoriaChange} 
-                className="select select-bordered focus:outline-none w-auto h-10"
+                className="select select-bordered focus:outline-none w-auto"
             >
                 <option disabled value="" className="font-sans">Seleccionar</option>
                 <option value="Anime y Manga" className="font-sans">Anime y Manga</option>

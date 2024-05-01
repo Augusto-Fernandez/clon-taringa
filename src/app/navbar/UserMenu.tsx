@@ -32,7 +32,7 @@ export default function UserMenu({session}:UserMenuButtonProps){
                             </Link>
                         </li>
                         <li  className="p-2">
-                            <Link href={"/saved?query="+user.name}>
+                            <Link href={"/saved"}>
                                 <FavoritedIcon className="w-8 h-8" background="rgb(74, 222, 128)" line="rgb(255, 255, 255)"/>
                             </Link>
                         </li>
