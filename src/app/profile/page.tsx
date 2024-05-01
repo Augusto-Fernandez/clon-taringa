@@ -17,7 +17,7 @@ export function generateMetadata({searchParams: { query }}: ProfilePageProps): M
     };
 }
 
-export default async function SearchPage({searchParams: { query }}: ProfilePageProps) {
+export default async function ProfilePage({searchParams: { query }}: ProfilePageProps) {
     const user = await prisma.user.findUnique({
         where: {
             userName: query

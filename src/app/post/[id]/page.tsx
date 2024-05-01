@@ -122,8 +122,7 @@ export default async function PostPage({params:{id}}:PostId) {
         let commentAlreadyVoted: string | undefined
         
         const searchCommentVote = commentVotesArray.find(commentVote => commentVote.commentId === commentId && commentVote.userId === userId);
-        commentAlreadyVoted = searchCommentVote?.type
-        console.log(searchCommentVote)
+        commentAlreadyVoted = searchCommentVote?.type;
 
         return commentAlreadyVoted
     }
