@@ -22,15 +22,18 @@ interface CommentProps{
     handleResponse: (postId: string, userId: string, userName: string, image: string | null, message: string, parentId: string) => Promise<void>;
     commentLikes: number;
     commentDislikes: number;
+    alreadyVotedComment: string | undefined
     handleCommentVote: (commentId: string, userId: string, type: 'UP' | 'DOWN') => Promise<void>;
 }
 
-export default function CommentCard({comment, isLogged, image, postId, userId, userName, handleResponse, commentLikes, commentDislikes, handleCommentVote}:CommentProps) {   
+export default function CommentCard({comment, isLogged, image, postId, userId, userName, handleResponse, commentLikes, commentDislikes, alreadyVotedComment, handleCommentVote}:CommentProps) {    
     const [responseBox, setResponseBox] = useState(false);
+    const [votedComment, setVotedComment] = useState(alreadyVotedComment);
 
     useEffect(() => {
         setResponseBox(false);
-    }, []);
+        setVotedComment(alreadyVotedComment);
+    }, [alreadyVotedComment]);
 
     const [response, setResponse] = useState("");
     const handleCommentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -89,24 +92,68 @@ export default function CommentCard({comment, isLogged, image, postId, userId, u
                                 }}>
                                     <ResponseIcon className="h-6 w-10"/>
                                 </button>
-                                <button 
-                                    className="bg-emerald-500 rounded-md flex h-6 w-12 justify-center"
-                                    onClick={async () =>{
-                                        await handleCommentVote(comment.id, userId, "UP");
-                                    }}
-                                >
-                                    <Upvote className="h-6 w-6"/>
-                                    <span className="text-white">{commentLikes}</span>
-                                </button>
-                                <button 
-                                    className="bg-red-500 rounded-md flex h-6 w-12 justify-center"
-                                    onClick={async () =>{
-                                        await handleCommentVote(comment.id, userId, "DOWN");
-                                    }}
-                                >
-                                    <Downvote className="h-6 w-6"/>
-                                    <span className="text-white">{commentDislikes}</span>
-                                </button>
+                                {
+                                    votedComment !== undefined && votedComment === "UP" ? (
+                                        <button 
+                                            className="bg-emerald-500 rounded-md flex h-6 w-12 justify-center"
+                                            onClick={async () =>{
+                                                await handleCommentVote(comment.id, userId, "UP");
+                                            }}
+                                        >
+                                            <Upvote 
+                                                className="h-6 w-6"
+                                                background="none"
+                                                line="white"
+                                            />
+                                            <span className="text-white">{commentLikes}</span>
+                                        </button>
+                                    ) : (
+                                        <button 
+                                            className="border border-emerald-500 rounded-md flex h-6 w-12 justify-center"
+                                            onClick={async () =>{
+                                                await handleCommentVote(comment.id, userId, "UP");
+                                            }}
+                                        >
+                                            <Upvote 
+                                                className="h-6 w-6"
+                                                background="none"
+                                                line="rgb(16, 185, 129)"
+                                            />
+                                            <span className="text-emerald-500">{commentLikes}</span>
+                                        </button>
+                                    )
+                                }
+                                {
+                                    votedComment !== undefined && votedComment === "DOWN" ? (
+                                        <button 
+                                            className="bg-red-500 rounded-md flex h-6 w-12 justify-center"
+                                            onClick={async () =>{
+                                                await handleCommentVote(comment.id, userId, "DOWN");
+                                            }}
+                                        >
+                                            <Downvote 
+                                                className="h-6 w-6"
+                                                background="none"
+                                                line="white"
+                                            />
+                                            <span className="text-white">{commentDislikes}</span>
+                                        </button>
+                                    ) : (
+                                        <button 
+                                            className="border border-red-500 rounded-md flex h-6 w-12 justify-center"
+                                            onClick={async () =>{
+                                                await handleCommentVote(comment.id, userId, "DOWN");
+                                            }}
+                                        >
+                                            <Downvote 
+                                                className="h-6 w-6"
+                                                background="none"
+                                                line="rgb(239, 68, 68)"
+                                            />
+                                            <span className="text-red-500">{commentDislikes}</span>
+                                        </button>
+                                    )
+                                }
                             </div>
                         )
                     }

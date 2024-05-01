@@ -78,6 +78,14 @@ export default async function PostPage({params:{id}}:PostId) {
         }
     });
 
+    let alreadyVoted: string | undefined
+
+    const searchVote = votes.find(vote => vote.userId === userId)
+
+    if(searchVote){
+        alreadyVoted = searchVote.type
+    }
+
     const comments = await prisma.comment.findMany({
         where: {
             postId: post.id
@@ -110,6 +118,16 @@ export default async function PostPage({params:{id}}:PostId) {
         return count;
     }
 
+    const checkIfCommetWasVoted = (commentId: string, userId: string) =>{
+        let commentAlreadyVoted: string | undefined
+        
+        const searchCommentVote = commentVotesArray.find(commentVote => commentVote.commentId === commentId && commentVote.userId === userId);
+        commentAlreadyVoted = searchCommentVote?.type
+        console.log(searchCommentVote)
+
+        return commentAlreadyVoted
+    }
+
     const saved = await prisma.savedPost.findMany({
         where: {
             postId: post.id
@@ -118,14 +136,7 @@ export default async function PostPage({params:{id}}:PostId) {
 
     let isSaved = false;
 
-    const searchSave = await prisma.savedPost.findUnique({
-        where:{
-            postId: post.id,
-            userId: userId as string
-        }
-    })
-
-    if(searchSave){
+    if(saved.find(save => save.userId === userId)){
         isSaved = true;
     }
 
@@ -181,6 +192,7 @@ export default async function PostPage({params:{id}}:PostId) {
                                     userId={userId as string}
                                     likes={likes}
                                     dislikes={dislikes}
+                                    alreadyVoted={alreadyVoted}
                                     handleVote={handleVote}
                                 />
                             )
@@ -231,6 +243,7 @@ export default async function PostPage({params:{id}}:PostId) {
                                     handleResponse={handleResponse}
                                     commentLikes={getCommentVotes(comment.id, "UP")}
                                     commentDislikes={getCommentVotes(comment.id, "DOWN")}
+                                    alreadyVotedComment={checkIfCommetWasVoted(comment.id, userId as string)}
                                     handleCommentVote={handleCommentVote}
                                     key={comment.id}
                                 />
