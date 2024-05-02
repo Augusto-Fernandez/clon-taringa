@@ -21,19 +21,19 @@ export default function UserMenu({session}:UserMenuButtonProps){
             {
                 user ? (
                     <ul className="flex justify-center items-center h-12 bg-green-400 border border-slate-300 rounded-lg">
-                        <li className="border-r border-r-slate-300 p-2">
+                        <li className="border-r border-r-slate-300 p-2 hover:bg-green-500 rounded-md">
                             <Link href="/">
                                 <NotificationIcon/>
                             </Link>
                         </li>
-                        <li className="border-r border-r-slate-300 p-2">
+                        <li className="border-r border-r-slate-300 p-2 hover:bg-green-500 rounded-md">
                             <Link href="/">
                                 <MessageIcon />
                             </Link>
                         </li>
-                        <li  className="p-2">
+                        <li  className="p-2 hover:bg-green-500 rounded-md">
                             <Link href={"/saved"}>
-                                <FavoritedIcon className="w-8 h-8" background="rgb(74, 222, 128)" line="rgb(255, 255, 255)"/>
+                                <FavoritedIcon className="w-8 h-8" background="none" line="white"/>
                             </Link>
                         </li>
                         <li className="dropdown dropdown-end ">
