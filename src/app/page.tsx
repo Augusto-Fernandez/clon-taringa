@@ -29,7 +29,9 @@ export default async function Home({searchParams:{page = "1"}}: HomeProps) {
   const totalPages = Math.ceil(totalPostCount/pageSize)
   
   const posts = await prisma.post.findMany({
-    orderBy: {id: "desc"}
+    orderBy: {id: "desc"},
+    skip: (currentPage-1)*pageSize,
+    take: pageSize,
   })
   
   return (
