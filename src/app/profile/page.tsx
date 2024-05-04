@@ -79,7 +79,7 @@ export default async function ProfilePage({searchParams: { query, page = "1" }}:
                             <PaginationBar 
                                 currentPage={currentPage} 
                                 totalPages={totalPages}
-                                user={user?.userName as string}
+                                query={user?.userName as string}
                             />
                         )
                     }

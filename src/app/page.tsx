@@ -60,11 +60,14 @@ export default async function Home({searchParams:{page = "1"}}: HomeProps) {
             ))
           }
         </div>
-        <div className="h-10">
+        <div className="h-14 flex justify-center">
           {
-            totalPages>1 && (
-              <PaginationBar currentPage={currentPage} totalPages={totalPages}/>
-            )
+              totalPages>1 && (
+                  <PaginationBar 
+                      currentPage={currentPage} 
+                      totalPages={totalPages}
+                  />
+              )
           }
         </div>
       </div>

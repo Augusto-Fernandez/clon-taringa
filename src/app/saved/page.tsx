@@ -6,12 +6,17 @@ import { prisma } from "../lib/db/prisma";
 import { Post } from "@prisma/client";
 
 import PostCard from "@/components/PostCard";
+import PaginationBar from "@/components/PaginationBar";
+
+interface SavedPageProps{
+    searchParams: {page: string};
+}
 
 export const metadata = {
     title: "Saved Posts"
 }
 
-export default async function SavesPage() {   
+export default async function SavesPage({searchParams:{page = "1"}}: SavedPageProps) {   
     const session = await getServerSession(authOptions);
     
     const user = await prisma.user.findUnique({
@@ -20,10 +25,16 @@ export default async function SavesPage() {
         }
     });
 
+    const currentPage = parseInt(page);
+    const pageSize = 10;
+    
     const saves = await prisma.savedPost.findMany({
         where: {
             userId: user?.id
-        }
+        },
+        orderBy: { id: "desc" },
+        skip: (currentPage-1)*pageSize,
+        take: pageSize
     })
 
     const savedPostsArray: Post[] = []
@@ -39,6 +50,13 @@ export default async function SavesPage() {
             savedPostsArray.push(...savedPosts);
         }
     }));
+
+    const totalSavedCount = await prisma.savedPost.count({
+        where: {
+            userId: user?.id
+        }
+    });
+    const totalPages = Math.ceil(totalSavedCount/pageSize);
     
     return(
         <div className="min-h-screen bg-gray-100 flex justify-center">
@@ -46,7 +64,7 @@ export default async function SavesPage() {
                 <div className="pt-10 pl-10 flex">
                     <h1 className="text-slate-600 font-semibold text-4xl">Posts guardados</h1>
                 </div>
-                <div className="bg-red-800 min-h-lvh max-h-lvh rounded-md m-10 p-3">
+                <div className="bg-red-800 h-[41.25rem] rounded-md m-10 p-3">
                     {savedPostsArray.length === 0 ? (
                         <div className="w-full flex justify-center">
                             <p className="p-10 text-5xl font-semibold">No hay posts guardados</p>
@@ -56,6 +74,16 @@ export default async function SavesPage() {
                             <PostCard post={post} key={post.id}/>
                         ))
                     )}
+                </div>
+                <div className="h-14 flex justify-center">
+                    {
+                        totalPages>1 && (
+                            <PaginationBar 
+                                currentPage={currentPage} 
+                                totalPages={totalPages}
+                            />
+                        )
+                    }
                 </div>
             </div>
         </div>

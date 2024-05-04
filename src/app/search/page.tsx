@@ -18,8 +18,6 @@ export function generateMetadata({searchParams: { query }}: SearchPageProps): Me
 export default async function SearchPage({searchParams: { query, page = "1" }}: SearchPageProps) {
     const currentPage = parseInt(page);
     const pageSize = 10;
-    const totalPostCount = await prisma.post.count();
-    const totalPages = Math.ceil(totalPostCount/pageSize);
     
     const posts = await prisma.post.findMany({
         where: {
@@ -27,13 +25,18 @@ export default async function SearchPage({searchParams: { query, page = "1" }}: 
                 { title: { contains: query, mode: "insensitive" } }
             ],
         },
-        orderBy: { id: "desc" }
+        orderBy: { id: "desc" },
+        skip: (currentPage-1)*pageSize,
+        take: pageSize
     });
+
+    const totalPostCount = posts.length;
+    const totalPages = Math.ceil(totalPostCount/pageSize);
     
     return(
         <div className="min-h-screen bg-gray-100 flex justify-center">
-            <div className="flex min-h-screen w-2/3 bg-slate-300 mx-20 rounded-lg justify-center">
-                <div className="bg-red-800 min-h-lvh max-h-lvh rounded-md m-10 w-full p-3">
+            <div className=" min-h-screen w-2/3 bg-slate-300 mx-20 rounded-lg justify-center">
+                <div className="bg-red-800 h-[41.25rem] rounded-md m-10 p-3">
                     {posts.length === 0 ? (
                             <div className="w-full flex justify-center">
                                 <p className="p-10 text-6xl font-semibold">No se encontró post</p>
@@ -44,13 +47,16 @@ export default async function SearchPage({searchParams: { query, page = "1" }}: 
                         ))
                     )}
                 </div>
-            </div>
-            <div className="h-10">
-                {
-                    totalPages>1 && (
-                        <PaginationBar currentPage={currentPage} totalPages={totalPages}/>
-                    )
-                }
+                <div className="h-14 flex justify-center">
+                    {
+                        totalPages>1 && (
+                            <PaginationBar 
+                                currentPage={currentPage} 
+                                totalPages={totalPages}
+                            />
+                        )
+                    }
+                </div>
             </div>
         </div>
     );

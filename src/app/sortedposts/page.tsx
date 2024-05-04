@@ -41,7 +41,9 @@ export default async function SortedPosts({searchParams: { query, page = "1" }}:
         { category: { contains: query, mode: "insensitive" } }
       ],
     },
-    orderBy: { id: "desc" }
+    orderBy: { id: "desc" },
+    skip: (currentPage-1)*pageSize,
+    take: pageSize,
   });
   
   return (
@@ -72,10 +74,13 @@ export default async function SortedPosts({searchParams: { query, page = "1" }}:
             ))
           )}
         </div>
-        <div className="h-10">
+        <div className="h-14 flex justify-center">
           {
             totalPages>1 && (
-              <PaginationBar currentPage={currentPage} totalPages={totalPages}/>
+              <PaginationBar 
+                currentPage={currentPage} 
+                totalPages={totalPages}
+              />
             )
           }
         </div>

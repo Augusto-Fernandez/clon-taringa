@@ -3,47 +3,87 @@ import Link from "next/link";
 interface PaginationBarProps {
     currentPage: number;
     totalPages: number;
-    user?: string;
+    query?: string;
 }
 
-export default function PaginationBar({currentPage, totalPages, user}: PaginationBarProps) {
+export default function PaginationBar({currentPage, totalPages, query}: PaginationBarProps) {
     const maxPage = Math.min(totalPages, Math.max(currentPage + 4, 10));
     const minPage = Math.max(1, Math.min(currentPage - 5, maxPage - 9));
 
     const numberedPageItems: JSX.Element[] = [];
 
-    for (let page = minPage; page <= maxPage; page++) {
-        numberedPageItems.push(
-            <Link
-                href={"?query="+ user + "&" + "page=" + page}
-                key={page}
-                className={`join-item btn ${currentPage === page ? "btn-active pointer-events-none" : ""}`}
-            >
-                {page}
-            </Link>
-        );
+    if(query){
+        for (let page = minPage; page <= maxPage; page++) {
+            numberedPageItems.push(
+                <Link
+                    href={"?query="+ query + "&" + "page=" + page}
+                    key={page}
+                    className={`join-item btn ${currentPage === page ? "btn-active pointer-events-none" : ""}`}
+                >
+                    {page}
+                </Link>
+            );
+        }
+    }else{
+        for (let page = minPage; page <= maxPage; page++) {
+            numberedPageItems.push(
+                <Link
+                    href={"?page=" + page}
+                    key={page}
+                    className={`join-item btn ${currentPage === page ? "btn-active pointer-events-none" : ""}`}
+                >
+                    {page}
+                </Link>
+            );
+        }
     }
 
     return (
         <>
-            <div className="join hidden sm:block">
-                {numberedPageItems}
-            </div>
-            <div className="join block sm:hidden">
-                {currentPage > 1 && (
-                    <Link href={"?query="+ user  + "&" + "page=" + (currentPage - 1)} className="join-item btn">
-                        «
-                    </Link>
-                )}
-                <button className="join-item btn pointer-events-none">
-                    Page {currentPage}
-                </button>
-                {currentPage < totalPages && (
-                    <Link href={"?query="+ user + "&" + "page=" + (currentPage + 1)} className="join-item btn">
-                        »
-                    </Link>
-                )}
-            </div>
+            {
+                query ? (
+                    <>
+                        <div className="join hidden sm:block">
+                            {numberedPageItems}
+                        </div>
+                        <div className="join block sm:hidden">
+                            {currentPage > 1 && (
+                                <Link href={"?query=" + query + "&" + "page=" + (currentPage - 1)} className="join-item btn">
+                                    «
+                                </Link>
+                            )}
+                            <button className="join-item btn pointer-events-none">
+                                Page {currentPage}
+                            </button>
+                            {currentPage < totalPages && (
+                                <Link href={"?query=" + query + "&" + "page=" + (currentPage + 1)} className="join-item btn">
+                                    »
+                                </Link>
+                            )}
+                        </div>
+                    </>
+            ) : (
+                <>
+                    <div className="join hidden sm:block">
+                        {numberedPageItems}
+                    </div>
+                    <div className="join block sm:hidden">
+                        {currentPage > 1 && (
+                            <Link href={"?page=" + (currentPage - 1)} className="join-item btn">
+                                «
+                            </Link>
+                        )}
+                        <button className="join-item btn pointer-events-none">
+                            Page {currentPage}
+                        </button>
+                        {currentPage < totalPages && (
+                            <Link href={"?page=" + (currentPage + 1)} className="join-item btn">
+                                »
+                            </Link>
+                        )}
+                    </div>
+                </>
+            )}
         </>
     );
 }
