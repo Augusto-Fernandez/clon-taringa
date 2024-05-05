@@ -53,14 +53,14 @@ export default async function Home({searchParams:{page = "1"}}: HomeProps) {
               </button>
           </Link>
         </div>
-        <div className="bg-red-800 min-h-lvh max-h-lvh p-3 rounded-md">
+        <div className="bg-red-800 h-[41.25rem] p-3 rounded-md">
           {
             posts.map(post => (
               <PostCard post={post} key={post.id}/>
             ))
           }
         </div>
-        <div className="h-14 flex justify-center mt-2">
+        <div className="h-10 flex justify-center mt-2">
           {
               totalPages>1 ? (
                   <PaginationBar 
@@ -73,12 +73,18 @@ export default async function Home({searchParams:{page = "1"}}: HomeProps) {
           }
         </div>
       </div>
-      <div className="w-1/4 flex-grow rounded-md space-y-10">
-        <div className="bg-red-800 h-96 flex-grow rounded-md">
+      <div className="w-1/4 rounded-md space-y-5">
+        <div className="space-y-1">
+          <p className="p-3 text-xl font-bold">Noticias</p>
+          <div className="bg-red-800 h-40 rounded-md">
 
+          </div>
         </div>
-        <div className="bg-red-800 h-96 flex-grow rounded-md">
+        <div>
+          <p className="p-3 text-xl font-bold">Top Posts</p>
+          <div className="bg-red-800 h-[26.75rem] rounded-md">
 
+          </div>
         </div>
       </div>
       <div className="bg-red-800 w-1/4 flex-grow rounded-md">
