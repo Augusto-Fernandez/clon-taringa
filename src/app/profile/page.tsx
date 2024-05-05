@@ -75,12 +75,14 @@ export default async function ProfilePage({searchParams: { query, page = "1" }}:
                 </div>
                 <div className="h-14 flex justify-center">
                     {
-                        totalPages>1 && (
+                        totalPages>1 ? (
                             <PaginationBar 
                                 currentPage={currentPage} 
                                 totalPages={totalPages}
-                                query={user?.userName as string}
+                                query={query}
                             />
+                        ) : (
+                            <div className="join-item btn">1</div>
                         )
                     }
                 </div>

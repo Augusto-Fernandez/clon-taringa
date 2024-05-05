@@ -36,7 +36,7 @@ export default async function SearchPage({searchParams: { query, page = "1" }}: 
     return(
         <div className="min-h-screen bg-gray-100 flex justify-center">
             <div className=" min-h-screen w-2/3 bg-slate-300 mx-20 rounded-lg justify-center">
-                <div className="bg-red-800 h-[41.25rem] rounded-md m-10 p-3">
+                <div className="bg-red-800 h-[41.25rem] rounded-md mt-10 mx-10 mb-2 p-3">
                     {posts.length === 0 ? (
                             <div className="w-full flex justify-center">
                                 <p className="p-10 text-6xl font-semibold">No se encontró post</p>
@@ -49,11 +49,13 @@ export default async function SearchPage({searchParams: { query, page = "1" }}: 
                 </div>
                 <div className="h-14 flex justify-center">
                     {
-                        totalPages>1 && (
+                        totalPages>1 ? (
                             <PaginationBar 
                                 currentPage={currentPage} 
                                 totalPages={totalPages}
                             />
+                        ) : (
+                            <div className="join-item btn">1</div>
                         )
                     }
                 </div>

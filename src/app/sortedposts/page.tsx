@@ -74,13 +74,15 @@ export default async function SortedPosts({searchParams: { query, page = "1" }}:
             ))
           )}
         </div>
-        <div className="h-14 flex justify-center">
+        <div className="h-14 flex justify-center mt-2">
           {
-            totalPages>1 && (
+            totalPages>1 ? (
               <PaginationBar 
                 currentPage={currentPage} 
                 totalPages={totalPages}
               />
+            ) : (
+              <div className="join-item btn">1</div>
             )
           }
         </div>

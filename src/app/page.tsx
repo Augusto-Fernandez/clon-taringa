@@ -60,13 +60,15 @@ export default async function Home({searchParams:{page = "1"}}: HomeProps) {
             ))
           }
         </div>
-        <div className="h-14 flex justify-center">
+        <div className="h-14 flex justify-center mt-2">
           {
-              totalPages>1 && (
+              totalPages>1 ? (
                   <PaginationBar 
                       currentPage={currentPage} 
                       totalPages={totalPages}
                   />
+              ) : (
+                <div className="join-item btn">1</div>
               )
           }
         </div>
