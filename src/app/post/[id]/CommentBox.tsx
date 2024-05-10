@@ -11,10 +11,11 @@ interface CommentBoxProps{
     postId: string;
     userId: string;
     userName: string;
-    handleComment: (postId: string, userId: string, userName: string, image: string | null, message: string) => Promise<void>;
+    postAuthorId: string
+    handleComment: (postId: string, userId: string, userName: string, image: string | null, message: string, postAuthorId: string) => Promise<void>;
 }
 
-export default function CommentBox ({image, postId, userId, userName, handleComment}:CommentBoxProps){
+export default function CommentBox ({image, postId, userId, userName, handleComment, postAuthorId}:CommentBoxProps){
     const [comment, setComment] = useState("");
     const handleCommentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setComment(event.target.value);
@@ -22,7 +23,7 @@ export default function CommentBox ({image, postId, userId, userName, handleComm
 
     const createComment = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        await handleComment(postId, userId, userName, image, comment);
+        await handleComment(postId, userId, userName, image, comment, postAuthorId);
         setComment("");
     };
 

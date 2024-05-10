@@ -30,7 +30,13 @@ export default async function SearchPage({searchParams: { query, page = "1" }}: 
         take: pageSize
     });
 
-    const totalPostCount = posts.length;
+    const totalPostCount = await prisma.post.count({
+        where: {
+            OR: [
+                { title: { contains: query, mode: "insensitive" } }
+            ],
+        }
+    })
     const totalPages = Math.ceil(totalPostCount/pageSize);
     
     return(

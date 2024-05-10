@@ -224,6 +224,7 @@ export default async function PostPage({params:{id}}:PostId) {
                         userId={userId as string}
                         userName={userName as string}
                         handleComment={handleComment}
+                        postAuthorId={author?.id as string}
                     />
                 )
             }

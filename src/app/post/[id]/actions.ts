@@ -46,7 +46,7 @@ export async function handleVote(postId: string, userId: string, type:'UP' | 'DO
     revalidatePath("/post/[id]","page");
 }
 
-export async function handleComment(postId: string, userId: string, userName: string, image: string | null, message: string) {
+export async function handleComment(postId: string, userId: string, userName: string, image: string | null, message: string, postAuthorId: string) {
     await prisma.comment.create({
         data: {
             userId: userId,
@@ -57,11 +57,23 @@ export async function handleComment(postId: string, userId: string, userName: st
         }
     })
 
+    if(userId !== postAuthorId){
+        await prisma.notification.create({
+            data: {
+                userId: postAuthorId,
+                subject: "POST",
+                subjectId: postId,
+                fromUserId: userId,
+                readed: false
+            }
+        })
+    }
+
     revalidatePath("/post/[id]","page");
 };
 
-export async function handleResponse(postId: string, userId: string, userName: string, image: string | null, message: string, parentId: string) {
-    await prisma.comment.create({
+export async function handleResponse(postId: string, userId: string, userName: string, image: string | null, message: string, parentId: string) {   
+    const comment = await prisma.comment.create({
         data: {
             userId: userId,
             postId: postId,
@@ -71,6 +83,24 @@ export async function handleResponse(postId: string, userId: string, userName: s
             parentId: parentId
         }
     })
+
+    const findParentComment = await prisma.comment.findUnique({
+        where: {
+            id: comment.parentId as string
+        }
+    })
+
+    if(userId !== findParentComment?.userId){
+        await prisma.notification.create({
+            data: {
+                userId: findParentComment?.userId as string,
+                subject: "COMMENT",
+                subjectId: postId,
+                fromUserId: userId,
+                readed: false
+            }
+        })
+    }
 
     revalidatePath("/post/[id]","page");
 };
