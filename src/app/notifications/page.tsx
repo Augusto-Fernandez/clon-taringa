@@ -6,7 +6,7 @@ import { prisma } from "../lib/db/prisma";
 
 import PaginationBar from "@/components/PaginationBar";
 import NotificationCard from "./NotificationCard";
-import { handleNotification } from "./actions";
+import { handleNotification, handleDeleteNotification } from "./actions";
 
 interface NotificationPageProps{
     searchParams: {page: string};
@@ -112,6 +112,7 @@ export default async function NotificationPage ({searchParams:{page = "1"}}: Not
                                 readed={notification.readed}
                                 notificationId={notification.id}
                                 handleNotification={handleNotification}
+                                handleDeleteNotification={handleDeleteNotification}
                             />
                         ))
                     }

@@ -23,7 +23,9 @@ export default function UserMenu({session}:UserMenuButtonProps){
                     <ul className="flex justify-center items-center h-12 bg-green-400 border border-slate-300 rounded-lg">
                         <li className="border-r border-r-slate-300 p-2 hover:bg-green-500 rounded-md">
                             <Link href={"/notifications"}>
-                                <NotificationIcon/>
+                                <NotificationIcon
+                                    line="rgb(255, 255, 255)"
+                                />
                             </Link>
                         </li>
                         <li className="border-r border-r-slate-300 p-2 hover:bg-green-500 rounded-md">

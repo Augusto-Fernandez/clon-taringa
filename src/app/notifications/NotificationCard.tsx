@@ -3,6 +3,10 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import NotificationIcon from "@/components/svgs/NotificationIcon";
+import CheckedIcon from "@/components/svgs/CheckedIcon";
+import DeleteIcon from "@/components/svgs/DeleteIcon";
+
 interface NotificationProps {
     fromUser: string;
     postId: string;
@@ -11,9 +15,10 @@ interface NotificationProps {
     readed: boolean;
     notificationId: string;
     handleNotification: (notificationId: string) => Promise<void>;
+    handleDeleteNotification: (notificationId: string) => Promise<void>;
 }
 
-export default function NotificationCard({postId, fromUser, postName, subject, readed, notificationId, handleNotification}:NotificationProps) {
+export default function NotificationCard({postId, fromUser, postName, subject, readed, notificationId, handleNotification, handleDeleteNotification}:NotificationProps) {
     const [isReaded, setIsReaded] = useState(readed);
 
     useEffect(() => {
@@ -24,13 +29,17 @@ export default function NotificationCard({postId, fromUser, postName, subject, r
         await handleNotification(notificationId);
         setIsReaded(!isReaded)
     };
+
+    const handleDeleteNotificationClick = async () => {
+        await handleDeleteNotification(notificationId);
+    };
     
     return(
         <>
             {
                 isReaded ? (
                     <div className="h-14 rounded-lg flex justify-between mb-2 p-3 text-slate-600 font-semibold">
-                        <Link href={`/post/${postId}`} className="text-slate-600 font-semibold border border-black">
+                        <Link href={`/post/${postId}`} className="text-slate-600 font-semibold">
                             {
                                 subject === "POST" && (
                                     <p><span className="text-blue-600">{fromUser}</span> comentó en tu post <span className="text-blue-600">{postName}</span></p>
@@ -42,10 +51,16 @@ export default function NotificationCard({postId, fromUser, postName, subject, r
                                 )
                             }
                         </Link>
+                        <div className="flex space-x-4">
+                            <CheckedIcon/>
+                            <button onClick={handleDeleteNotificationClick}>
+                                <DeleteIcon/>
+                            </button>
+                        </div>
                     </div>
                 ) : (
                     <div className="bg-slate-300 h-14 rounded-lg flex justify-between mb-2 p-3 text-slate-600 font-semibold">
-                        <Link onClick={handleNotificationClick} href={`/post/${postId}`} className="text-slate-600 font-semibold border border-black">
+                        <Link onClick={handleNotificationClick} href={`/post/${postId}`} className="text-slate-600 font-semibold">
                             {
                                 subject === "POST" && (
                                     <p><span className="text-blue-600">{fromUser}</span> comentó en tu post <span className="text-blue-600">{postName}</span></p>
@@ -57,6 +72,16 @@ export default function NotificationCard({postId, fromUser, postName, subject, r
                                 )
                             }
                         </Link>
+                        <div className="flex space-x-4">
+                            <button onClick={handleNotificationClick}>
+                                <NotificationIcon
+                                    line="black"
+                                />
+                            </button>
+                            <button onClick={handleDeleteNotificationClick}>
+                                <DeleteIcon/>
+                            </button>
+                        </div>
                     </div>
                 )
             }

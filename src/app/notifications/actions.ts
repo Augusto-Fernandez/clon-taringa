@@ -16,3 +16,13 @@ export async function handleNotification(notificationId: string) {
 
     revalidatePath("/notifications","page");
 };
+
+export async function handleDeleteNotification(notificationId: string){
+    await prisma.notification.delete({
+        where: {
+            id: notificationId
+        }
+    })
+
+    revalidatePath("/notifications","page");
+}
