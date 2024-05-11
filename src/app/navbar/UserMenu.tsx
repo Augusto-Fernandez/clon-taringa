@@ -11,9 +11,10 @@ import FavoritedIcon from "@/components/svgs/FavoritedIcon";
 
 interface UserMenuButtonProps {
     session: Session | null;
+    notificationCount: number;
 }
 
-export default function UserMenu({session}:UserMenuButtonProps){
+export default function UserMenu({session, notificationCount}:UserMenuButtonProps){
     const user = session?.user;
 
     return(
@@ -21,11 +22,23 @@ export default function UserMenu({session}:UserMenuButtonProps){
             {
                 user ? (
                     <ul className="flex justify-center items-center h-12 bg-green-400 border border-slate-300 rounded-lg">
-                        <li className="border-r border-r-slate-300 p-2 hover:bg-green-500 rounded-md">
+                        <li className="border-r border-r-slate-300 p-2 hover:bg-green-500 rounded-md h-12">
                             <Link href={"/notifications"}>
-                                <NotificationIcon
-                                    line="rgb(255, 255, 255)"
-                                />
+                                <div className="indicator">
+                                    <NotificationIcon
+                                        line="rgb(255, 255, 255)"
+                                    />
+                                    {
+                                        notificationCount > 0 && notificationCount < 10 && (
+                                            <span className="indicator-item badge bg-red-500 text-white">{notificationCount}</span>
+                                        )
+                                    }
+                                    {
+                                        notificationCount > 9 && (
+                                            <span className="indicator-item badge bg-red-500 text-white">+9</span>
+                                        )
+                                    }
+                                </div>
                             </Link>
                         </li>
                         <li className="border-r border-r-slate-300 p-2 hover:bg-green-500 rounded-md">
