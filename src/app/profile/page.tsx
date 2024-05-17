@@ -1,12 +1,17 @@
 import { Metadata } from "next";
 import Image from "next/image";
+import { getServerSession } from "next-auth";
 
 import { prisma } from "../lib/db/prisma";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+
 import PostCard from "@/components/PostCard";
 import ProfileCommentCard from "./ProfileCommentCard";
 import profilePicPlaceholder from "../../../public/profilePicPlaceholder.png" 
 import { Comment, Post } from "@prisma/client";
 import PaginationBar from "@/components/PaginationBar";
+import { handleCreateChat } from "./actions";
+import CreateChatButton from "./CreateChatButton";
 
 interface ProfilePageProps {
     searchParams: {query: string, page: string};
@@ -19,6 +24,14 @@ export function generateMetadata({searchParams: { query }}: ProfilePageProps): M
 }
 
 export default async function ProfilePage({searchParams: { query, page = "1" }}: ProfilePageProps) {
+    const session = await getServerSession(authOptions);
+
+    const userLogged = await prisma.user.findUnique({
+        where: {
+            userName: session?.user?.name as string
+        }
+    });
+    
     const user = await prisma.user.findUnique({
         where: {
             userName: query
@@ -54,9 +67,20 @@ export default async function ProfilePage({searchParams: { query, page = "1" }}:
     return(
         <div className="min-h-screen bg-gray-100 flex justify-center">
             <div className=" min-h-screen w-2/3 bg-slate-300 mx-20 rounded-lg justify-center">
-                <div className="pt-10 pl-10 flex">
-                    <Image src={user?.image || profilePicPlaceholder} alt="Profile picture" width={40} height={40} className="w-28 rounded-full"/>
-                    <h1 className="text-7xl p-4">{user?.userName}</h1>
+                <div className="pt-10 pl-10 flex justify-between">
+                    <div className="flex">
+                        <Image src={user?.image || profilePicPlaceholder} alt="Profile picture" width={40} height={40} className="w-28 rounded-full"/>
+                        <h1 className="text-7xl p-4">{user?.userName}</h1>
+                    </div>
+                    {
+                        userLogged && userLogged.id !== user?.id && (
+                            <CreateChatButton
+                                userId={userLogged.id}
+                                toUserId={user?.id as string}
+                                handleCreateChat={handleCreateChat}
+                            />
+                        )
+                    }
                 </div>
                 <div className="bg-red-800 h-[41.25rem] rounded-md mt-10 mx-10 mb-2 p-3">
                     {posts.length === 0 && comments.length === 0 ? (
