@@ -42,7 +42,7 @@ export default function UserMenu({session, notificationCount}:UserMenuButtonProp
                             </Link>
                         </li>
                         <li className="border-r border-r-slate-300 p-2 hover:bg-green-500 rounded-md">
-                            <Link href="/">
+                            <Link href={"/messages"}>
                                 <MessageIcon />
                             </Link>
                         </li>

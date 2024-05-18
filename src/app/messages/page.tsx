@@ -4,6 +4,8 @@ import { prisma } from "../lib/db/prisma";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 
 import PaginationBar from "@/components/PaginationBar";
+import { User } from "@prisma/client";
+import ChatCard from "./ChatCard";
 
 interface MessagesPageProps{
     searchParams: {page: string};
@@ -19,7 +21,7 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
         where: {
             userName: session?.user?.name as string
         }
-    })
+    });
 
     const conversations = await prisma.conversation.findMany({
         where: {
@@ -30,7 +32,37 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
         orderBy: { id: "desc" },
         skip: (currentPage-1)*pageSize,
         take: pageSize
-    })
+    });
+
+    const otherUserArray:User[] = [];
+
+    await Promise.all(conversations.map(async (conversation) => {
+        const otherUserId = conversation?.userIds.find(id => id !== userLogged?.id);
+        
+        const otherUsers = await prisma.user.findMany({
+            where: {
+                id: otherUserId
+            }
+        });
+    
+        if (otherUsers.length > 0) {
+            otherUserArray.push(...otherUsers);
+        }
+    }));
+
+    const getOtherUserName = (userIds: string[]) => {
+        let otherUserName: string = "";
+        
+        const otherUserId = userIds.find(id => id !== userLogged?.id);
+        
+        otherUserArray.forEach(user => {
+            if(user.id === otherUserId){
+                otherUserName = user.userName;
+            }
+        });
+
+        return otherUserName;
+    }
 
     const totalConversationsCount = await prisma.conversation.count({
         where: {
@@ -38,7 +70,7 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
                 has: userLogged?.id as string
             }
         }
-    })
+    });
 
     const totalPages = Math.ceil(totalConversationsCount/pageSize);
     
@@ -46,10 +78,18 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
         <div className="min-h-screen bg-gray-100 flex justify-center">
             <div className=" min-h-screen w-2/3 bg-slate-300 mx-20 rounded-lg justify-center">
                 <div className="pt-10 pl-10 flex">
-                    <h1 className="text-slate-600 font-semibold text-4xl">Notificaciones</h1>
+                    <h1 className="text-slate-600 font-semibold text-4xl">Mensajes</h1>
                 </div>
                 <div className="bg-red-800 h-[41.25rem] rounded-md mt-10 mx-10 mb-2 p-3">
-
+                    {
+                        conversations.map(chat => (
+                            <ChatCard 
+                                key={ chat.id}
+                                otherUserName={getOtherUserName(chat.userIds)}
+                                chatId={chat.id}
+                            />
+                        ))
+                    }
                 </div>
                 <div className="h-14 flex justify-center">
                     {
