@@ -4,8 +4,9 @@ import { prisma } from "../lib/db/prisma";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 
 import PaginationBar from "@/components/PaginationBar";
-import { User } from "@prisma/client";
+import { Message, User } from "@prisma/client";
 import ChatCard from "./ChatCard";
+import formatDate from "../lib/formatDate";
 
 interface MessagesPageProps{
     searchParams: {page: string};
@@ -35,6 +36,7 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
     });
 
     const otherUserArray:User[] = [];
+    const lastMessageArray:Message[] = [];
 
     await Promise.all(conversations.map(async (conversation) => {
         const otherUserId = conversation?.userIds.find(id => id !== userLogged?.id);
@@ -47,6 +49,18 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
     
         if (otherUsers.length > 0) {
             otherUserArray.push(...otherUsers);
+        }
+
+        const lastMessage = await prisma.message.findFirst({
+            where: {
+                conversationId: conversation.id
+            },
+            orderBy:{id:"desc"},
+            take: 1
+        });
+
+        if(lastMessage){
+            lastMessageArray.push(lastMessage);
         }
     }));
 
@@ -63,6 +77,28 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
 
         return otherUserName;
     }
+
+    const getMessageProps = (chatId:string, prop: "userName" | "body" | "date") => {
+        const message = lastMessageArray.find(message => message.conversationId === chatId);
+
+        if( message && prop === "userName" && message.conversationId === chatId && message.senderId === userLogged?.id){
+            return userLogged.userName;
+        }
+
+        if( message && prop === "userName" && message.conversationId === chatId && message.senderId !== userLogged?.id){
+            const getUserName = otherUserArray.find(user => user.id === message.senderId)
+            return getUserName?.userName as string;
+        }
+
+        if( message && prop === "body" && message.conversationId === chatId ){
+            return message.body as string;
+        }
+        if( message && prop === "date" && message.conversationId === chatId ){
+            return formatDate(message.createdAt);
+        }
+
+        return "undefined";
+    };
 
     const totalConversationsCount = await prisma.conversation.count({
         where: {
@@ -87,6 +123,9 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
                                 key={ chat.id}
                                 otherUserName={getOtherUserName(chat.userIds)}
                                 chatId={chat.id}
+                                messageUserName={getMessageProps(chat.id, "userName")}
+                                body={getMessageProps(chat.id, "body")}
+                                date={getMessageProps(chat.id, "date")}
                             />
                         ))
                     }
