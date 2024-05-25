@@ -83,6 +83,16 @@ export default async function ChatPage ({params:{id}}:ChatPageProps){
 
         return senderIsLoggeduser;
     }
+
+    const getOtherUserId = () => {
+        const getOtherUser = chat?.userIds.find(id => id !== userLogged?.id);
+
+        if(getOtherUser){
+            return getOtherUser;
+        }
+
+        return "undefined";
+    }
     
     return (
         <div className="min-h-screen bg-gray-100 flex justify-center">
@@ -109,6 +119,7 @@ export default async function ChatPage ({params:{id}}:ChatPageProps){
                         <MessageBox
                             chatId={chat?.id as string}
                             userId={userLogged?.id as string}
+                            otherUserId={getOtherUserId()}
                             handleMessage={handleMessage}
                         />
                     )

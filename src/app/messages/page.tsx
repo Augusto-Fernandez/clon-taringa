@@ -4,9 +4,10 @@ import { prisma } from "../lib/db/prisma";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 
 import PaginationBar from "@/components/PaginationBar";
-import { Message, User } from "@prisma/client";
+import { Message, MessageNotification, User } from "@prisma/client";
 import ChatCard from "./ChatCard";
 import formatDate from "../lib/formatDate";
+import { handleChatRedirect } from "./actions";
 
 interface MessagesPageProps{
     searchParams: {page: string};
@@ -37,6 +38,7 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
 
     const otherUserArray:User[] = [];
     const lastMessageArray:Message[] = [];
+    const messageNotificationArray: MessageNotification[] = [];
 
     await Promise.all(conversations.map(async (conversation) => {
         const otherUserId = conversation?.userIds.find(id => id !== userLogged?.id);
@@ -61,6 +63,17 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
 
         if(lastMessage){
             lastMessageArray.push(lastMessage);
+        }
+
+        const messageNotification = await prisma.messageNotification.findUnique({
+            where:{
+                conversationId: conversation.id,
+                userId: userLogged?.id
+            }
+        });
+
+        if(messageNotification){
+            messageNotificationArray.push(messageNotification);
         }
     }));
 
@@ -100,6 +113,16 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
         return "undefined";
     };
 
+    const getMessageNotification = (chatId: string) => {
+        const messageNotification = messageNotificationArray.find(notification => notification.conversationId === chatId && notification.userId === userLogged?.id)
+    
+        if(messageNotification){
+            return messageNotification.count;
+        }
+
+        return 0;
+    }
+
     const totalConversationsCount = await prisma.conversation.count({
         where: {
             userIds: {
@@ -126,6 +149,9 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
                                 messageUserName={getMessageProps(chat.id, "userName")}
                                 body={getMessageProps(chat.id, "body")}
                                 date={getMessageProps(chat.id, "date")}
+                                notifCount={getMessageNotification(chat.id)}
+                                userId={userLogged?.id as string}
+                                handleChatRedirect={handleChatRedirect}
                             />
                         ))
                     }

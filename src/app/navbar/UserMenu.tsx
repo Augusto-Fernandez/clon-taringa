@@ -12,9 +12,10 @@ import FavoritedIcon from "@/components/svgs/FavoritedIcon";
 interface UserMenuButtonProps {
     session: Session | null;
     notificationCount: number;
+    messageNotificationCount: number;
 }
 
-export default function UserMenu({session, notificationCount}:UserMenuButtonProps){
+export default function UserMenu({session, notificationCount, messageNotificationCount}:UserMenuButtonProps){
     const user = session?.user;
 
     return(
@@ -41,9 +42,21 @@ export default function UserMenu({session, notificationCount}:UserMenuButtonProp
                                 </div>
                             </Link>
                         </li>
-                        <li className="border-r border-r-slate-300 p-2 hover:bg-green-500 rounded-md">
+                        <li className="border-r border-r-slate-300 px-2 pt-2 hover:bg-green-500 rounded-md">
                             <Link href={"/messages"}>
-                                <MessageIcon />
+                                <div className="indicator">
+                                    <MessageIcon/>
+                                    {
+                                        messageNotificationCount > 0 && messageNotificationCount < 10 && (
+                                            <span className="indicator-item badge bg-red-500 text-white">{messageNotificationCount}</span>
+                                        )
+                                    }
+                                    {
+                                        messageNotificationCount > 9 && (
+                                            <span className="indicator-item badge bg-red-500 text-white">+9</span>
+                                        )
+                                    }
+                                </div>
                             </Link>
                         </li>
                         <li  className="p-2 hover:bg-green-500 rounded-md">

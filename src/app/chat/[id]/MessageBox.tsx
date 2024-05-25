@@ -7,10 +7,11 @@ import UserButton from "@/components/UserButton"
 interface MessageBoxProps {
     chatId: string;
     userId: string;
-    handleMessage: ( body: string, chatId: string, userId: string) => Promise<void>;
+    otherUserId: string;
+    handleMessage: ( body: string, chatId: string, userId: string, otherUserId: string) => Promise<void>;
 };
 
-export default function MessageBox ({chatId, userId, handleMessage}: MessageBoxProps){
+export default function MessageBox ({chatId, userId, otherUserId, handleMessage}: MessageBoxProps){
     const [response, setResponse] = useState("");
     const handleResponseChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setResponse(event.target.value);
@@ -18,7 +19,7 @@ export default function MessageBox ({chatId, userId, handleMessage}: MessageBoxP
 
     const createComment = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        await handleMessage(response, chatId, userId);
+        await handleMessage(response, chatId, userId, otherUserId);
         setResponse("");
     };
     
