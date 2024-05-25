@@ -26,11 +26,17 @@ export function generateMetadata({searchParams: { query }}: ProfilePageProps): M
 export default async function ProfilePage({searchParams: { query, page = "1" }}: ProfilePageProps) {
     const session = await getServerSession(authOptions);
 
-    const userLogged = await prisma.user.findUnique({
-        where: {
-            userName: session?.user?.name as string
-        }
-    });
+    let userLoggedId = null;
+
+    if(session?.user){
+        const userLogged = await prisma.user.findUnique({
+            where: {
+                userName: session?.user?.name as string
+            }
+        });
+
+        userLoggedId = userLogged?.id as string;
+    }
     
     const user = await prisma.user.findUnique({
         where: {
@@ -73,9 +79,9 @@ export default async function ProfilePage({searchParams: { query, page = "1" }}:
                         <h1 className="text-7xl p-4">{user?.userName}</h1>
                     </div>
                     {
-                        userLogged && userLogged.id !== user?.id && (
+                        session?.user && userLoggedId !== user?.id && (
                             <CreateChatButton
-                                userId={userLogged.id}
+                                userId={userLoggedId as string}
                                 toUserId={user?.id as string}
                                 handleCreateChat={handleCreateChat}
                             />
