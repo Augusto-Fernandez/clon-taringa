@@ -30,6 +30,12 @@ export default async function ChatPage ({params:{id}}:ChatPageProps){
         }
     });
 
+    if(!chat?.userIds.includes(userLogged?.id as string)){
+        return(
+            <div className="h-screen">Page not found.</div>
+        );
+    }
+
     const otherUserId = chat?.userIds.find(id => id !== userLogged?.id);
 
     const otherUser = await prisma.user.findUnique({
