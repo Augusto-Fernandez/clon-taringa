@@ -31,7 +31,7 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
                 has: userLogged?.id as string
             }
         },
-        orderBy: { id: "desc" },
+        orderBy: { updatedAt:"desc" },
         skip: (currentPage-1)*pageSize,
         take: pageSize
     });

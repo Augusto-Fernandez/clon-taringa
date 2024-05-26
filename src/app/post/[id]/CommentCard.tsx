@@ -56,8 +56,7 @@ export default function CommentCard({comment, isLogged, image, postId, userId, u
     
     return(
         <div id={`comment-${comment.id}`} className="border-b h-auto pb-2">
-            <p className="block text-xs pl-16"
-            >
+            <p className="block text-xs pl-16">
                 Comentario <span className="text-blue-400">#{comment.id}</span>
             </p>
             {

@@ -13,6 +13,15 @@ export async function handleMessage(body: string, conversationId: string, sender
         }
     })
 
+    await prisma.conversation.update({
+        where: {
+            id: conversationId
+        },
+        data: {
+            updatedAt: new Date
+        }
+    })
+
     const checkMessageNotification = await prisma.messageNotification.findUnique({
         where:{
             userId: receiverId,
