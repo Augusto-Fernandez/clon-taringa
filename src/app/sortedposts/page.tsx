@@ -66,13 +66,13 @@ export default async function SortedPosts({searchParams: { query, page = "1" }}:
           </Link>
         </div>
         <div className="bg-red-800 h-[41.25rem] p-3 rounded-md">
-          {posts.length === 0 ? (
-            <p className="p-10 text-3xl font-semibold">Aún no hay posts en esta categoria</p>
-            ) : (
+          {posts.length > 0 ? (
             posts.map(post => (
               <PostCard post={post} key={post.id}/>
             ))
-          )}
+            ) : (
+              <p className="p-10 text-3xl font-semibold">Aún no hay posts en esta categoria</p>
+            )}
         </div>
         <div className="h-10 flex justify-center mt-2">
           {

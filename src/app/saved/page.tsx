@@ -65,14 +65,14 @@ export default async function SavesPage({searchParams:{page = "1"}}: SavedPagePr
                     <h1 className="text-slate-600 font-semibold text-4xl">Posts guardados</h1>
                 </div>
                 <div className="bg-red-800 h-[41.25rem] rounded-md mx-10 mt-10 mb-2 p-3">
-                    {savedPostsArray.length === 0 ? (
-                        <div className="w-full flex justify-center">
-                            <p className="p-10 text-5xl font-semibold">No hay posts guardados</p>
-                        </div>
-                    ) : (
+                    {savedPostsArray.length > 0 ? (
                         savedPostsArray.map(post => (
                             <PostCard post={post} key={post.id}/>
                         ))
+                    ) : (
+                        <div className="w-full flex justify-center">
+                            <p className="p-10 text-5xl font-semibold">No hay posts guardados</p>
+                        </div>
                     )}
                 </div>
                 <div className="h-14 flex justify-center">

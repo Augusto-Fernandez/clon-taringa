@@ -1,31 +1,19 @@
 import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 
 import { prisma } from "../lib/db/prisma";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 
 import PaginationBar from "@/components/PaginationBar";
-import { Message, MessageNotification, User } from "@prisma/client";
+import { Conversation, Message, MessageNotification, User } from "@prisma/client";
 import ChatCard from "@/components/ChatCard";
 import formatDate from "../lib/formatDate";
 import { handleChatRedirect } from "./actions";
-import SearchButton from "@/components/SearchButton";
 
 interface MessagesPageProps{
-    searchParams: {page: string};
+    searchParams: { query: string, page: string };
 }
 
-async function searchChat(formData: FormData) {
-    "use server";
-
-    const searchQuery = formData.get("searchQuery")?.toString();
-
-    if (searchQuery) {
-        redirect("/searchchat?query=" + searchQuery);
-    }
-}
-
-export default async function MessagesPage ({searchParams:{page = "1"}}:MessagesPageProps){
+export default async function MessagesPage ({searchParams:{query, page = "1"}}:MessagesPageProps){
     const session = await getServerSession(authOptions);
 
     const currentPage = parseInt(page);
@@ -37,22 +25,34 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
         }
     });
 
-    const conversations = await prisma.conversation.findMany({
+    const getQueryUser = await prisma.user.findUnique({
         where: {
-            userIds: {
-                has: userLogged?.id as string
-            }
-        },
-        orderBy: { updatedAt:"desc" },
-        skip: (currentPage-1)*pageSize,
-        take: pageSize
+            userName: query
+        }
     });
+
+    const conversationsArray: Conversation[] = [];
+
+    if(getQueryUser){
+        const conversations = await prisma.conversation.findMany({
+            where: {
+                userIds: {
+                    has: userLogged?.id as string && getQueryUser?.id
+                }
+            },
+            orderBy: { updatedAt:"desc" },
+            skip: (currentPage-1)*pageSize,
+            take: pageSize
+        });
+
+        conversationsArray.push(...conversations);
+    }
 
     const otherUserArray:User[] = [];
     const lastMessageArray:Message[] = [];
     const messageNotificationArray: MessageNotification[] = [];
 
-    await Promise.all(conversations.map(async (conversation) => {
+    await Promise.all(conversationsArray.map(async (conversation) => {
         const otherUserId = conversation?.userIds.find(id => id !== userLogged?.id);
         
         const otherUsers = await prisma.user.findMany({
@@ -148,17 +148,13 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
     return(
         <div className="min-h-screen bg-gray-100 flex justify-center">
             <div className=" min-h-screen w-2/3 bg-slate-300 mx-20 rounded-lg justify-center">
-                <div className="pt-10 px-10 flex justify-between">
+                <div className="pt-10 pl-10 flex">
                     <h1 className="text-slate-600 font-semibold text-4xl">Mensajes</h1>
-                    <form action={searchChat} className="flex justify-center items-center space-x-1">
-                        <input type="text" placeholder="Buscar chat" name="searchQuery" className="input input-bordered w-24 md:w-auto h-11"/>
-                        <SearchButton/>
-                    </form>
                 </div>
                 <div className="bg-red-800 h-[41.25rem] rounded-md mt-10 mx-10 mb-2 p-3">
                     {
-                        conversations.length > 0 ? (
-                            conversations.map(chat => (
+                        conversationsArray.length > 0 ? (
+                            conversationsArray.map(chat => (
                                 <ChatCard 
                                     key={ chat.id}
                                     otherUserName={getOtherUserName(chat.userIds)}
@@ -173,7 +169,7 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
                             ))
                         ) : (
                             <div className="w-full flex justify-center">
-                                <p className="p-10 text-5xl font-semibold">No hay mensajes</p>
+                                <p className="p-10 text-5xl font-semibold">No se encontró chat</p>
                             </div>
                         )
                     }

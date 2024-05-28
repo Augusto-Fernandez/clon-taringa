@@ -102,19 +102,25 @@ export default async function NotificationPage ({searchParams:{page = "1"}}: Not
                 </div>
                 <div className="bg-red-800 h-[41.25rem] rounded-md mt-10 mx-10 mb-2 p-3">
                     {
-                        notifications.map(notification => (
-                            <NotificationCard
-                                key={notification.id}
-                                fromUser={getFromUserName(notification.fromUserId)}
-                                postId={notification.subjectId}
-                                postName={getPostName(notification.subjectId)}
-                                subject={notification.subject}
-                                readed={notification.readed}
-                                notificationId={notification.id}
-                                handleNotification={handleNotification}
-                                handleDeleteNotification={handleDeleteNotification}
-                            />
-                        ))
+                        notifications.length > 0 ? (
+                            notifications.map(notification => (
+                                <NotificationCard
+                                    key={notification.id}
+                                    fromUser={getFromUserName(notification.fromUserId)}
+                                    postId={notification.subjectId}
+                                    postName={getPostName(notification.subjectId)}
+                                    subject={notification.subject}
+                                    readed={notification.readed}
+                                    notificationId={notification.id}
+                                    handleNotification={handleNotification}
+                                    handleDeleteNotification={handleDeleteNotification}
+                                />
+                            ))
+                        ) : (
+                            <div className="w-full flex justify-center">
+                                <p className="p-10 text-5xl font-semibold">No hay notificaciones</p>
+                            </div>
+                        )
                     }
                 </div>
                 <div className="h-14 flex justify-center">

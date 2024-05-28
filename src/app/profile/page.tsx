@@ -89,11 +89,7 @@ export default async function ProfilePage({searchParams: { query, page = "1" }}:
                     }
                 </div>
                 <div className="bg-red-800 h-[41.25rem] rounded-md mt-10 mx-10 mb-2 p-3">
-                    {posts.length === 0 && comments.length === 0 ? (
-                            <div className="w-full flex justify-center">
-                                <p className="p-10 text-5xl font-semibold">No hay actividad de este usuario</p>
-                            </div>
-                        ) : (
+                    {userActivityPage.length > 0 ? (
                             userActivityPage.map((activity, index) => {
                                 if ("type" in activity && activity.type === "comment") {
                                     return <ProfileCommentCard comment={activity as Comment} key={index} />;
@@ -101,6 +97,10 @@ export default async function ProfilePage({searchParams: { query, page = "1" }}:
                                     return <PostCard post={activity as Post} key={activity.id} />;
                                 }
                             })
+                        ) : (
+                            <div className="w-full flex justify-center">
+                                <p className="p-10 text-5xl font-semibold">No hay actividad de este usuario</p>
+                            </div>
                     )}
                 </div>
                 <div className="h-14 flex justify-center">

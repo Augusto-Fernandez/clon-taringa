@@ -43,15 +43,15 @@ export default async function SearchPage({searchParams: { query, page = "1" }}: 
         <div className="min-h-screen bg-gray-100 flex justify-center">
             <div className=" min-h-screen w-2/3 bg-slate-300 mx-20 rounded-lg justify-center">
                 <div className="bg-red-800 h-[41.25rem] rounded-md mt-10 mx-10 mb-2 p-3">
-                    {posts.length === 0 ? (
+                    {posts.length > 0 ? (
+                            posts.map(post => (
+                                <PostCard post={post} key={post.id}/>
+                            ))
+                        ) : (
                             <div className="w-full flex justify-center">
                                 <p className="p-10 text-6xl font-semibold">No se encontró post</p>
                             </div>
-                        ) : (
-                            posts.map(post => (
-                                <PostCard post={post} key={post.id}/>
-                        ))
-                    )}
+                        )}
                 </div>
                 <div className="h-14 flex justify-center">
                     {
