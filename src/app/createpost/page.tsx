@@ -78,7 +78,9 @@ export default async function CreatePost (){
                             <PostAuthorship/>
                             <div className="flex p-4 space-x-8">
                                 <p className="py-4 text-slate-600 text-sm">Categoria:</p>
-                                <SelectCategoty/>
+                                <SelectCategoty
+                                    className="border border-gray-300 h-9 mt-2 bg-white rounded w-[11.8rem] text-gray-500 pl-4"
+                                />
                             </div>
                             <div className="flex pl-4 space-x-16">
                                 <label className="text-slate-600 text-sm">NSFW</label> 

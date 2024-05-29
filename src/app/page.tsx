@@ -42,7 +42,9 @@ export default async function Home({searchParams:{page = "1"}}: HomeProps) {
             <div className="flex space-x-16">
               <p className="p-3 text-xl font-bold">Posts</p>
               <div className="flex items-center space-x-1">
-                <SelectCategoty/>
+                <SelectCategoty
+                  className="dropdown z-[1] menu p-2 shadow bg-slate-200 w-52 rounded"
+                />
                 <SearchButton/>
               </div>
             </div>
