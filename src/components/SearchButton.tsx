@@ -1,10 +1,15 @@
 import SearchButtonIcon from "./svgs/SearchButtonIcon";
 
-export default function SearchButton () {
+interface SearchButtonProps {
+    className:string;
+    svgSize: string;
+}
+
+export default function SearchButton ({className, svgSize}:SearchButtonProps) {
     return (
-        <button type="submit" className="btn-ghost h-10 bg-green-500 rounded-lg hover:bg-green-400">
+        <button type="submit" className={`flex items-center justify-center ${className}`}>
             <SearchButtonIcon
-                className="w-9 h-8"
+                className={svgSize}
             />
         </button>
     );  

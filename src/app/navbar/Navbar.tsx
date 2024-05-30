@@ -69,7 +69,10 @@ export default async function Navbar() {
                 />
                 <form action={searchPosts} className="flex justify-center items-center space-x-1">
                     <input type="text" placeholder="Buscar Post" name="searchQuery" className="input input-bordered w-24 md:w-auto"/>
-                    <SearchButton/>
+                    <SearchButton
+                        className="btn-ghost h-9 w-9 bg-green-500 rounded-lg hover:bg-green-400"
+                        svgSize="w-7 h-7"
+                    />
                 </form>
             </div>
         </div>

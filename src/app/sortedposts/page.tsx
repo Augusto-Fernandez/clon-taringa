@@ -57,7 +57,10 @@ export default async function SortedPosts({searchParams: { query, page = "1" }}:
                 <SelectCategoty
                   className="dropdown z-[1] menu p-2 shadow bg-slate-200 w-52 rounded"
                 />
-                <SearchButton/>
+                <SearchButton
+                  className="btn-ghost h-[2rem] w-[2rem] bg-green-500 rounded-lg hover:bg-green-400"
+                  svgSize="w-6 h-6"
+                />
               </div>
             </div>
           </form>
