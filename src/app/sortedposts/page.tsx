@@ -8,6 +8,7 @@ import SelectCategoty from "@/components/SelectCategory";
 import PaginationBar from "@/components/PaginationBar";
 import SearchButton from "@/components/SearchButton";
 import TopPostCard from "@/components/TopPostCard";
+import AdminPostCard from "@/components/AdminPostCard";
 
 import { prisma } from "../lib/db/prisma";
 
@@ -44,6 +45,20 @@ export default async function SortedPosts({searchParams: { query, page = "1" }}:
     orderBy: { id: "desc" },
     skip: (currentPage-1)*pageSize,
     take: pageSize,
+  });
+
+  const getAdmin = await prisma.user.findUnique({
+    where:{
+      userName: "admin"
+    }
+  });
+
+  const adminPosts = await prisma.post.findMany({
+    where:{
+      userId: getAdmin?.id
+    },
+    orderBy: { id: "desc" },
+    take: 3
   });
 
   const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
@@ -136,11 +151,18 @@ export default async function SortedPosts({searchParams: { query, page = "1" }}:
           }
         </div>
       </div>
-      <div className="w-1/4 rounded-md space-y-5">
+      <div className="w-1/4 rounded-md space-y-1">
         <div className="space-y-1">
           <p className="p-3 text-xl font-bold">Noticias</p>
-          <div className="bg-red-800 h-40 rounded-md">
-
+          <div className="bg-red-800 h-52 rounded-md p-3">
+            {
+              adminPosts.map(post => (
+                <AdminPostCard
+                  key={post.id}
+                  post={post}
+                />
+              ))
+            }
           </div>
         </div>
         <div>
