@@ -5,7 +5,7 @@ import PostCard from "@/components/PostCard";
 import SelectCategoty from "@/components/SelectCategory";
 import PaginationBar from "@/components/PaginationBar";
 import SearchButton from "@/components/SearchButton";
-import TopPostCard from "./TopPostCard";
+import TopPostCard from "../components/TopPostCard";
 
 import { prisma } from "./lib/db/prisma";
 import { Post } from "@prisma/client";
