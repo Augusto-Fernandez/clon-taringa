@@ -175,3 +175,43 @@ export async function savePost(postId: string, userId: string) {
 
     revalidatePath("/post/[id]","page");
 }
+
+export async function reportPost(postId: string, userId: string, body: string) {
+    const previousReport = await prisma.report.findUnique({
+        where: {
+            userId: userId,
+            postId: postId
+        },
+    });
+
+    if(previousReport === null){
+        await prisma.report.create({
+            data: {
+                userId: userId,
+                postId: postId,
+                body: body
+            }
+        })
+    }
+
+    revalidatePath("/post/[id]","page");
+}
+
+export async function deleteReport(postId: string, userId: string) {
+    const previousReport = await prisma.report.findUnique({
+        where: {
+            userId: userId,
+            postId: postId
+        },
+    });
+
+    if(previousReport){
+        await prisma.report.delete({
+            where: {
+                id: previousReport.id
+            }
+        })
+    }
+
+    revalidatePath("/post/[id]","page");
+}

@@ -23,6 +23,7 @@ export default async function Navbar() {
 
     let notificationCount = 0;
     let messageNotificationCount = 0;
+    let isAdmin = false;
     
     if(session){
         const loggedUser = await prisma.user.findUnique({
@@ -30,6 +31,8 @@ export default async function Navbar() {
                 userName: session?.user?.name as string
             }
         })
+
+        isAdmin = loggedUser?.isAdmin as boolean;
 
         const getNotificationCount = await prisma.notification.findMany({
             where: {
@@ -66,6 +69,7 @@ export default async function Navbar() {
                     session={session}
                     notificationCount={notificationCount}
                     messageNotificationCount={messageNotificationCount}
+                    isAdmin={isAdmin}
                 />
                 <form action={searchPosts} className="flex justify-center items-center space-x-1">
                     <input type="text" placeholder="Buscar Post" name="searchQuery" className="input input-bordered w-24 md:w-auto"/>

@@ -37,7 +37,7 @@ export default async function PostCard({post}:PostProps) {
                 <span className="font-semibold text-lg">{post.title}</span>
                 <span className="text-blue-600">{author?.userName}</span>
                 {
-                    post.nsfw && (
+                    post.nsfw && !author?.isAdmin && (
                         <span className="badge text-white bg-red-600 text-xs border-red-500 border-2">NSFW</span>
                     )
                 }

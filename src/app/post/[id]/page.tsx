@@ -13,12 +13,13 @@ import profilePicPlaceholder from "../../../../public/profilePicPlaceholder.png"
 import postDefaultBanner from "../../../../public/postDefaultBanner.png"
 
 import VoteBox from "./VoteBox";
-import { handleVote, handleComment, handleResponse, handleCommentVote, savePost } from "./actions";
+import { handleVote, handleComment, handleResponse, handleCommentVote, savePost, reportPost, deleteReport } from "./actions";
 import CommentBox from "./CommentBox";
 import CommentsIcon from "@/components/svgs/CommientsIcon";
 import CommentCard from "./CommentCard";
 import { Comment, CommentVote } from "@prisma/client";
 import SavedPostBox from "./SavedPostBox";
+import ReportBox from "./ReportBox";
 
 interface PostId {
     params: {
@@ -41,10 +42,11 @@ export default async function PostPage({params:{id}}:PostId) {
         }
     })
 
-    let userId = null
-    let userName = null
-    let userImage = null
-    let isLogged = false
+    let userId = null;
+    let userName = null;
+    let userImage = null;
+    let isLogged = false;
+    let postReported = false;
 
     const session = await getServerSession(authOptions);
     
@@ -139,6 +141,17 @@ export default async function PostPage({params:{id}}:PostId) {
         isSaved = true;
     }
 
+    const checkReportPost = await prisma.report.findUnique({
+        where: {
+            userId: userId as string,
+            postId: post.id
+        }
+    })
+
+    if(checkReportPost){
+        postReported = true
+    }
+
     interface SortedByVotesArray extends Comment {
         votesDif: number
     }
@@ -182,7 +195,7 @@ export default async function PostPage({params:{id}}:PostId) {
                         </div>
                     )
                 }
-                <div className="p-5 flex">
+                <div className="p-5 flex justify-between">
                     <div className="p-5 flex space-x-1">
                         {
                             session?.user && (
@@ -209,15 +222,30 @@ export default async function PostPage({params:{id}}:PostId) {
                                 </div>
                             )
                         }
-                        <div className="flex">
-                            <CommentsIcon className="w-8 h-8"/>
-                            <span className="pt-1 w-1 pr-5">{comments.length}</span>
-                        </div>
+                        {
+                            !author?.isAdmin && (
+                                <div className="flex">
+                                    <CommentsIcon className="w-8 h-8"/>
+                                    <span className="pt-1 w-1 pr-5">{comments.length}</span>
+                                </div>
+                            )
+                        }
                     </div>
+                    {
+                        session?.user && !author?.isAdmin && (
+                            <ReportBox
+                                userId={userId as string}
+                                postId={post.id}
+                                isReported = {postReported}
+                                reportPost={reportPost}
+                                deleteReport={deleteReport}
+                            />
+                        )
+                    }
                 </div>
             </div>
             {
-                session?.user && (
+                session?.user && !author?.isAdmin && (
                     <CommentBox 
                         image={userImage as string | null}
                         postId={post.id}
@@ -229,7 +257,7 @@ export default async function PostPage({params:{id}}:PostId) {
                 )
             }
             {
-                comments.length > 0 && (
+                comments.length > 0 && !author?.isAdmin && (
                     <div className="bg-white rounded-3xl mt-8 mx-72 p-4 space-y-4">
                         {
                             commentsSortedByVotes.map(comment => (

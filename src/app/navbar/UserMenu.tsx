@@ -13,13 +13,19 @@ interface UserMenuButtonProps {
     session: Session | null;
     notificationCount: number;
     messageNotificationCount: number;
+    isAdmin: boolean;
 }
 
-export default function UserMenu({session, notificationCount, messageNotificationCount}:UserMenuButtonProps){
+export default function UserMenu({session, notificationCount, messageNotificationCount, isAdmin}:UserMenuButtonProps){
     const user = session?.user;
 
     return(
         <>
+            {
+                user && isAdmin && (
+                    <button>Panel de Control</button>
+                )
+            }
             {
                 user ? (
                     <ul className="flex justify-center items-center h-12 bg-green-400 border border-slate-300 rounded-lg">
