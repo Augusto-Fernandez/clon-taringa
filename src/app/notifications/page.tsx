@@ -106,7 +106,7 @@ export default async function NotificationPage ({searchParams:{page = "1"}}: Not
                             notifications.map(notification => (
                                 <NotificationCard
                                     key={notification.id}
-                                    fromUser={getFromUserName(notification.fromUserId)}
+                                    fromUserName={getFromUserName(notification.fromUserId)}
                                     postId={notification.subjectId}
                                     postName={getPostName(notification.subjectId)}
                                     subject={notification.subject}

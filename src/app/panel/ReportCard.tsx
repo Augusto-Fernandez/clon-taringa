@@ -8,7 +8,7 @@ import ReportUpIcon from "@/components/svgs/ReportUpIcon";
 import ReportDownIcon from "@/components/svgs/ReportDownIcon";
 
 interface ReportCardProps {
-    postId?: string;
+    postId: string;
     userName: string;
     postTitle?: string;
     commentId?: string;
