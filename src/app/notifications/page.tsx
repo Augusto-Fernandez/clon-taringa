@@ -18,9 +18,6 @@ export const metadata = {
 
 export default async function NotificationPage ({searchParams:{page = "1"}}: NotificationPageProps){
     const session = await getServerSession(authOptions);
-    
-    const currentPage = parseInt(page);
-    const pageSize = 10;
 
     let userId = null
 
@@ -33,6 +30,9 @@ export default async function NotificationPage ({searchParams:{page = "1"}}: Not
 
         userId = userLogged?.id
     }
+
+    const currentPage = parseInt(page);
+    const pageSize = 10;
 
     const notifications = await prisma.notification.findMany({
         where:{

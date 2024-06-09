@@ -48,6 +48,16 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
         take: pageSize
     });
 
+    const totalConversationsCount = await prisma.conversation.count({
+        where: {
+            userIds: {
+                has: userLogged?.id as string
+            }
+        }
+    });
+
+    const totalPages = Math.ceil(totalConversationsCount/pageSize);
+
     const otherUserArray:User[] = [];
     const lastMessageArray:Message[] = [];
     const messageNotificationArray: MessageNotification[] = [];
@@ -134,16 +144,6 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
 
         return 0;
     }
-
-    const totalConversationsCount = await prisma.conversation.count({
-        where: {
-            userIds: {
-                has: userLogged?.id as string
-            }
-        }
-    });
-
-    const totalPages = Math.ceil(totalConversationsCount/pageSize);
     
     return(
         <div className="min-h-screen bg-gray-100 flex justify-center">

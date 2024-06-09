@@ -56,6 +56,7 @@ export default async function SavesPage({searchParams:{page = "1"}}: SavedPagePr
             userId: user?.id
         }
     });
+    
     const totalPages = Math.ceil(totalSavedCount/pageSize);
     
     return(

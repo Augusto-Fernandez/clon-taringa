@@ -6,6 +6,7 @@ export const config = {
         "/saved/:path*", 
         "/chat/:path*", 
         "/messages/:path*", 
-        "/notifications/:path*"
+        "/notifications/:path*",
+        "/panel/:path*"
     ] 
 }

@@ -18,12 +18,23 @@ export default async function MessagesPage ({searchParams:{query, page = "1"}}:M
 
     const currentPage = parseInt(page);
     const pageSize = 10;
+    
 
     const userLogged = await prisma.user.findUnique({
         where: {
             userName: session?.user?.name as string
         }
     });
+
+    const totalConversationsCount = await prisma.conversation.count({
+        where: {
+            userIds: {
+                has: userLogged?.id as string
+            }
+        }
+    });
+
+    const totalPages = Math.ceil(totalConversationsCount/pageSize);
 
     const getQueryUser = await prisma.user.findUnique({
         where: {
@@ -134,16 +145,6 @@ export default async function MessagesPage ({searchParams:{query, page = "1"}}:M
 
         return 0;
     }
-
-    const totalConversationsCount = await prisma.conversation.count({
-        where: {
-            userIds: {
-                has: userLogged?.id as string
-            }
-        }
-    });
-
-    const totalPages = Math.ceil(totalConversationsCount/pageSize);
     
     return(
         <div className="min-h-screen bg-gray-100 flex justify-center">
