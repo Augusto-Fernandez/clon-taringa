@@ -18,10 +18,9 @@ import CloseIcon from "@/components/svgs/CloseIcon";
 interface CommentProps{
     comment: Comment;
     isLogged: boolean;
-    image: string | null;
-    postId: string;
-    userId: string;
-    userName: string;
+    loggedUserImage: string | null;
+    loggedUserId: string;
+    loggedUserName: string;
     handleResponse: (postId: string, userId: string, userName: string, image: string | null, message: string, parentId: string) => Promise<void>;
     commentLikes: number;
     commentDislikes: number;
@@ -36,7 +35,7 @@ type Input = {
     reportBody: string
 };
 
-export default function CommentCard({comment, isLogged, image, postId, userId, userName, handleResponse, commentLikes, commentDislikes, alreadyVotedComment, handleCommentVote, isReported, reportComment, deleteReport}:CommentProps) {    
+export default function CommentCard({comment, isLogged, loggedUserImage, loggedUserId, loggedUserName, handleResponse, commentLikes, commentDislikes, alreadyVotedComment, handleCommentVote, isReported, reportComment, deleteReport}:CommentProps) {    
     const [responseBox, setResponseBox] = useState(false);
     const [votedComment, setVotedComment] = useState(alreadyVotedComment);
 
@@ -52,7 +51,7 @@ export default function CommentCard({comment, isLogged, image, postId, userId, u
 
     const createResponse = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        await handleResponse(postId, userId, userName, image, response, comment.id);
+        await handleResponse(comment.postId, loggedUserId, loggedUserName, loggedUserImage, response, comment.id);
         setResponse("");
         setResponseBox(false);
     };
@@ -73,7 +72,7 @@ export default function CommentCard({comment, isLogged, image, postId, userId, u
 
     const handleModal = async () => {
         if(isReported){
-            await deleteReport(comment.id, userId, "COMMENT");
+            await deleteReport(comment.id, loggedUserId, "COMMENT");
         }else{
             setModal(!modal);
         }
@@ -82,7 +81,7 @@ export default function CommentCard({comment, isLogged, image, postId, userId, u
     const { register, handleSubmit, formState: { errors } } = useForm<Input>();
 
     const handleReportForm:SubmitHandler<Input> = async (data) => {
-        await reportComment(comment.id, comment.postId, userId, data.reportBody)
+        await reportComment(comment.id, comment.postId, loggedUserId, data.reportBody)
         setModal(!modal);
     }
     
@@ -128,7 +127,7 @@ export default function CommentCard({comment, isLogged, image, postId, userId, u
                                         <button 
                                             className="bg-emerald-500 rounded-md flex h-6 w-12 justify-center"
                                             onClick={async () =>{
-                                                await handleCommentVote(comment.id, userId, "UP");
+                                                await handleCommentVote(comment.id, loggedUserId, "UP");
                                             }}
                                         >
                                             <Upvote 
@@ -142,7 +141,7 @@ export default function CommentCard({comment, isLogged, image, postId, userId, u
                                         <button 
                                             className="border border-emerald-500 rounded-md flex h-6 w-12 justify-center"
                                             onClick={async () =>{
-                                                await handleCommentVote(comment.id, userId, "UP");
+                                                await handleCommentVote(comment.id, loggedUserId, "UP");
                                             }}
                                         >
                                             <Upvote 
@@ -159,7 +158,7 @@ export default function CommentCard({comment, isLogged, image, postId, userId, u
                                         <button 
                                             className="bg-red-500 rounded-md flex h-6 w-12 justify-center"
                                             onClick={async () =>{
-                                                await handleCommentVote(comment.id, userId, "DOWN");
+                                                await handleCommentVote(comment.id, loggedUserId, "DOWN");
                                             }}
                                         >
                                             <Downvote 
@@ -173,7 +172,7 @@ export default function CommentCard({comment, isLogged, image, postId, userId, u
                                         <button 
                                             className="border border-red-500 rounded-md flex h-6 w-12 justify-center"
                                             onClick={async () =>{
-                                                await handleCommentVote(comment.id, userId, "DOWN");
+                                                await handleCommentVote(comment.id, loggedUserId, "DOWN");
                                             }}
                                         >
                                             <Downvote 

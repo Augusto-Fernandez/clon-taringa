@@ -288,10 +288,9 @@ export default async function PostPage({params:{id}}:PostId) {
                                 <CommentCard 
                                     comment={comment} 
                                     isLogged={isLogged} 
-                                    image={loggedUserImage as string | null}
-                                    postId={post.id}
-                                    userId={loggedUserId as string}
-                                    userName={loggedUserName as string}
+                                    loggedUserImage={loggedUserImage as string | null}
+                                    loggedUserId={loggedUserId as string}
+                                    loggedUserName={loggedUserName as string}
                                     handleResponse={handleResponse}
                                     commentLikes={getCommentVotes(comment.id, "UP")}
                                     commentDislikes={getCommentVotes(comment.id, "DOWN")}
