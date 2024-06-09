@@ -13,11 +13,11 @@ import profilePicPlaceholder from "../../../../public/profilePicPlaceholder.png"
 import postDefaultBanner from "../../../../public/postDefaultBanner.png"
 
 import VoteBox from "./VoteBox";
-import { handleVote, handleComment, handleResponse, handleCommentVote, savePost, reportPost, deleteReport } from "./actions";
+import { handleVote, handleComment, handleResponse, handleCommentVote, savePost, reportPost, reportComment,deleteReport } from "./actions";
 import CommentBox from "./CommentBox";
 import CommentsIcon from "@/components/svgs/CommientsIcon";
 import CommentCard from "./CommentCard";
-import { Comment, CommentVote } from "@prisma/client";
+import { Comment, CommentVote, Report } from "@prisma/client";
 import SavedPostBox from "./SavedPostBox";
 import ReportBox from "./ReportBox";
 
@@ -95,6 +95,7 @@ export default async function PostPage({params:{id}}:PostId) {
     });
 
     const commentVotesArray:CommentVote[] = [];
+    const commentReportArray:Report[] = [];
     
     await Promise.all(comments.map(async (comment) => {
         const commentsVotes = await prisma.commentVote.findMany({
@@ -105,6 +106,18 @@ export default async function PostPage({params:{id}}:PostId) {
     
         if (commentsVotes.length > 0) {
             commentVotesArray.push(...commentsVotes);
+        }
+
+        const commentReport = await prisma.report.findUnique({
+            where:{
+                commentId: comment.id,
+                userId: userId as string,
+                subjectType: "COMMENT"
+            }
+        });
+
+        if(commentReport){
+            commentReportArray.push(commentReport);
         }
     }));
 
@@ -144,7 +157,8 @@ export default async function PostPage({params:{id}}:PostId) {
     const checkReportPost = await prisma.report.findUnique({
         where: {
             userId: userId as string,
-            postId: post.id
+            postId: post.id,
+            subjectType: "POST"
         }
     })
 
@@ -158,6 +172,15 @@ export default async function PostPage({params:{id}}:PostId) {
 
     const commentsSortedByVotes:SortedByVotesArray[] = [...comments.map((comment) => ({ ...comment, votesDif: getCommentVotes(comment.id, "UP") - getCommentVotes(comment.id, "DOWN")}))]
     commentsSortedByVotes.sort((a,b) => b.votesDif - a.votesDif);
+
+    const checkReportedComment = (commentId: string) => {
+        const findReportedComment = commentReportArray.find(report => report.commentId === commentId)
+        if(findReportedComment){
+            return true;
+        }
+
+        return false;
+    };
 
     return(
         <div className="min-h-screen bg-gray-100 py-6">
@@ -273,7 +296,10 @@ export default async function PostPage({params:{id}}:PostId) {
                                     commentDislikes={getCommentVotes(comment.id, "DOWN")}
                                     alreadyVotedComment={checkIfCommetWasVoted(comment.id, userId as string)}
                                     handleCommentVote={handleCommentVote}
+                                    isReported={checkReportedComment(comment.id)}
+                                    reportComment={reportComment}
                                     key={comment.id}
+                                    deleteReport={deleteReport}
                                 />
                             ))
                         }

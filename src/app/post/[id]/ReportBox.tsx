@@ -12,7 +12,7 @@ interface ReportBoxProps {
     userId: string
     isReported: boolean;
     reportPost: (postId: string, userId: string, body: string) => Promise<void>;
-    deleteReport: (postId: string, userId: string) => Promise<void>;
+    deleteReport: (postId: string, userId: string, subjectType:"POST" | "COMMENT") => Promise<void>;
 }
 
 type Input = {
@@ -29,7 +29,7 @@ export default function ReportBox({postId, userId, isReported, reportPost, delet
 
     const handleModal = async () => {
         if(isReported){
-            await deleteReport(postId, userId);
+            await deleteReport(postId, userId, "POST");
         }else{
             setModal(!modal);
         }

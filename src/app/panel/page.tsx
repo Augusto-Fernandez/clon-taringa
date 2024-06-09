@@ -6,7 +6,7 @@ import { Post, User } from "@prisma/client";
 
 import ReportCard from "./ReportCard";
 import PaginationBar from "@/components/PaginationBar";
-import { deleteReport, deletePost } from "./actions";
+import { deleteReport, deletePost, deleteComment } from "./actions";
 
 interface PanelPageProps{
     searchParams: {page: string};
@@ -49,7 +49,7 @@ export default async function PanelPage ({searchParams:{page = "1"}}: PanelPageP
     await Promise.all(reports.map(async (report) => {
         const reportedPosts = await prisma.post.findUnique({
             where: {
-                id: report.postId
+                id: report.postId as string
             }
         });
 
@@ -96,18 +96,21 @@ export default async function PanelPage ({searchParams:{page = "1"}}: PanelPageP
                 <div className="pt-10 pl-10 flex">
                     <h1 className="text-slate-600 font-semibold text-4xl">Reportes</h1>
                 </div>
-                <div className="bg-red-800 h-[41.25rem] rounded-md mt-10 mx-10 mb-2 p-3">
+                <div className="bg-red-800 min-h-[41.25rem] h-auto rounded-md mt-10 mx-10 mb-2 p-3">
                     {
                         reports.map(report => (
                             <ReportCard
                                 key={report.id}
-                                postId={report.postId}
+                                postId={report.postId as string}
+                                commentId={report.commentId as string}
                                 userName={getUserName(report.userId)}
-                                postTitle={getPostTitle(report.postId)}
+                                postTitle={getPostTitle(report.postId as string)}
                                 body={report.body}
                                 reportId={report.id}
+                                subject={report.subjectType}
                                 deleteReport={deleteReport}
                                 deletePost={deletePost}
+                                deleteComment={deleteComment}
                             />
                         ))
                     }

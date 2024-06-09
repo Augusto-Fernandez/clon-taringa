@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { Comment } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,6 +12,8 @@ import ResponseIcon from "@/components/svgs/ResponseIcon";
 import Upvote from "@/components/svgs/Upvote";
 import Downvote from "@/components/svgs/Downvote";
 import UserButton from "@/components/UserButton";
+import FlagIcon from "@/components/svgs/FlagIcon";
+import CloseIcon from "@/components/svgs/CloseIcon";
 
 interface CommentProps{
     comment: Comment;
@@ -24,9 +27,16 @@ interface CommentProps{
     commentDislikes: number;
     alreadyVotedComment: string | undefined
     handleCommentVote: (commentId: string, userId: string, type: 'UP' | 'DOWN') => Promise<void>;
+    isReported: boolean;
+    reportComment: (commentId: string, postId: string, userId: string, body: string) => Promise<void>;
+    deleteReport: (commentId: string, userId: string, subjectType:"POST" | "COMMENT") => Promise<void>;
 }
 
-export default function CommentCard({comment, isLogged, image, postId, userId, userName, handleResponse, commentLikes, commentDislikes, alreadyVotedComment, handleCommentVote}:CommentProps) {    
+type Input = {
+    reportBody: string
+};
+
+export default function CommentCard({comment, isLogged, image, postId, userId, userName, handleResponse, commentLikes, commentDislikes, alreadyVotedComment, handleCommentVote, isReported, reportComment, deleteReport}:CommentProps) {    
     const [responseBox, setResponseBox] = useState(false);
     const [votedComment, setVotedComment] = useState(alreadyVotedComment);
 
@@ -53,6 +63,28 @@ export default function CommentCard({comment, isLogged, image, postId, userId, u
             parentCommentCard.scrollIntoView({ behavior: "smooth", block: "center" });
         }
     };
+
+    const [reported, setReported] = useState(isReported);
+    const [modal, setModal] = useState(false);
+
+    useEffect(() => {
+        setReported(isReported);
+    }, [isReported]);
+
+    const handleModal = async () => {
+        if(isReported){
+            await deleteReport(comment.id, userId, "COMMENT");
+        }else{
+            setModal(!modal);
+        }
+    };
+
+    const { register, handleSubmit, formState: { errors } } = useForm<Input>();
+
+    const handleReportForm:SubmitHandler<Input> = async (data) => {
+        await reportComment(comment.id, comment.postId, userId, data.reportBody)
+        setModal(!modal);
+    }
     
     return(
         <div id={`comment-${comment.id}`} className="border-b h-auto pb-2">
@@ -153,6 +185,63 @@ export default function CommentCard({comment, isLogged, image, postId, userId, u
                                         </button>
                                     )
                                 }
+                                <button onClick={handleModal}>
+                                    {
+                                        reported ? (
+                                            <div className="bg-red-600 p-1 rounded">
+                                                <FlagIcon
+                                                    className="w-4 h-4 bg-red-600"
+                                                    line="white"
+                                                />
+                                            </div>
+                                        ) : (
+                                            <FlagIcon
+                                                className="w-5 h-5 mt-0.5"
+                                                line="red"
+                                            />
+                                        )
+                                    }
+                                </button>
+                            </div>
+                        )
+                    }
+                    {
+                        modal && (
+                            <div className="fixed inset-0 z-10 flex items-center justify-center">
+                                <form 
+                                    onSubmit={handleSubmit(handleReportForm)}
+                                    className="bg-white border-2 p-8 rounded-md border-slate-400 flex flex-col space-y-4"
+                                >
+                                    <div className="flex justify-between">
+                                        <label className="text-slate-600 font-semibold text-4xl">Motivo de denuncia</label>
+                                        <button onClick={handleModal}>
+                                            <CloseIcon
+                                                className="w-10 h-10"
+                                                line="rgb(239, 68, 68)"
+                                            />
+                                        </button>
+                                    </div>
+                                    <textarea 
+                                        className="w-[40rem] min-h-[20rem] max-h-[20rem] border border-gray-300 rounded hover:no-animation focus:outline-none"
+                                        {...register("reportBody", {
+                                            required: {
+                                                value: true,
+                                                message: "Es necesario un motivo de denuncia",
+                                            },
+                                        })}
+                                    ></textarea>
+                                    {errors.reportBody && typeof errors.reportBody.message === 'string' && (
+                                        <span className="text-red-500 text-xs font-bold">
+                                            {errors.reportBody.message}
+                                        </span>
+                                    )}
+                                    <div className="flex justify-end w-full">
+                                        <UserButton
+                                            content="Denunciar"
+                                            width="w-24"
+                                        />
+                                    </div>
+                                </form>
                             </div>
                         )
                     }

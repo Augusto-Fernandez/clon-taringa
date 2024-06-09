@@ -29,3 +29,19 @@ export async function deletePost(postId: string) {
 
     revalidatePath("/panel","page");
 };
+
+export async function deleteComment(commentId: string) {
+    await prisma.comment.delete({
+        where: {
+            id: commentId
+        }
+    })
+
+    await prisma.report.deleteMany({
+        where:{
+            commentId: commentId
+        }
+    })
+
+    revalidatePath("/panel","page");
+};

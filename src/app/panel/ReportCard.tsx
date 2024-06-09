@@ -8,16 +8,19 @@ import ReportUpIcon from "@/components/svgs/ReportUpIcon";
 import ReportDownIcon from "@/components/svgs/ReportDownIcon";
 
 interface ReportCardProps {
-    postId: string;
+    postId?: string;
     userName: string;
-    postTitle: string;
+    postTitle?: string;
+    commentId?: string;
     body: string;
     reportId: string;
+    subject: "POST" | "COMMENT";
     deleteReport: (reportId: string) => Promise<void>;
     deletePost: (postId: string) => Promise<void>;
+    deleteComment: (commentId: string) => Promise<void>;
 }
 
-export default function ReportCard({postId, userName, postTitle, body, reportId, deleteReport, deletePost}:ReportCardProps) {
+export default function ReportCard({postId, userName, postTitle, commentId, body, reportId, subject, deleteReport, deletePost, deleteComment}:ReportCardProps) {
     const [reportBody, setReportBody] = useState(false);
     
     const handleReportDetails = () =>{
@@ -29,14 +32,24 @@ export default function ReportCard({postId, userName, postTitle, body, reportId,
     }
 
     const handleDeletePost = async () => {
-        await deletePost(postId);
+        await deletePost(postId as string);
+    }
+
+    const handleDeleteComment = async () => {
+        await deleteComment(commentId as string);
     }
     
     return(
-        <div className="min-h-14 h-auto rounded-lg bg-slate-300">
-            <div className="flex justify-between mb-2 p-3">
+        <div className="min-h-14 h-auto rounded-lg bg-slate-300 mb-2 ">
+            <div className="flex justify-between p-3">
                 <Link href={"/post/"+postId} className="text-slate-600 font-semibold">
-                    <p>El usurio <span className="text-blue-600">{userName}</span> reportó el post <span className="text-blue-600">{postTitle}</span>.</p>
+                    {
+                        subject === "POST" ? (
+                            <p>El usurio <span className="text-blue-600">{userName}</span> reportó el post <span className="text-blue-600">{postTitle}</span>.</p>
+                        ) : (
+                            <p>El usurio <span className="text-blue-600">{userName}</span> reportó el comentario <span className="text-blue-600">{commentId}</span>.</p>
+                        )
+                    }
                 </Link>
                 <div className="flex space-x-4">
                     {
@@ -66,12 +79,23 @@ export default function ReportCard({postId, userName, postTitle, body, reportId,
                     <>
                         <p className="p-5 text-slate-700 text-sm mx-3 border-t border-slate-400">{body}</p>
                         <div className="flex justify-end p-3">
-                            <button 
-                                className="btn btn-error text-white"
-                                onClick={handleDeletePost}
-                            >
-                                Borrar Post
-                            </button>
+                            {
+                                subject === "POST" ? (
+                                    <button 
+                                        className="btn btn-error text-white"
+                                        onClick={handleDeletePost}
+                                    >
+                                        Borrar Post
+                                    </button>
+                                ) : (
+                                    <button 
+                                        className="btn btn-error text-white"
+                                        onClick={handleDeleteComment}
+                                    >
+                                        Borrar Comentario
+                                    </button>
+                                )
+                            }
                         </div>
                     </>
                 )

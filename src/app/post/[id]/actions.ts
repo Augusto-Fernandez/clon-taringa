@@ -188,6 +188,7 @@ export async function reportPost(postId: string, userId: string, body: string) {
         await prisma.report.create({
             data: {
                 userId: userId,
+                subjectType: "POST",
                 postId: postId,
                 body: body
             }
@@ -197,18 +198,46 @@ export async function reportPost(postId: string, userId: string, body: string) {
     revalidatePath("/post/[id]","page");
 }
 
-export async function deleteReport(postId: string, userId: string) {
+export async function reportComment(commentId: string, postId: string, userId: string, body: string) {
     const previousReport = await prisma.report.findUnique({
         where: {
             userId: userId,
-            postId: postId
+            commentId: commentId
         },
     });
 
-    if(previousReport){
+    if(previousReport === null){
+        await prisma.report.create({
+            data: {
+                userId: userId,
+                subjectType: "COMMENT",
+                postId: postId,
+                commentId: commentId,
+                body: body
+            }
+        })
+    }
+
+    revalidatePath("/post/[id]","page");
+}
+
+export async function deleteReport(subjectId: string, userId: string, subject: "POST" | "COMMENT") {
+    if(subject === "POST"){
         await prisma.report.delete({
             where: {
-                id: previousReport.id
+                postId: subjectId,
+                userId: userId,
+                subjectType: subject
+            }
+        })
+    }
+
+    if(subject === "COMMENT"){
+        await prisma.report.delete({
+            where: {
+                commentId: subjectId,
+                userId: userId,
+                subjectType: subject
             }
         })
     }
