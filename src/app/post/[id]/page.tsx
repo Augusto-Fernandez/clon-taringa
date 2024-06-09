@@ -42,11 +42,10 @@ export default async function PostPage({params:{id}}:PostId) {
         }
     })
 
-    let userId = null;
-    let userName = null;
-    let userImage = null;
+    let loggedUserId = null;
+    let loggedUserName = null;
+    let loggedUserImage = null;
     let isLogged = false;
-    let postReported = false;
 
     const session = await getServerSession(authOptions);
     
@@ -57,9 +56,9 @@ export default async function PostPage({params:{id}}:PostId) {
             }
         })
         
-        userId = userLogged?.id
-        userName = userLogged?.userName
-        userImage = userLogged?.image
+        loggedUserId = userLogged?.id
+        loggedUserName = userLogged?.userName
+        loggedUserImage = userLogged?.image
         isLogged = true
     }
     
@@ -82,7 +81,7 @@ export default async function PostPage({params:{id}}:PostId) {
 
     let alreadyVoted: string | undefined
 
-    const searchVote = votes.find(vote => vote.userId === userId)
+    const searchVote = votes.find(vote => vote.userId === loggedUserId)
 
     if(searchVote){
         alreadyVoted = searchVote.type
@@ -111,7 +110,7 @@ export default async function PostPage({params:{id}}:PostId) {
         const commentReport = await prisma.report.findUnique({
             where:{
                 commentId: comment.id,
-                userId: userId as string,
+                userId: loggedUserId as string,
                 subjectType: "COMMENT"
             }
         });
@@ -150,17 +149,19 @@ export default async function PostPage({params:{id}}:PostId) {
 
     let isSaved = false;
 
-    if(saved.find(save => save.userId === userId)){
+    if(saved.find(save => save.userId === loggedUserId)){
         isSaved = true;
     }
 
     const checkReportPost = await prisma.report.findUnique({
         where: {
-            userId: userId as string,
+            userId: loggedUserId as string,
             postId: post.id,
             subjectType: "POST"
         }
     })
+
+    let postReported = false;
 
     if(checkReportPost){
         postReported = true
@@ -170,9 +171,6 @@ export default async function PostPage({params:{id}}:PostId) {
         votesDif: number
     }
 
-    const commentsSortedByVotes:SortedByVotesArray[] = [...comments.map((comment) => ({ ...comment, votesDif: getCommentVotes(comment.id, "UP") - getCommentVotes(comment.id, "DOWN")}))]
-    commentsSortedByVotes.sort((a,b) => b.votesDif - a.votesDif);
-
     const checkReportedComment = (commentId: string) => {
         const findReportedComment = commentReportArray.find(report => report.commentId === commentId)
         if(findReportedComment){
@@ -181,6 +179,9 @@ export default async function PostPage({params:{id}}:PostId) {
 
         return false;
     };
+
+    const commentsSortedByVotes:SortedByVotesArray[] = [...comments.map((comment) => ({ ...comment, votesDif: getCommentVotes(comment.id, "UP") - getCommentVotes(comment.id, "DOWN")}))]
+    commentsSortedByVotes.sort((a,b) => b.votesDif - a.votesDif);
 
     return(
         <div className="min-h-screen bg-gray-100 py-6">
@@ -224,7 +225,7 @@ export default async function PostPage({params:{id}}:PostId) {
                             session?.user && (
                                 <VoteBox 
                                     postId={post.id}
-                                    userId={userId as string}
+                                    userId={loggedUserId as string}
                                     likes={likes}
                                     dislikes={dislikes}
                                     alreadyVoted={alreadyVoted}
@@ -237,7 +238,7 @@ export default async function PostPage({params:{id}}:PostId) {
                                 <div className="flex">
                                     <SavedPostBox 
                                         postId={post.id}
-                                        userId={userId as string}
+                                        userId={loggedUserId as string}
                                         isSaved={isSaved}
                                         savePost={savePost}
                                     />
@@ -257,7 +258,7 @@ export default async function PostPage({params:{id}}:PostId) {
                     {
                         session?.user && !author?.isAdmin && (
                             <ReportBox
-                                userId={userId as string}
+                                userId={loggedUserId as string}
                                 postId={post.id}
                                 isReported = {postReported}
                                 reportPost={reportPost}
@@ -270,10 +271,10 @@ export default async function PostPage({params:{id}}:PostId) {
             {
                 session?.user && !author?.isAdmin && (
                     <CommentBox 
-                        image={userImage as string | null}
+                        image={loggedUserImage as string | null}
                         postId={post.id}
-                        userId={userId as string}
-                        userName={userName as string}
+                        userId={loggedUserId as string}
+                        userName={loggedUserName as string}
                         handleComment={handleComment}
                         postAuthorId={author?.id as string}
                     />
@@ -287,14 +288,14 @@ export default async function PostPage({params:{id}}:PostId) {
                                 <CommentCard 
                                     comment={comment} 
                                     isLogged={isLogged} 
-                                    image={userImage as string | null}
+                                    image={loggedUserImage as string | null}
                                     postId={post.id}
-                                    userId={userId as string}
-                                    userName={userName as string}
+                                    userId={loggedUserId as string}
+                                    userName={loggedUserName as string}
                                     handleResponse={handleResponse}
                                     commentLikes={getCommentVotes(comment.id, "UP")}
                                     commentDislikes={getCommentVotes(comment.id, "DOWN")}
-                                    alreadyVotedComment={checkIfCommetWasVoted(comment.id, userId as string)}
+                                    alreadyVotedComment={checkIfCommetWasVoted(comment.id, loggedUserId as string)}
                                     handleCommentVote={handleCommentVote}
                                     isReported={checkReportedComment(comment.id)}
                                     reportComment={reportComment}
