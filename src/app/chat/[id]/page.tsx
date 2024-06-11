@@ -24,6 +24,14 @@ export default async function ChatPage ({params:{id}}:ChatPageProps){
         }
     });
 
+    if(!userLogged){
+        return(
+            <div>
+                <p>Acceso no autorizado, por favor iniciar sesión</p>
+            </div>
+        );
+    }
+
     const chat = await prisma.conversation.findUnique({
         where: {
             id: id
@@ -65,19 +73,14 @@ export default async function ChatPage ({params:{id}}:ChatPageProps){
         }
     }));
 
-    const getUserProps = (userId: string, prop: "image" | "userName") => {
-        let userProp: string = "";
+    const getUserName = (userId: string) => {
+        const getUserName = messagesUsersArray.find(user => user.id === userId);
+        return getUserName?.userName as string;
+    }
 
-        messagesUsersArray.forEach(user => {
-            if(user.id === userId && prop === "image"){
-                userProp = user.image as string;
-            }
-            if(user.id === userId && prop === "userName"){
-                userProp = user.userName as string;
-            }
-        });
-
-        return userProp;
+    const getUserProfileImg = (userId: string) => {
+        const getUserImg = messagesUsersArray.find(user => user.id === userId);
+        return getUserImg?.image as string;
     }
 
     const checkSenderId = (userId: string) => {
@@ -92,12 +95,7 @@ export default async function ChatPage ({params:{id}}:ChatPageProps){
 
     const getOtherUserId = () => {
         const getOtherUser = chat?.userIds.find(id => id !== userLogged?.id);
-
-        if(getOtherUser){
-            return getOtherUser;
-        }
-
-        return "undefined";
+        return getOtherUser;
     }
     
     return (
@@ -111,8 +109,8 @@ export default async function ChatPage ({params:{id}}:ChatPageProps){
                         messages.map(message => (
                             <MessageBubble
                                 key={message.id}
-                                userImage={getUserProps(message.senderId, "image")}
-                                userName={getUserProps(message.senderId, "userName")}
+                                userImage={getUserProfileImg(message.senderId)}
+                                userName={getUserName(message.senderId)}
                                 body={message.body as string}
                                 createdAt={formatDate(message.createdAt)}
                                 checkSenderId={checkSenderId(message.senderId)}
@@ -125,7 +123,7 @@ export default async function ChatPage ({params:{id}}:ChatPageProps){
                         <MessageBox
                             chatId={chat?.id as string}
                             userId={userLogged?.id as string}
-                            otherUserId={getOtherUserId()}
+                            otherUserId={getOtherUserId() as string}
                             handleMessage={handleMessage}
                         />
                     )

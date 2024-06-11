@@ -25,9 +25,19 @@ export default async function PanelPage ({searchParams:{page = "1"}}: PanelPageP
         }
     })
 
+    if(!getAdmin){
+        return(
+            <div>
+                <p>Acceso no autorizado, por favor iniciar sesión</p>
+            </div>
+        );
+    }
+
     if(!getAdmin?.isAdmin){
         return(
-            <div className="h-screen">Page not found.</div>
+            <div className="h-screen">
+                <p>Page not found.</p>
+            </div>
         );
     }
     
@@ -69,25 +79,13 @@ export default async function PanelPage ({searchParams:{page = "1"}}: PanelPageP
     }));
 
     const getPostTitle = (postId: string) => {
-        let postTitle = "undefined";
-
         const findPost = postArray.find(post => post.id === postId);
-        if(findPost){
-            return findPost.title;
-        }
-
-        return postTitle;
+        return findPost?.title as string;
     };
 
     const getUserName = (userId: string) => {
-        let userName = "undefined";
-
         const findUser = userArray.find(user => user.id === userId);
-        if(findUser){
-            return findUser.userName;
-        }
-
-        return userName;
+        return findUser?.userName as string;
     };
 
     return(
@@ -101,13 +99,10 @@ export default async function PanelPage ({searchParams:{page = "1"}}: PanelPageP
                         reports.map(report => (
                             <ReportCard
                                 key={report.id}
-                                postId={report.postId as string}
+                                report={report}
                                 commentId={report.commentId as string}
                                 userName={getUserName(report.userId)}
                                 postTitle={getPostTitle(report.postId as string)}
-                                body={report.body}
-                                reportId={report.id}
-                                subject={report.subjectType}
                                 deleteReport={deleteReport}
                                 deletePost={deletePost}
                                 deleteComment={deleteComment}

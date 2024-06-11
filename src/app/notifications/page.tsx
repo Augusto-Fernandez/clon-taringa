@@ -19,16 +19,18 @@ export const metadata = {
 export default async function NotificationPage ({searchParams:{page = "1"}}: NotificationPageProps){
     const session = await getServerSession(authOptions);
 
-    let userId = null
+    const userLogged = await prisma.user.findUnique({
+        where:{
+            userName: session?.user?.name as string
+        }
+    })
 
-    if(session?.user){
-        const userLogged = await prisma.user.findUnique({
-            where:{
-                userName: session?.user?.name as string
-            }
-        })
-
-        userId = userLogged?.id
+    if(!userLogged){
+        return(
+            <div>
+                <p>Acceso no autorizado, por favor iniciar sesión</p>
+            </div>
+        );
     }
 
     const currentPage = parseInt(page);
@@ -36,7 +38,7 @@ export default async function NotificationPage ({searchParams:{page = "1"}}: Not
 
     const notifications = await prisma.notification.findMany({
         where:{
-            userId: userId as string
+            userId: userLogged.id
         },
         orderBy: { id: "desc" },
         skip: (currentPage-1)*pageSize,
@@ -45,7 +47,7 @@ export default async function NotificationPage ({searchParams:{page = "1"}}: Not
 
     const totalNotificationCount = await prisma.notification.count({
         where:{
-            userId: userId as string
+            userId: userLogged.id
         }
     })
 
@@ -77,21 +79,13 @@ export default async function NotificationPage ({searchParams:{page = "1"}}: Not
     }));
 
     const getFromUserName = (fromUserId: string) => {
-        let fromUserName: string;
-
         const searchFromUserName = fromUserArray.find(fromUser => fromUser.id === fromUserId)
-        fromUserName = searchFromUserName?.userName as string;
-
-        return fromUserName;
+        return searchFromUserName?.userName as string;
     }
 
     const getPostName = (postId: string) => {
-        let postName: string;
-
         const searchPostName = postArray.find(post => post.id === postId)
-        postName = searchPostName?.title as string;
-
-        return postName;
+        return searchPostName?.title as string;
     }
     
     return(
@@ -106,12 +100,9 @@ export default async function NotificationPage ({searchParams:{page = "1"}}: Not
                             notifications.map(notification => (
                                 <NotificationCard
                                     key={notification.id}
+                                    notification={notification}
                                     fromUserName={getFromUserName(notification.fromUserId)}
-                                    postId={notification.subjectId}
                                     postName={getPostName(notification.subjectId)}
-                                    subject={notification.subject}
-                                    readed={notification.readed}
-                                    notificationId={notification.id}
                                     handleNotification={handleNotification}
                                     handleDeleteNotification={handleDeleteNotification}
                                 />

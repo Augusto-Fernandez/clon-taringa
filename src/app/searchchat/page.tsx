@@ -18,13 +18,20 @@ export default async function MessagesPage ({searchParams:{query, page = "1"}}:M
 
     const currentPage = parseInt(page);
     const pageSize = 10;
-    
 
     const userLogged = await prisma.user.findUnique({
         where: {
             userName: session?.user?.name as string
         }
     });
+
+    if(!userLogged){
+        return(
+            <div>
+                <p>Acceso no autorizado, por favor iniciar sesión</p>
+            </div>
+        );
+    }
 
     const totalConversationsCount = await prisma.conversation.count({
         where: {
@@ -101,39 +108,31 @@ export default async function MessagesPage ({searchParams:{query, page = "1"}}:M
     }));
 
     const getOtherUserName = (userIds: string[]) => {
-        let otherUserName: string = "";
-        
         const otherUserId = userIds.find(id => id !== userLogged?.id);
+        const getOtherUserName = otherUserArray.find(user => user.id === otherUserId);
         
-        otherUserArray.forEach(user => {
-            if(user.id === otherUserId){
-                otherUserName = user.userName;
-            }
-        });
-
-        return otherUserName;
+        return getOtherUserName?.userName as string;
     }
 
-    const getMessageProps = (chatId:string, prop: "userName" | "body" | "date") => {
+    const getMessageUserName = (chatId: string) => {
         const message = lastMessageArray.find(message => message.conversationId === chatId);
 
-        if( message && prop === "userName" && message.conversationId === chatId && message.senderId === userLogged?.id){
+        if(message?.senderId === userLogged.id){
             return userLogged.userName;
         }
 
-        if( message && prop === "userName" && message.conversationId === chatId && message.senderId !== userLogged?.id){
-            const getUserName = otherUserArray.find(user => user.id === message.senderId)
-            return getUserName?.userName as string;
-        }
+        const getUserName = otherUserArray.find(user => user.id === message?.senderId)
+        return getUserName?.userName as string;
+    };
 
-        if( message && prop === "body" && message.conversationId === chatId ){
-            return message.body as string;
-        }
-        if( message && prop === "date" && message.conversationId === chatId ){
-            return formatDate(message.createdAt);
-        }
+    const getLastMessageBody = (chatId: string) => {
+        const message = lastMessageArray.find(message => message.conversationId === chatId);
+        return message?.body as string;
+    };
 
-        return "undefined";
+    const getLastMessageDate = (chatId: string) => {
+        const message = lastMessageArray.find(message => message.conversationId === chatId);
+        return formatDate(message?.createdAt as Date);
     };
 
     const getMessageNotification = (chatId: string) => {
@@ -160,9 +159,9 @@ export default async function MessagesPage ({searchParams:{query, page = "1"}}:M
                                     key={ chat.id}
                                     otherUserName={getOtherUserName(chat.userIds)}
                                     chatId={chat.id}
-                                    messageUserName={getMessageProps(chat.id, "userName")}
-                                    body={getMessageProps(chat.id, "body")}
-                                    date={getMessageProps(chat.id, "date")}
+                                    messageUserName={getMessageUserName(chat.id)}
+                                    body={getLastMessageBody(chat.id)}
+                                    date={getLastMessageDate(chat.id)}
                                     notifCount={getMessageNotification(chat.id)}
                                     userId={userLogged?.id as string}
                                     handleChatRedirect={handleChatRedirect}

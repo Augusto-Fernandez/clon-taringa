@@ -19,18 +19,26 @@ export const metadata = {
 export default async function SavesPage({searchParams:{page = "1"}}: SavedPageProps) {   
     const session = await getServerSession(authOptions);
     
-    const user = await prisma.user.findUnique({
+    const userLogged = await prisma.user.findUnique({
         where: {
             userName: session?.user?.name as string
         }
     });
+
+    if(!userLogged){
+        return(
+            <div>
+                <p>Acceso no autorizado, por favor iniciar sesión</p>
+            </div>
+        );
+    }
 
     const currentPage = parseInt(page);
     const pageSize = 10;
     
     const saves = await prisma.savedPost.findMany({
         where: {
-            userId: user?.id
+            userId: userLogged.id
         },
         orderBy: { id: "desc" },
         skip: (currentPage-1)*pageSize,
@@ -53,7 +61,7 @@ export default async function SavesPage({searchParams:{page = "1"}}: SavedPagePr
 
     const totalSavedCount = await prisma.savedPost.count({
         where: {
-            userId: user?.id
+            userId: userLogged.id
         }
     });
     

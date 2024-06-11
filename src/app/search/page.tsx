@@ -36,7 +36,8 @@ export default async function SearchPage({searchParams: { query, page = "1" }}: 
                 { title: { contains: query, mode: "insensitive" } }
             ],
         }
-    })
+    });
+    
     const totalPages = Math.ceil(totalPostCount/pageSize);
     
     return(
