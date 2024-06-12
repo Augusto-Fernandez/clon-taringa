@@ -100,7 +100,6 @@ export default async function PanelPage ({searchParams:{page = "1"}}: PanelPageP
                             <ReportCard
                                 key={report.id}
                                 report={report}
-                                commentId={report.commentId as string}
                                 userName={getUserName(report.userId)}
                                 postTitle={getPostTitle(report.postId as string)}
                                 deleteReport={deleteReport}

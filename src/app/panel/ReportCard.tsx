@@ -13,13 +13,12 @@ interface ReportCardProps {
     report: Report
     userName: string;
     postTitle?: string;
-    commentId?: string;
     deleteReport: (reportId: string) => Promise<void>;
     deletePost: (postId: string) => Promise<void>;
     deleteComment: (commentId: string) => Promise<void>;
 }
 
-export default function ReportCard({report, userName, postTitle, commentId, deleteReport, deletePost, deleteComment}:ReportCardProps) {
+export default function ReportCard({report, userName, postTitle, deleteReport, deletePost, deleteComment}:ReportCardProps) {
     const [reportBody, setReportBody] = useState(false);
     
     const handleReportDetails = () =>{
@@ -35,7 +34,7 @@ export default function ReportCard({report, userName, postTitle, commentId, dele
     }
 
     const handleDeleteComment = async () => {
-        await deleteComment(commentId as string);
+        await deleteComment(report.commentId as string);
     }
     
     return(
@@ -46,7 +45,7 @@ export default function ReportCard({report, userName, postTitle, commentId, dele
                         report.subjectType === "POST" ? (
                             <p>El usurio <span className="text-blue-600">{userName}</span> reportó el post <span className="text-blue-600">{postTitle}</span>.</p>
                         ) : (
-                            <p>El usurio <span className="text-blue-600">{userName}</span> reportó el comentario <span className="text-blue-600">{commentId}</span>.</p>
+                            <p>El usurio <span className="text-blue-600">{userName}</span> reportó el comentario <span className="text-blue-600">{report.commentId}</span>.</p>
                         )
                     }
                 </Link>
