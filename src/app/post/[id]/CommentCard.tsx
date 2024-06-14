@@ -32,7 +32,8 @@ interface CommentProps{
 }
 
 type Input = {
-    reportBody: string
+    body: string;
+    reportBody: string;
 };
 
 export default function CommentCard({comment, isLogged, loggedUserImage, loggedUserId, loggedUserName, handleResponse, commentLikes, commentDislikes, alreadyVotedComment, handleCommentVote, isReported, reportComment, deleteReport}:CommentProps) {    
@@ -43,18 +44,6 @@ export default function CommentCard({comment, isLogged, loggedUserImage, loggedU
         setResponseBox(false);
         setVotedComment(alreadyVotedComment);
     }, [alreadyVotedComment]);
-
-    const [response, setResponse] = useState("");
-    const handleCommentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setResponse(event.target.value);
-    };
-
-    const createResponse = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        await handleResponse(comment.postId, loggedUserId, loggedUserName, loggedUserImage, response, comment.id);
-        setResponse("");
-        setResponseBox(false);
-    };
 
     const handleResponseClick = () => {
         const parentCommentCard = document.getElementById(`comment-${comment.parentId}`);
@@ -78,12 +67,18 @@ export default function CommentCard({comment, isLogged, loggedUserImage, loggedU
         }
     };
 
-    const { register, handleSubmit, formState: { errors } } = useForm<Input>();
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm<Input>();
 
     const handleReportForm:SubmitHandler<Input> = async (data) => {
         await reportComment(comment.id, comment.postId, loggedUserId, data.reportBody)
         setModal(!modal);
     }
+
+    const createResponse:SubmitHandler<Input> = async (data) => {
+        await handleResponse(comment.postId, loggedUserId, loggedUserName, loggedUserImage, data.body, comment.id);
+        setValue("body", "");
+        setResponseBox(false);
+    };
     
     return(
         <div id={`comment-${comment.id}`} className="border-b h-auto pb-2">
@@ -248,21 +243,33 @@ export default function CommentCard({comment, isLogged, loggedUserImage, loggedU
             </div>
             {
                 responseBox && isLogged && (
-                    <form onSubmit={createResponse} className="min-h-28 flex space-x-2 p-5">
-                        <Image
-                            src={comment.profileImg || profilePicPlaceholder}
-                            alt="Profile picture"
-                            priority={true}
-                            className="max-w-8 max-h-8 rounded-full"
-                        />
-                        <textarea 
-                            className="w-full hover:no-animation focus:outline-none border border-t-gray-300 rounded-md min-h-16 h-auto"
-                            placeholder="Agregar respuesta"
-                            onChange={handleCommentChange}
-                        >  
-                        </textarea>
-                        <UserButton content="Responder" width="w-auto"/>
-                    </form>
+                    <>
+                        <form onSubmit={handleSubmit(createResponse)} className="min-h-28 flex space-x-2 p-5">
+                            <Image
+                                src={comment.profileImg || profilePicPlaceholder}
+                                alt="Profile picture"
+                                priority={true}
+                                className="max-w-8 max-h-8 rounded-full"
+                            />
+                            <textarea 
+                                className="w-full hover:no-animation focus:outline-none border border-t-gray-300 rounded-md min-h-16 h-auto"
+                                placeholder="Agregar respuesta"
+                                {...register("body", {
+                                    required: {
+                                        value: true,
+                                        message: "Es necesario una respuesta",
+                                    },
+                                })}
+                            >  
+                            </textarea>
+                            <UserButton content="Responder" width="w-auto"/>
+                        </form>
+                        {errors.body && typeof errors.body.message === 'string' && (
+                            <span className="m-16 text-red-500 text-xs font-bold">
+                                {errors.body.message}
+                            </span>
+                        )}
+                    </>
                 )
             }
         </div>
