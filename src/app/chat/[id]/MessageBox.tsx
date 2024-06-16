@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
+import { SubmitHandler, useForm } from "react-hook-form";
 
 import UserButton from "@/components/UserButton"
 
@@ -11,16 +12,16 @@ interface MessageBoxProps {
     handleMessage: ( body: string, chatId: string, userId: string, otherUserId: string) => Promise<void>;
 };
 
-export default function MessageBox ({chatId, userId, otherUserId, handleMessage}: MessageBoxProps){
-    const [response, setResponse] = useState("");
-    const handleResponseChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setResponse(event.target.value);
-    };
+type Input = {
+    body: string;
+};
 
-    const createComment = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        await handleMessage(response, chatId, userId, otherUserId);
-        setResponse("");
+export default function MessageBox ({chatId, userId, otherUserId, handleMessage}: MessageBoxProps){
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm<Input>();
+
+    const createComment:SubmitHandler<Input> = async (data) => {
+        await handleMessage(data.body, chatId, userId, otherUserId);
+        setValue("body", "");
     };
 
     useEffect(() => {
@@ -31,16 +32,26 @@ export default function MessageBox ({chatId, userId, otherUserId, handleMessage}
     });
     
     return(
-        <form id='messageBox' onSubmit={createComment} className="mx-10 mt-2 mb-8 rounded-3xl bg-white p-4 flex space-x-4 border">
-            <textarea 
-                className="w-full hover:no-animation focus:outline-none border border-t-gray-300 rounded-md min-h-16 h-auto"
-                required
-                placeholder="Agregar respuesta"
-                value={response}
-                onChange={handleResponseChange}
-            >
-            </textarea>
-            <UserButton content="Responder" width="w-auto"/>
-        </form>
+        <>
+            <form id='messageBox' onSubmit={handleSubmit(createComment)} className="mx-10 mt-2 rounded-3xl bg-white p-4 flex space-x-4 border">
+                <textarea 
+                    className="w-full hover:no-animation focus:outline-none border border-t-gray-300 rounded-md min-h-16 h-auto"
+                    placeholder="Agregar respuesta"
+                    {...register("body", {
+                        required: {
+                            value: true,
+                            message: "Es necesario ingresar una respuesta",
+                        },
+                    })}
+                >
+                </textarea>
+                <UserButton content="Responder" width="w-auto"/>
+            </form>
+            {errors.body && typeof errors.body.message === 'string' && (
+                <span className="ml-14  text-red-500 text-sm font-bold">
+                    {errors.body.message}
+                </span>
+            )}
+        </>
     );
 };
