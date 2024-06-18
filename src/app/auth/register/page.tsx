@@ -1,7 +1,9 @@
 "use client"
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
 
+import { registerSchema } from "@/app/lib/validations/registerSchema";
 import UserButton from "@/components/UserButton";
 
 type Inputs = {
@@ -12,7 +14,9 @@ type Inputs = {
 };
 
 export default function RegisterPage() {
-    const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
+    const { register, handleSubmit, formState: { errors } } = useForm<Inputs>({
+        resolver: zodResolver(registerSchema)
+    });
 
     const router = useRouter();
 
@@ -35,6 +39,15 @@ export default function RegisterPage() {
 
         if(res.ok){
             router.push("/auth/login");
+        } else {
+            const errorData = await res.json();
+            if (errorData.message === "Email already exists") {
+                alert("El correo electrónico ya está registrado");
+            } else if (errorData.message === "username already exists") {
+                alert("El nombre de usuario ya está registrado");
+            } else {
+                alert("Ocurrió un error inesperado. Por favor, inténtalo de nuevo.");
+            }
         }
     };
 
@@ -48,12 +61,7 @@ export default function RegisterPage() {
                         type="text"
                         className="input p-3 rounded block w-full border border-gray-300 hover:no-animation focus:outline-non"
                         placeholder="Nombre de Usuario"
-                        {...register("username", {
-                            required: {
-                                value: true,
-                                message: "Nombre de usuario es requerido",
-                            },
-                        })}
+                        {...register("username")}
                     />
                     {errors.username && typeof errors.username.message === 'string' && (
                         <span className="text-red-500 text-xs font-bold">
@@ -67,12 +75,7 @@ export default function RegisterPage() {
                         type="email"
                         className="input p-3 rounded block w-full border border-gray-300 hover:no-animation focus:outline-non"
                         placeholder="Email"
-                        {...register("email", {
-                            required: {
-                                value: true,
-                                message: "Email es requerido",
-                            },
-                        })}
+                        {...register("email")}
                     />
                     {errors.email && typeof errors.email.message === 'string' && (
                         <span className="text-red-500 text-xs font-bold">
@@ -86,12 +89,7 @@ export default function RegisterPage() {
                         type="password"
                         className="input p-3 rounded block w-full border border-gray-300 hover:no-animation focus:outline-non"
                         placeholder="********"
-                        {...register("password", {
-                            required: {
-                                value: true,
-                                message: "Contraseña es requerida",
-                            },
-                        })}
+                        {...register("password")}
                     />
                     {errors.password && typeof errors.password.message === 'string' && (
                         <span className="text-red-500 text-xs font-bold">
@@ -105,12 +103,7 @@ export default function RegisterPage() {
                         type="password"
                         className="input p-3 rounded block mb-2 w-full border border-gray-300 hover:no-animation focus:outline-non"
                         placeholder="********"
-                        {...register("confirmPassword", {
-                            required: {
-                            value: true,
-                            message: "Es obligatorio confirmar contraseña",
-                            },
-                        })}
+                        {...register("confirmPassword")}
                     />
                     {errors.confirmPassword && typeof errors.confirmPassword.message === 'string' && (
                         <span className="text-red-500 text-xs font-bold">
