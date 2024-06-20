@@ -60,6 +60,9 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                             maxLength: {
                                 value: 30,
                                 message: "El título no debe exceder los 30 caracteres",
+                            },
+                            validate: {
+                                notEmpty: value => value.trim() !== "" || "El título no puede estar vacío",
                             }
                         })}
                     />
@@ -86,6 +89,9 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                             minLength: {
                                 value: 20,
                                 message: "El contenido del post debe tener al menos 20 caracteres",
+                            },
+                            validate: {
+                                notEmpty: value => value.trim() !== "" || "El contenido del post no puede estar vacío",
                             }
                         })}
                         >
