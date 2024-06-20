@@ -1,11 +1,13 @@
 "use client"
 
 import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 
 import FlagIcon from "@/components/svgs/FlagIcon";
 import UserButton from "@/components/UserButton";
 import CloseIcon from "@/components/svgs/CloseIcon";
+import { reportInputSchema } from "@/app/lib/validations/reportInputSchema";
 
 interface ReportBoxProps {
     postId: string
@@ -35,7 +37,9 @@ export default function ReportBox({postId, userId, isReported, reportPost, delet
         }
     };
 
-    const { register, handleSubmit, formState: { errors } } = useForm<Input>();
+    const { register, handleSubmit, formState: { errors } } = useForm<Input>({
+        resolver: zodResolver(reportInputSchema)
+    });
 
     const handleReportForm:SubmitHandler<Input> = async (data) => {
         await reportPost(postId, userId, data.reportBody);
@@ -79,12 +83,7 @@ export default function ReportBox({postId, userId, isReported, reportPost, delet
                             </div>
                             <textarea 
                                 className="w-[40rem] min-h-[20rem] max-h-[20rem] border border-gray-300 rounded hover:no-animation focus:outline-none"
-                                {...register("reportBody", {
-                                    required: {
-                                        value: true,
-                                        message: "Es necesario un motivo de denuncia",
-                                    },
-                                })}
+                                {...register("reportBody")}
                             ></textarea>
                             {errors.reportBody && typeof errors.reportBody.message === 'string' && (
                                 <span className="text-red-500 text-xs font-bold">

@@ -1,9 +1,11 @@
 "use client"
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import UserButton from "@/components/UserButton"
+import { textInputSchema } from '@/app/lib/validations/textInputSchema';
 
 interface MessageBoxProps {
     chatId: string;
@@ -17,7 +19,9 @@ type Input = {
 };
 
 export default function MessageBox ({chatId, userId, otherUserId, handleMessage}: MessageBoxProps){
-    const { register, handleSubmit, setValue, formState: { errors } } = useForm<Input>();
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm<Input>({
+        resolver: zodResolver(textInputSchema)
+    });
 
     const createComment:SubmitHandler<Input> = async (data) => {
         await handleMessage(data.body, chatId, userId, otherUserId);
@@ -37,12 +41,7 @@ export default function MessageBox ({chatId, userId, otherUserId, handleMessage}
                 <textarea 
                     className="w-full hover:no-animation focus:outline-none border border-t-gray-300 rounded-md min-h-16 h-auto"
                     placeholder="Agregar respuesta"
-                    {...register("body", {
-                        required: {
-                            value: true,
-                            message: "Es necesario ingresar una respuesta",
-                        },
-                    })}
+                    {...register("body")}
                 >
                 </textarea>
                 <UserButton content="Responder" width="w-auto"/>

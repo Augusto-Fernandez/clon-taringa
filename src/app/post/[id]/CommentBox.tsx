@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import UserButton from "@/components/UserButton";
 import profilePicPlaceholder from "../../../../public/profilePicPlaceholder.png"
+import { textInputSchema } from "@/app/lib/validations/textInputSchema";
 
 interface CommentBoxProps{
     image: string | null;
@@ -20,7 +22,9 @@ type Input = {
 };
 
 export default function CommentBox ({image, postId, userId, userName, handleComment, postAuthorId}:CommentBoxProps){
-    const { register, handleSubmit, setValue, formState: { errors } } = useForm<Input>();
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm<Input>({
+        resolver: zodResolver(textInputSchema)
+    });
 
     const createComment:SubmitHandler<Input> = async (data) => {
         await handleComment(postId, userId, userName, image, data.body, postAuthorId);
@@ -39,12 +43,7 @@ export default function CommentBox ({image, postId, userId, userName, handleComm
                 <textarea 
                     className="w-full hover:no-animation focus:outline-none border border-t-gray-300 rounded-md min-h-16 h-auto"
                     placeholder="Agregar comentario"
-                    {...register("body", {
-                        required: {
-                            value: true,
-                            message: "Es necesario una respuesta",
-                        },
-                    })}
+                    {...register("body")}
                 >
                 </textarea>
                 <UserButton content="Comentar" width="w-auto"/>
