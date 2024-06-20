@@ -53,6 +53,14 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                                 value: true,
                                 message: "Es necesario un titulo",
                             },
+                            minLength: {
+                                value: 3,
+                                message: "El título debe tener al menos 3 caracteres",
+                            },
+                            maxLength: {
+                                value: 30,
+                                message: "El título no debe exceder los 30 caracteres",
+                            }
                         })}
                     />
                     {errors.title && typeof errors.title.message === 'string' && (
@@ -75,6 +83,10 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                                 value: true,
                                 message: "Es necesario ingresar contenido al post",
                             },
+                            minLength: {
+                                value: 20,
+                                message: "El contenido del post debe tener al menos 20 caracteres",
+                            }
                         })}
                         >
                     </textarea>
@@ -106,6 +118,10 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                                 value: true,
                                 message: "Es necesario ingresar una URL",
                             },
+                            pattern: {
+                                value: /^http:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/\S*)?$/,
+                                message: "La URL debe comenzar con 'http://'",
+                            }
                         })}
                     />
                     {!isChecked && errors.link && typeof errors.link.message === 'string' && (
