@@ -13,12 +13,20 @@ export default async function TopPostCard({post, voteRatio}:TopPostProps) {
         where: {
             id: post.userId
         }
-    })
+    });
+
+    const formatedPostTitle = () =>{
+        if(post.nsfw){
+            return post.title.length > 18 ? post.title.substring(0, 18) + "..." : post.title;
+        }
+
+        return post.title.length > 21 ? post.title.substring(0, 21) + "..." : post.title;
+    };
     
     return(
         <Link href={"/post/"+post.id} className="bg-slate-300 h-8 rounded flex justify-between">
             <div className="p-1 space-x-1">
-                <span className="font-semibold text-sm">{post.title}</span>
+                <span className="font-semibold text-sm">{formatedPostTitle()}</span>
                 {
                     post.nsfw && !author?.isAdmin && (
                         <span className="rounded text-white bg-red-600 text-[0.5rem] border-red-500 border-2">NSFW</span>

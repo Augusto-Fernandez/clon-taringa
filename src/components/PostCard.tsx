@@ -31,10 +31,18 @@ export default async function PostCard({post}:PostProps) {
         }
     });
 
+    const formatedPostTitle = () =>{
+        if(post.nsfw){
+            return post.title.length > 13 ? post.title.substring(0, 13) + "..." : post.title;
+        }
+
+        return post.title.length > 18 ? post.title.substring(0, 18) + "..." : post.title;
+    };
+
     return(
         <Link href={"/post/"+post.id} className="bg-slate-300 h-14 rounded-lg flex justify-between mb-2">
             <div className="p-3 space-x-4">
-                <span className="font-semibold text-lg">{post.title}</span>
+                <span className="font-semibold text-lg">{formatedPostTitle()}</span>
                 <span className="text-blue-600">{author?.userName}</span>
                 {
                     post.nsfw && !author?.isAdmin && (

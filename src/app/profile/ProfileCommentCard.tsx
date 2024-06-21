@@ -37,11 +37,14 @@ export default async function ProfileCommentCard({comment}:CommentProps) {
         }
     });
 
+    const formatedComment = comment.message.length > 29 ? comment.message.substring(0, 29) + "..." : comment.message;
+    const formatedPostTitle = post?.title.length as number > 18 ? post?.title.substring(0, 18) + "..." : post?.title;
+
     return(
         <div className="h-14 rounded-lg flex justify-between mb-2">
             <div className="p-3">
                 <p className="text-slate-600 font-semibold">
-                    <span className="text-blue-600">{author?.userName}</span> comentó &quot;<span>{comment.message}</span>&quot; en <Link href={`/post/${comment.postId}`} className="text-blue-600">{post?.title}</Link>
+                    <span className="text-blue-600">{author?.userName}</span> comentó &quot;<span>{formatedComment}</span>&quot; en <Link href={`/post/${comment.postId}`} className="text-blue-600">{formatedPostTitle}</Link>
                 </p>
             </div>
             <div className="p-4 space-x-1 flex">

@@ -36,6 +36,8 @@ export default function ReportCard({report, userName, postTitle, deleteReport, d
     const handleDeleteComment = async () => {
         await deleteComment(report.commentId as string);
     }
+
+    const formatedPostTitle = report.body.length as number > 25 ? report.body.substring(0, 25) + "..." : report.body;
     
     return(
         <div className="min-h-14 h-auto rounded-lg bg-slate-300 mb-2 ">
@@ -43,7 +45,7 @@ export default function ReportCard({report, userName, postTitle, deleteReport, d
                 <Link href={"/post/"+report.postId} className="text-slate-600 font-semibold">
                     {
                         report.subjectType === "POST" ? (
-                            <p>El usurio <span className="text-blue-600">{userName}</span> reportó el post <span className="text-blue-600">{postTitle}</span>.</p>
+                            <p>El usurio <span className="text-blue-600">{userName}</span> reportó el post <span className="text-blue-600">{formatedPostTitle}</span></p>
                         ) : (
                             <p>El usurio <span className="text-blue-600">{userName}</span> reportó el comentario <span className="text-blue-600">{report.commentId}</span>.</p>
                         )

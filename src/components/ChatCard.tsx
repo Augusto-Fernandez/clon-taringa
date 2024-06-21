@@ -12,6 +12,14 @@ interface ChatCardProps{
 }
 
 export default function ChatCard({otherUserName, chatId, messageUserName, body, date, notifCount, userId, handleChatRedirect}:ChatCardProps) {
+    const formatedComment = () => {
+        if(notifCount > 0){
+            return body.length > 7 ? body.substring(0, 7) + "..." : body;
+        }
+
+        return body.length > 11 ? body.substring(0, 11) + "..." : body;
+    };
+    
     return(
         <button onClick={() => handleChatRedirect(chatId, userId)} className=" w-full bg-slate-300 h-14 rounded-lg flex justify-between mb-2">
             <div className="p-3 space-x-7 flex">
@@ -27,7 +35,7 @@ export default function ChatCard({otherUserName, chatId, messageUserName, body, 
                     )
                 }
                 <p className="text-base pt-1">
-                    <span>{messageUserName}</span>: <span>{body}</span>
+                    <span>{messageUserName}</span>: <span>{formatedComment()}</span>
                 </p>
             </div>
             <span className="text-sm p-5">{date}</span>
