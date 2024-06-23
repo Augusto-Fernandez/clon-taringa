@@ -77,7 +77,12 @@ export default function ReportCard({report, userName, postTitle, deleteReport, d
             {
                 reportBody && (
                     <>
-                        <p className="p-5 text-slate-700 text-sm mx-3 border-t border-slate-400">{report.body}</p>
+                        <p 
+                            className="p-5 text-slate-700 text-sm mx-3 border-t border-slate-400"
+                            style={{ overflowWrap: 'break-word', whiteSpace: 'normal' }}
+                        >
+                            {report.body}
+                        </p>
                         <div className="flex justify-end p-3">
                             {
                                 report.subjectType === "POST" ? (

@@ -23,7 +23,12 @@ export default function UserMenu({session, notificationCount, messageNotificatio
         <>
             {
                 user && isAdmin && (
-                    <Link href={"/panel"}>Panel de Control</Link>
+                    <Link 
+                        href={"/panel"}
+                        className="btn text-base font-semibold bg-green-500 border border-green-300/80 text-white hover:bg-green-600" 
+                    >
+                        Panel de Control
+                    </Link>
                 )
             }
             {
