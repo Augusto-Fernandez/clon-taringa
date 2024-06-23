@@ -12,33 +12,31 @@ interface ChatCardProps{
 }
 
 export default function ChatCard({otherUserName, chatId, messageUserName, body, date, notifCount, userId, handleChatRedirect}:ChatCardProps) {
-    const formatedComment = () => {
-        if(notifCount > 0){
-            return body.length > 7 ? body.substring(0, 7) + "..." : body;
-        }
-
-        return body.length > 11 ? body.substring(0, 11) + "..." : body;
-    };
+    const formatedComment = body.length > 21 ? body.substring(0, 21) + "..." : body;
     
     return(
         <button onClick={() => handleChatRedirect(chatId, userId)} className=" w-full bg-slate-300 h-14 rounded-lg flex justify-between mb-2">
-            <div className="p-3 space-x-7 flex">
-                <span className="font-semibold text-lg">{otherUserName}</span>
-                {
-                    notifCount > 0 && notifCount < 10 && (
-                        <span className="badge bg-red-500 text-white border-red-400 mt-1.5">{notifCount}</span>
-                    )
-                }
-                {
-                    notifCount > 9 && (
-                        <span className="badge bg-red-500 text-white border-red-400 mt-1">+9</span>
-                    )
-                }
-                <p className="text-base pt-1">
-                    <span>{messageUserName}</span>: <span>{formatedComment()}</span>
-                </p>
+            <div className="py-3 pl-3 flex w-11/12 justify-between">
+                <div className="space-x-4">
+                    <span className="font-semibold text-lg">{otherUserName}</span>
+                    {
+                        notifCount > 0 && notifCount < 10 && (
+                            <span className="badge bg-red-500 text-white border-red-400 mt-1.5">{notifCount}</span>
+                        )
+                    }
+                    {
+                        notifCount > 9 && (
+                            <span className="badge bg-red-500 text-white border-red-400 mt-1">+9</span>
+                        )
+                    }
+                </div>
+                <div className="pt-1 w-2/3 flex justify-start">
+                    <p className="text-sm">
+                        <span>{messageUserName}</span>: <span>{formatedComment}</span>
+                    </p>
+                </div>
             </div>
-            <span className="text-sm p-5">{date}</span>
+            <span className="text-sm p-5 w-1/6">{date}</span>
         </button>
     );
 }

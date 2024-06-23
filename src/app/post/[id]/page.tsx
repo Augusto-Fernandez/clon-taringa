@@ -256,7 +256,7 @@ export default async function PostPage({params:{id}}:PostId) {
                         }
                     </div>
                     {
-                        session?.user && !author?.isAdmin && (
+                        session?.user && !author?.isAdmin && loggedUserId !== author?.id && (
                             <ReportBox
                                 userId={loggedUserId as string}
                                 postId={post.id}

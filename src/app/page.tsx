@@ -92,7 +92,7 @@ export default async function Home({searchParams:{page = "1"}}: HomeProps) {
 
   postsSortedByVotes.sort((a, b) => b.voteRatio - a.voteRatio);
 
-  const top10Posts = postsSortedByVotes.slice(0, 10);
+  const top10Posts = postsSortedByVotes.slice(0, 5);
   
   return (
     <main className="flex min-h-screen items-stretch justify-between p-5 bg-slate-300 mx-20 rounded-lg space-x-10">

@@ -32,16 +32,6 @@ export default function NotificationCard({notification, fromUserName, postName, 
     const handleDeleteNotificationClick = async () => {
         await handleDeleteNotification(notification.id);
     };
-
-    const formatedPostTitle = (type: "POST" | "COMMENT") => {
-        if(type === "POST"){
-            return postName?.length as number > 26 ? postName.substring(0, 26) + "..." : postName;
-        }
-
-        if(type === "COMMENT"){
-            return postName?.length as number > 21 ? postName.substring(0, 21) + "..." : postName;
-        }
-    };
     
     return(
         <>
@@ -51,12 +41,12 @@ export default function NotificationCard({notification, fromUserName, postName, 
                         <Link href={`/post/${notification.subjectId}`} className="text-slate-600 font-semibold">
                             {
                                 notification.subject === "POST" && (
-                                    <p><span className="text-blue-600">{fromUserName}</span> comentó en tu post <span className="text-blue-600">{formatedPostTitle("POST")}</span></p>
+                                    <p><span className="text-blue-600">{fromUserName}</span> comentó en tu post <span className="text-blue-600">{postName}</span></p>
                                 )
                             }
                             {
                                 notification.subject === "COMMENT" && (
-                                    <p><span className="text-blue-600">{fromUserName}</span> respondió tu comentario en <span className="text-blue-600">{formatedPostTitle("COMMENT")}</span></p>
+                                    <p><span className="text-blue-600">{fromUserName}</span> respondió tu comentario en <span className="text-blue-600">{postName}</span></p>
                                 )
                             }
                         </Link>
@@ -72,12 +62,12 @@ export default function NotificationCard({notification, fromUserName, postName, 
                         <Link onClick={handleNotificationClick} href={`/post/${notification.subjectId}`} className="text-slate-600 font-semibold">
                             {
                                 notification.subject === "POST" && (
-                                    <p><span className="text-blue-600">{fromUserName}</span> comentó en tu post <span className="text-blue-600">{formatedPostTitle("POST")}</span></p>
+                                    <p><span className="text-blue-600">{fromUserName}</span> comentó en tu post <span className="text-blue-600">{postName}</span></p>
                                 )
                             }
                             {
                                 notification.subject === "COMMENT" && (
-                                    <p><span className="text-blue-600">{fromUserName}</span> respondió tu comentario en <span className="text-blue-600">{formatedPostTitle("COMMENT")}</span></p>
+                                    <p><span className="text-blue-600">{fromUserName}</span> respondió tu comentario en <span className="text-blue-600">{postName}</span></p>
                                 )
                             }
                         </Link>

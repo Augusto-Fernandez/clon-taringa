@@ -70,7 +70,7 @@ export default async function ProfilePage({searchParams: { query, page = "1" }}:
                 <div className="pt-10 pl-10 flex justify-between">
                     <div className="flex">
                         <Image src={user?.image || profilePicPlaceholder} alt="Profile picture" width={40} height={40} className="w-28 rounded-full"/>
-                        <h1 className="text-7xl p-4">{user?.userName}</h1>
+                        <h1 className="text-3xl p-4">{user?.userName}</h1>
                     </div>
                     {
                         session?.user && userLogged?.id as string !== user?.id && (

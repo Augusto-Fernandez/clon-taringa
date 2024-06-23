@@ -58,8 +58,8 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                                 message: "El título debe tener al menos 3 caracteres",
                             },
                             maxLength: {
-                                value: 30,
-                                message: "El título no debe exceder los 30 caracteres",
+                                value: 20,
+                                message: "El título no debe exceder los 20 caracteres",
                             },
                             validate: {
                                 notEmpty: value => value.trim() !== "" || "El título no puede estar vacío",

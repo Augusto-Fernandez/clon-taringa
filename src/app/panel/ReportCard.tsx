@@ -37,7 +37,7 @@ export default function ReportCard({report, userName, postTitle, deleteReport, d
         await deleteComment(report.commentId as string);
     }
 
-    const formatedPostTitle = report.body.length as number > 25 ? report.body.substring(0, 25) + "..." : report.body;
+    const formatedPostTitle = postTitle?.length as number > 25 ? report.body.substring(0, 25) + "..." : postTitle;
     
     return(
         <div className="min-h-14 h-auto rounded-lg bg-slate-300 mb-2 ">

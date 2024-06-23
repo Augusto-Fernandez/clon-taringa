@@ -190,23 +190,27 @@ export default function CommentCard({comment, isLogged, loggedUserImage, loggedU
                                         </button>
                                     )
                                 }
-                                <button onClick={handleModal}>
-                                    {
-                                        reported ? (
-                                            <div className="bg-red-600 p-1 rounded">
-                                                <FlagIcon
-                                                    className="w-4 h-4 bg-red-600"
-                                                    line="white"
-                                                />
-                                            </div>
-                                        ) : (
-                                            <FlagIcon
-                                                className="w-5 h-5 mt-0.5"
-                                                line="red"
-                                            />
-                                        )
-                                    }
-                                </button>
+                                {
+                                    loggedUserId !== comment.userId && (
+                                        <button onClick={handleModal}>
+                                            {
+                                                reported ? (
+                                                    <div className="bg-red-600 p-1 rounded">
+                                                        <FlagIcon
+                                                            className="w-4 h-4 bg-red-600"
+                                                            line="white"
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    <FlagIcon
+                                                        className="w-5 h-5 mt-0.5"
+                                                        line="red"
+                                                    />
+                                                )
+                                            }
+                                        </button>
+                                    )
+                                }
                             </div>
                         )
                     }

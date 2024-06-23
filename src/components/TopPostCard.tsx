@@ -14,44 +14,45 @@ export default async function TopPostCard({post, voteRatio}:TopPostProps) {
             id: post.userId
         }
     });
-
-    const formatedPostTitle = () =>{
-        if(post.nsfw){
-            return post.title.length > 18 ? post.title.substring(0, 18) + "..." : post.title;
-        }
-
-        return post.title.length > 21 ? post.title.substring(0, 21) + "..." : post.title;
-    };
     
-    return(
-        <Link href={"/post/"+post.id} className="bg-slate-300 h-8 rounded flex justify-between">
-            <div className="p-1 space-x-1">
-                <span className="font-semibold text-sm">{formatedPostTitle()}</span>
-                {
-                    post.nsfw && !author?.isAdmin && (
-                        <span className="rounded text-white bg-red-600 text-[0.5rem] border-red-500 border-2">NSFW</span>
-                    )
-                }
-                {
-                    author?.isAdmin && (
-                        <span className="rounded text-white bg-blue-600 text-[0.5rem] border-blue-500 border-2">ADMIN</span>
-                    )
-                }
+    return (
+        <Link href={"/post/" + post.id} className="bg-slate-300 h-[4.3rem] rounded flex">
+            <div className="w-14"></div>
+            <div className="p-1 flex flex-col">
+                <span className="font-medium text-xs">{post.title}</span>
+                <div className="space-x-2">
+                    <span className="text-xs text-blue-600">{author?.userName}</span>
+                    {
+                        post.nsfw && !author?.isAdmin && (
+                            <span className="badge h-3 w-10 mt-1 text-white bg-red-600 text-xs border-red-500 border-2">nsfw</span>
+                        )
+                    }
+                    {
+                        author?.isAdmin && (
+                            <span className="badge h-3 w-10 mt-1 text-white bg-blue-600 text-xs border-blue-500 border-2">admin</span>
+                        )
+                    }
+                </div>
+                <p className="text-xs">
+                    {
+                        voteRatio > 0 && !author?.isAdmin && (
+                            <span className="text-emerald-600">+{voteRatio} </span>
+                        )
+                    }
+                    {
+                        voteRatio < 0 && !author?.isAdmin && (
+                            <span className="text-red-500">{voteRatio} </span>
+                        )
+                    }
+                    {
+                        author?.isAdmin ? (
+                            <span>Anuncio</span>
+                        ) : (
+                            <span>- {post.category}</span>
+                        )
+                    }
+                </p>
             </div>
-            {
-                voteRatio > 0 && !author?.isAdmin && (
-                    <div className="pt-1 pr-3">
-                        <span className="text-emerald-600">+{voteRatio}</span>
-                    </div>
-                )
-            }
-            {
-                voteRatio < 0 && !author?.isAdmin && (
-                    <div className="pt-1 pr-3">
-                        <span className="text-red-500">{voteRatio}</span>
-                    </div>
-                )
-            }
         </Link>
     );
 }
