@@ -3,6 +3,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import {useRouter} from 'next/navigation'
 import {useState} from 'react'
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 
 import UserButton from "@/components/UserButton";
 
@@ -73,7 +74,12 @@ export default function LoginPage() {
                         </span>
                     )}
                 </div>
-                <UserButton content="Ingresar" width="w-full"/>
+                <UserButton content="Ingresar" width="w-full mb-4"/>
+                <div className="border-t border-gray-300 flex justify-center pt-3">
+                    <Link href={"/auth/register"} className="text-blue-600">
+                        Crear Cuenta
+                    </Link>
+                </div>
             </form>
         </div>
     );
