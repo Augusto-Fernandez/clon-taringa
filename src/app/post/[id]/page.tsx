@@ -191,7 +191,7 @@ export default async function PostPage({params:{id}}:PostId) {
                     alt="Banner picture"
                     className="h-32 border-b border-b-gray-300 rounded-t-3xl"
                 />
-                <h1 className="min-h-28 h-auto p-10 text-slate-600 font-semibold text-5xl">{post.title}</h1>
+                <h1 className="min-h-28 h-auto p-10 text-slate-600 font-semibold text-4xl">{post.title}</h1>
                 <div className="pb-10 pl-10 pr-10 flex justify-between h-1">
                     <Link href={"/profile?query="+author?.userName} className=" h-10 flex space-x-2">
                         <Image

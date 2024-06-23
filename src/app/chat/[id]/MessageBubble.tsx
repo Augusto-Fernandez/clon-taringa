@@ -31,7 +31,12 @@ export default function MessageBubble ({userImage, userName, body, createdAt, ch
                 {userName}
                 <time className="ml-2 text-xs opacity-50">{createdAt}</time>
             </div>
-            <div className="chat-bubble bg-slate-300 text-slate-800">{body}</div>
+            <div 
+                className="chat-bubble bg-slate-300 text-slate-800 w-5/6" 
+                style={{ overflowWrap: 'break-word', whiteSpace: 'normal' }}
+            >
+                {body}
+            </div>
         </div>
     );
 };

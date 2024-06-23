@@ -114,15 +114,15 @@ export default function CommentCard({comment, isLogged, loggedUserImage, loggedU
                         className="max-w-14 max-h-14 rounded-full mt-3"
                     />
                 </Link>
-                <div className="p-2 w-full">
+                <div className="p-2 w-[54.5rem]">
                     <Link href={"/profile?query="+comment.userName}> 
                         <span className="pt-1 text-blue-600 text-2xl">{comment.userName}</span>
                     </Link>
                     <span className="text-xs text-slate-500 pl-6">{formatDate(comment.createdAt)}</span>
-                    <p className="text-slate-800 w-auto min-h-6 h-auto text-lg">{comment.message}</p>
+                    <p className="text-slate-800 min-h-6 h-auto text-lg" style={{ overflowWrap: 'break-word', whiteSpace: 'normal' }}>{comment.message}</p>
                     {
                         isLogged && (
-                            <div className="flex justify-end space-x-1 pt-4 h-6">
+                            <div className="flex justify-end space-x-1 mt-4 h-6">
                                 <button onClick={() => {
                                     setResponseBox(!responseBox);
                                 }}>
