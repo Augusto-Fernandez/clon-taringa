@@ -46,6 +46,7 @@ export default async function PostPage({params:{id}}:PostId) {
     let loggedUserName = null;
     let loggedUserImage = null;
     let isLogged = false;
+    let postReported = false;
 
     const session = await getServerSession(authOptions);
     
@@ -60,6 +61,18 @@ export default async function PostPage({params:{id}}:PostId) {
         loggedUserName = userLogged?.userName
         loggedUserImage = userLogged?.image
         isLogged = true
+
+        const checkReportPost = await prisma.report.findUnique({
+            where: {
+                userId: userLogged?.id,
+                postId: post.id,
+                subjectType: "POST"
+            }
+        })
+    
+        if(checkReportPost){
+            postReported = true
+        }
     }
     
     const votes = await prisma.vote.findMany({
@@ -107,16 +120,18 @@ export default async function PostPage({params:{id}}:PostId) {
             commentVotesArray.push(...commentsVotes);
         }
 
-        const commentReport = await prisma.report.findUnique({
-            where:{
-                commentId: comment.id,
-                userId: loggedUserId as string,
-                subjectType: "COMMENT"
+        if(session?.user){
+            const commentReport = await prisma.report.findUnique({
+                where:{
+                    commentId: comment.id,
+                    userId: loggedUserId as string,
+                    subjectType: "COMMENT"
+                }
+            });
+    
+            if(commentReport){
+                commentReportArray.push(commentReport);
             }
-        });
-
-        if(commentReport){
-            commentReportArray.push(commentReport);
         }
     }));
 
@@ -153,24 +168,6 @@ export default async function PostPage({params:{id}}:PostId) {
         isSaved = true;
     }
 
-    const checkReportPost = await prisma.report.findUnique({
-        where: {
-            userId: loggedUserId as string,
-            postId: post.id,
-            subjectType: "POST"
-        }
-    })
-
-    let postReported = false;
-
-    if(checkReportPost){
-        postReported = true
-    }
-
-    interface SortedByVotesArray extends Comment {
-        votesDif: number
-    }
-
     const checkReportedComment = (commentId: string) => {
         const findReportedComment = commentReportArray.find(report => report.commentId === commentId)
         if(findReportedComment){
@@ -179,6 +176,10 @@ export default async function PostPage({params:{id}}:PostId) {
 
         return false;
     };
+
+    interface SortedByVotesArray extends Comment {
+        votesDif: number
+    }
 
     const commentsSortedByVotes:SortedByVotesArray[] = [...comments.map((comment) => ({ ...comment, votesDif: getCommentVotes(comment.id, "UP") - getCommentVotes(comment.id, "DOWN")}))]
     commentsSortedByVotes.sort((a,b) => b.votesDif - a.votesDif);

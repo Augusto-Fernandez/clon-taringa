@@ -27,11 +27,19 @@ export function generateMetadata({searchParams: { query }}: ProfilePageProps): M
 export default async function ProfilePage({searchParams: { query, page = "1" }}: ProfilePageProps) {
     const session = await getServerSession(authOptions);
 
-    const userLogged = await prisma.user.findUnique({
-        where: {
-            userName: session?.user?.name as string
-        }
-    });
+    let loggedUserId = null;
+    let loggedUserDescription = null;
+
+    if (session?.user) {
+        const userLogged = await prisma.user.findUnique({
+            where: {
+                userName: session?.user?.name as string
+            }
+        });
+
+        loggedUserId = userLogged?.id;
+        loggedUserDescription = userLogged?.profileDescription;
+    };
     
     const user = await prisma.user.findUnique({
         where: {
@@ -74,11 +82,11 @@ export default async function ProfilePage({searchParams: { query, page = "1" }}:
                         <div className="p-2">
                             <h1 className="text-3xl">{user?.userName}</h1>
                             {
-                                session?.user && userLogged?.id as string === user?.id ? 
+                                session?.user && loggedUserId as string === user?.id ? 
                                 (
                                     <ProfileDescription
-                                        userId={userLogged?.id as string}
-                                        profileDescription={userLogged?.profileDescription as string}
+                                        userId={loggedUserId as string}
+                                        profileDescription={loggedUserDescription as string}
                                         handleProfileDescription={handleProfileDescription}
                                     />
                                 ) : (
@@ -92,9 +100,9 @@ export default async function ProfilePage({searchParams: { query, page = "1" }}:
                 </div>
                 <div className="flex justify-end mx-10 mt-1">
                     {
-                        session?.user && userLogged?.id as string !== user?.id && (
+                        session?.user && loggedUserId as string !== user?.id && (
                             <CreateChatButton
-                                userId={userLogged?.id as string}
+                                userId={loggedUserId as string}
                                 toUserId={user?.id as string}
                                 handleCreateChat={handleCreateChat}
                             />
