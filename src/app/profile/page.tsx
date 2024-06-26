@@ -10,8 +10,9 @@ import ProfileCommentCard from "./ProfileCommentCard";
 import profilePicPlaceholder from "../../../public/profilePicPlaceholder.png" 
 import { Comment, Post } from "@prisma/client";
 import PaginationBar from "@/components/PaginationBar";
-import { handleCreateChat } from "./actions";
+import { handleCreateChat, handleProfileDescription } from "./actions";
 import CreateChatButton from "./CreateChatButton";
+import ProfileDescription from "./ProfileDescription";
 
 interface ProfilePageProps {
     searchParams: {query: string, page: string};
@@ -69,9 +70,27 @@ export default async function ProfilePage({searchParams: { query, page = "1" }}:
             <div className=" min-h-screen w-2/3 bg-slate-300 mx-20 rounded-lg justify-center">
                 <div className="pt-10 pl-10 flex justify-between">
                     <div className="flex">
-                        <Image src={user?.image || profilePicPlaceholder} alt="Profile picture" width={40} height={40} className="w-28 rounded-full"/>
-                        <h1 className="text-3xl p-4">{user?.userName}</h1>
+                        <Image src={user?.image || profilePicPlaceholder} alt="Profile picture" width={40} height={40} className="w-28 h-28 rounded-full"/>
+                        <div className="p-2">
+                            <h1 className="text-3xl">{user?.userName}</h1>
+                            {
+                                session?.user && userLogged?.id as string === user?.id ? 
+                                (
+                                    <ProfileDescription
+                                        userId={userLogged?.id as string}
+                                        profileDescription={userLogged?.profileDescription as string}
+                                        handleProfileDescription={handleProfileDescription}
+                                    />
+                                ) : (
+                                    <div className="w-[51rem] h-16">
+                                        <p className="text-xs h-12" style={{ overflowWrap: 'break-word', whiteSpace: 'normal' }}>{user?.profileDescription}</p>
+                                    </div>
+                                )
+                            }
+                        </div>
                     </div>
+                </div>
+                <div className="flex justify-end mx-10 mt-1">
                     {
                         session?.user && userLogged?.id as string !== user?.id && (
                             <CreateChatButton
@@ -82,7 +101,7 @@ export default async function ProfilePage({searchParams: { query, page = "1" }}:
                         )
                     }
                 </div>
-                <div className="bg-red-800 h-[41.25rem] rounded-md mt-10 mx-10 mb-2 p-3">
+                <div className="bg-red-800 h-[41.25rem] rounded-md mt-3 mx-10 mb-2 p-3">
                     {userActivityPage.length > 0 ? (
                             userActivityPage.map((activity, index) => {
                                 if ("type" in activity && activity.type === "comment") {

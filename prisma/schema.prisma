@@ -32,6 +32,7 @@ model User {
   email String @unique
   password String
   image String?
+  profileDescription String?
   isAdmin Boolean
   posts Post[]
   votes Vote[]

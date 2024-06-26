@@ -1,6 +1,7 @@
 "use server"
 
 import { redirect } from 'next/navigation'
+import { revalidatePath } from "next/cache";
 
 import { prisma } from "../lib/db/prisma"
 
@@ -24,4 +25,17 @@ export async function handleCreateChat(userId:string, toUserId: string) {
 
         redirect(`/chat/${conversation.id}`);
     }
+};
+
+export async function handleProfileDescription(userId:string, profileDescription: string) {
+    await prisma.user.update({
+        where: {
+            id: userId
+        },
+        data:{
+            profileDescription: profileDescription
+        }
+    })
+
+    revalidatePath("/profile/[id]","page");
 };
