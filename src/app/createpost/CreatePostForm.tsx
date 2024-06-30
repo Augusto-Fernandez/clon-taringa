@@ -1,9 +1,12 @@
 "use client"
 
 import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm, Controller } from "react-hook-form";
+import dynamic from 'next/dynamic';
 
 import UserButton from "@/components/UserButton";
+import 'react-quill/dist/quill.snow.css';
+import { toolbarOptions } from "./toolBarOptions";
 
 interface CreatePostFormProps {
     authorId: string;
@@ -22,7 +25,7 @@ type Input = {
 export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostFormProps){
     const [isChecked, setIsChecked] = useState(false);
 
-    const { register, handleSubmit, formState: { errors } } = useForm<Input>();
+    const { register, handleSubmit, formState: { errors }, control } = useForm<Input>();
 
     const handleCheckboxChange = () => {
         setIsChecked(!isChecked);
@@ -40,6 +43,8 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
             await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, data.link);
         };
     };
+
+    const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
     
     return(
         <form onSubmit={handleSubmit(createPost)}>
@@ -71,31 +76,33 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                             {errors.title.message}
                         </span>
                     )}
-                    <div className="bg-gray-100 pl-4">
-                        <div className="flex h-14 p-4 space-x-10">
-                            <p className=" text-sm border-l border-gray-200 pl-8">Imagen</p>
-                            <p className=" text-sm border-l border-gray-200 pl-8">Video</p>
-                            <p className=" text-sm border-l border-gray-200 pl-8">Link</p>
-                        </div>
-                    </div>
-                    <textarea 
-                        className="textarea resize-none w-full min-h-96 max-h-96 hover:no-animation focus:outline-none border border-t-gray-300 rounded-t-none h-14" 
-                        placeholder="Contenido del post (obligatorio)"
-                        {...register("body", {
+                    <Controller
+                        name="body"
+                        control={control}
+                        defaultValue=""
+                        rules={{ 
                             required: {
                                 value: true,
                                 message: "Es necesario ingresar contenido al post",
                             },
-                            minLength: {
-                                value: 20,
-                                message: "El contenido del post debe tener al menos 20 caracteres",
-                            },
                             validate: {
-                                notEmpty: value => value.trim() !== "" || "El contenido del post no puede estar vacío",
+                                notEmpty: value => {
+                                    const text = value.replace(/<\/?[^>]+(>|$)/g, "").trim();
+                                    return text !== "" || "Es necesario ingresar contenido al post";
+                                }
                             }
-                        })}
-                        >
-                    </textarea>
+                        }}
+                        render={({ field }) => (
+                                <ReactQuill 
+                                    modules={{toolbar:toolbarOptions}}
+                                    className="min-h-96 h-auto bg-white"
+                                    theme="snow" 
+                                    value={field.value} 
+                                    onChange={field.onChange} 
+                                />
+                            )
+                        }
+                    />
                     {errors.body && typeof errors.body.message === 'string' && (
                         <span className="p-3 text-red-500 text-sm font-bold">
                             {errors.body.message}
