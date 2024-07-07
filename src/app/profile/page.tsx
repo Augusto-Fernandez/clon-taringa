@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import Image from "next/image";
 import { getServerSession } from "next-auth";
 
 import { prisma } from "../lib/db/prisma";
@@ -7,12 +6,12 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 
 import PostCard from "@/components/PostCard";
 import ProfileCommentCard from "./ProfileCommentCard";
-import profilePicPlaceholder from "../../../public/profilePicPlaceholder.png" 
 import { Comment, Post } from "@prisma/client";
 import PaginationBar from "@/components/PaginationBar";
-import { handleCreateChat, handleProfileDescription } from "./actions";
+import { handleCreateChat, handleProfileDescription, handleProfileImage } from "./actions";
 import CreateChatButton from "./CreateChatButton";
 import ProfileDescription from "./ProfileDescription";
+import ProfileImage from "./ProfileImage";
 
 interface ProfilePageProps {
     searchParams: {query: string, page: string};
@@ -78,11 +77,16 @@ export default async function ProfilePage({searchParams: { query, page = "1" }}:
             <div className=" min-h-screen w-2/3 bg-slate-300 mx-20 rounded-lg justify-center">
                 <div className="pt-10 pl-10 flex justify-between">
                     <div className="flex">
-                        <Image src={user?.image || profilePicPlaceholder} alt="Profile picture" width={40} height={40} className="w-28 h-28 rounded-full"/>
+                        <ProfileImage
+                            image={user?.image as string}
+                            userId={user?.id as string}
+                            loggedUserId={loggedUserId as string}
+                            handleProfileImage={handleProfileImage}
+                        />
                         <div className="p-2">
                             <h1 className="text-3xl">{user?.userName}</h1>
                             {
-                                session?.user && loggedUserId as string === user?.id ? 
+                                session?.user && loggedUserId === user?.id ? 
                                 (
                                     <ProfileDescription
                                         userId={loggedUserId as string}
