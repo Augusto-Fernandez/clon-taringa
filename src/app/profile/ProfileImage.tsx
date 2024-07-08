@@ -28,7 +28,13 @@ export default function ProfileImage({image, userId, loggedUserId, handleProfile
 
     const uploadImage = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0] || null;
-        setImageUpload(file);
+        if (file && !["image/jpeg", "image/jpg"].includes(file.type)) {
+            alert("Solo se permiten imágenes de tipo JPG o JPEG");
+            setImageUpload(null);
+            setInputModal(false);
+        } else {
+            setImageUpload(file);
+        }
     };
 
     const handleUpload = async () => {
@@ -39,6 +45,7 @@ export default function ProfileImage({image, userId, loggedUserId, handleProfile
         try{
             await uploadBytes(imageRef, imageUpload);
         }catch(e){
+            setImageUpload(null);
             setInputModal(false);
             alert("Ocurrió un error al subir imagen");
             return console.log(e);
@@ -48,10 +55,9 @@ export default function ProfileImage({image, userId, loggedUserId, handleProfile
 
         await handleProfileImage(userId, imgUrl);
 
+        setImageUpload(null);
         setInputModal(false);
     };
-
-    console.log(image)
 
     return(
         <div className="flex flex-col">
