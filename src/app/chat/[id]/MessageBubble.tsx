@@ -23,6 +23,8 @@ export default function MessageBubble ({userImage, userName, body, createdAt, ch
                            src={userImage || profilePicPlaceholder} 
                            alt="Profile picture"
                            priority={true}
+                           width={20}
+                           height={20}
                         />
                     </Link>
                 </div>

@@ -14,9 +14,10 @@ interface UserMenuButtonProps {
     notificationCount: number;
     messageNotificationCount: number;
     isAdmin: boolean;
+    image: string | null;
 }
 
-export default function UserMenu({session, notificationCount, messageNotificationCount, isAdmin}:UserMenuButtonProps){
+export default function UserMenu({session, notificationCount, messageNotificationCount, image, isAdmin}:UserMenuButtonProps){
     const user = session?.user;
 
     return(
@@ -79,11 +80,11 @@ export default function UserMenu({session, notificationCount, messageNotificatio
                             <Image
                                 tabIndex={0} 
                                 role="button"
-                                src={user?.image || profilePicPlaceholder}
+                                src={image || profilePicPlaceholder}
                                 alt="Profile picture"
-                                width={40}
-                                height={40}
-                                className="w-10 rounded-full"
+                                width={20}
+                                height={20}
+                                className="w-10 h-10 rounded-full"
                             />
                             <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-36 space-y-1">
                                 <li>

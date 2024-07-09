@@ -111,7 +111,9 @@ export default function CommentCard({comment, isLogged, loggedUserImage, loggedU
                         src={comment.profileImg || profilePicPlaceholder}
                         alt="Profile picture"
                         priority={true}
-                        className="max-w-14 max-h-14 rounded-full mt-3"
+                        width={20}
+                        height={20}
+                        className="w-10 h-10 rounded-full mt-3"
                     />
                 </Link>
                 <div className="p-2 w-[54.5rem]">
@@ -259,7 +261,9 @@ export default function CommentCard({comment, isLogged, loggedUserImage, loggedU
                                 src={loggedUserImage || profilePicPlaceholder}
                                 alt="Profile picture"
                                 priority={true}
-                                className="max-w-8 max-h-8 rounded-full"
+                                width={20}
+                                height={20}
+                                className="w-8 h-8 rounded-full"
                             />
                             <textarea 
                                 className="w-full hover:no-animation focus:outline-none border border-t-gray-300 rounded-md min-h-16 h-auto"

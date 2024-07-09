@@ -200,9 +200,9 @@ export default async function PostPage({params:{id}}:PostId) {
                             role="button"
                             src={author?.image || profilePicPlaceholder}
                             alt="Profile picture"
-                            width={40}
-                            height={40}
-                            className="w-9 pb-1 rounded-full"
+                            width={20}
+                            height={20}
+                            className="w-9 h-9 mb-1 rounded-full"
                             priority={true}
                         />
                         <span className="pt-1 text-blue-600">{author?.userName}</span>

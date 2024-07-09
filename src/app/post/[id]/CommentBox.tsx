@@ -38,7 +38,9 @@ export default function CommentBox ({image, postId, userId, userName, handleComm
                     src={image || profilePicPlaceholder}
                     alt="Profile picture"
                     priority={true}
-                    className="max-w-12 max-h-12 rounded-full mt-2"
+                    width={20}
+                    height={20}
+                    className="w-12 h-12 rounded-full mt-2"
                 />
                 <textarea 
                     className="w-full hover:no-animation focus:outline-none border border-t-gray-300 rounded-md min-h-16 h-auto"

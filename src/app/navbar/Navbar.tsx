@@ -24,6 +24,7 @@ export default async function Navbar() {
     let notificationCount = 0;
     let messageNotificationCount = 0;
     let isAdmin = false;
+    let userImg = null;
     
     if(session){
         const loggedUser = await prisma.user.findUnique({
@@ -33,6 +34,7 @@ export default async function Navbar() {
         })
 
         isAdmin = loggedUser?.isAdmin as boolean;
+        userImg = loggedUser?.image as string;
 
         const getNotificationCount = await prisma.notification.findMany({
             where: {
@@ -69,6 +71,7 @@ export default async function Navbar() {
                     session={session}
                     notificationCount={notificationCount}
                     messageNotificationCount={messageNotificationCount}
+                    image={userImg}
                     isAdmin={isAdmin}
                 />
                 <form action={searchPosts} className="flex justify-center items-center space-x-1">
