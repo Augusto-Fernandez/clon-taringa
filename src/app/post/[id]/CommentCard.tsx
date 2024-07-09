@@ -20,10 +20,11 @@ import { reportInputSchema } from "@/app/lib/validations/reportInputSchema";
 interface CommentProps {
     comment: Comment;
     isLogged: boolean;
+    commentProfileImg: string | null;
     loggedUserImage: string | null;
     loggedUserId: string;
     loggedUserName: string;
-    handleResponse: (postId: string, userId: string, userName: string, image: string | null, message: string, parentId: string) => Promise<void>;
+    handleResponse: (postId: string, userId: string, userName: string, message: string, parentId: string) => Promise<void>;
     commentLikes: number;
     commentDislikes: number;
     alreadyVotedComment: string | undefined;
@@ -41,7 +42,7 @@ type InputReport = {
     reportBody: string;
 };
 
-export default function CommentCard({comment, isLogged, loggedUserImage, loggedUserId, loggedUserName, handleResponse, commentLikes, commentDislikes, alreadyVotedComment, handleCommentVote, isReported, reportComment, deleteReport}:CommentProps) {    
+export default function CommentCard({comment, isLogged, commentProfileImg, loggedUserImage, loggedUserId, loggedUserName, handleResponse, commentLikes, commentDislikes, alreadyVotedComment, handleCommentVote, isReported, reportComment, deleteReport}:CommentProps) {    
     const [responseBox, setResponseBox] = useState(false);
     const [votedComment, setVotedComment] = useState(alreadyVotedComment);
 
@@ -86,7 +87,7 @@ export default function CommentCard({comment, isLogged, loggedUserImage, loggedU
     };
 
     const createResponse:SubmitHandler<InputResponse> = async (data) => {
-        await handleResponse(comment.postId, loggedUserId, loggedUserName, loggedUserImage, data.body, comment.id);
+        await handleResponse(comment.postId, loggedUserId, loggedUserName, data.body, comment.id);
         setValueResponse("body", "");
         setResponseBox(false);
     };
@@ -108,7 +109,7 @@ export default function CommentCard({comment, isLogged, loggedUserImage, loggedU
             <div className="flex min-h-28">
                 <Link href={"/profile?query="+comment.userName}>
                     <Image
-                        src={comment.profileImg || profilePicPlaceholder}
+                        src={commentProfileImg || profilePicPlaceholder}
                         alt="Profile picture"
                         priority={true}
                         width={20}

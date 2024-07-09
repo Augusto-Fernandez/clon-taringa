@@ -46,13 +46,12 @@ export async function handleVote(postId: string, userId: string, type:'UP' | 'DO
     revalidatePath("/post/[id]","page");
 }
 
-export async function handleComment(postId: string, userId: string, userName: string, image: string | null, message: string, postAuthorId: string) {
+export async function handleComment(postId: string, userId: string, userName: string, message: string, postAuthorId: string) {
     await prisma.comment.create({
         data: {
             userId: userId,
             postId: postId,
             userName: userName,
-            profileImg: image,
             message: message
         }
     })
@@ -72,13 +71,12 @@ export async function handleComment(postId: string, userId: string, userName: st
     revalidatePath("/post/[id]","page");
 };
 
-export async function handleResponse(postId: string, userId: string, userName: string, image: string | null, message: string, parentId: string) {   
+export async function handleResponse(postId: string, userId: string, userName: string, message: string, parentId: string) {   
     const comment = await prisma.comment.create({
         data: {
             userId: userId,
             postId: postId,
             userName: userName,
-            profileImg: image,
             message: message,
             parentId: parentId
         }

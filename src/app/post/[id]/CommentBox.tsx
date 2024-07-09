@@ -14,7 +14,7 @@ interface CommentBoxProps{
     userId: string;
     userName: string;
     postAuthorId: string
-    handleComment: (postId: string, userId: string, userName: string, image: string | null, message: string, postAuthorId: string) => Promise<void>;
+    handleComment: (postId: string, userId: string, userName: string, message: string, parentId: string) => Promise<void>;
 }
 
 type Input = {
@@ -27,7 +27,7 @@ export default function CommentBox ({image, postId, userId, userName, handleComm
     });
 
     const createComment:SubmitHandler<Input> = async (data) => {
-        await handleComment(postId, userId, userName, image, data.body, postAuthorId);
+        await handleComment(postId, userId, userName, data.body, postAuthorId);
         setValue("body", "");
     };
 

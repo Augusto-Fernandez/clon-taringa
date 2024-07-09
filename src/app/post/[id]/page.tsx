@@ -17,7 +17,7 @@ import { handleVote, handleComment, handleResponse, handleCommentVote, savePost,
 import CommentBox from "./CommentBox";
 import CommentsIcon from "@/components/svgs/CommientsIcon";
 import CommentCard from "./CommentCard";
-import { Comment, CommentVote, Report } from "@prisma/client";
+import { Comment, CommentVote, Report, User } from "@prisma/client";
 import SavedPostBox from "./SavedPostBox";
 import ReportBox from "./ReportBox";
 
@@ -106,10 +106,21 @@ export default async function PostPage({params:{id}}:PostId) {
         }
     });
 
+    const commentUserArray:User[] = [];
     const commentVotesArray:CommentVote[] = [];
     const commentReportArray:Report[] = [];
     
     await Promise.all(comments.map(async (comment) => {
+        const commentUser = await prisma.user.findUnique({
+            where: {
+                id: comment.userId
+            }
+        });
+
+        if (commentUser) {
+            commentUserArray.push(commentUser);
+        }
+        
         const commentsVotes = await prisma.commentVote.findMany({
             where: {
                 commentId: comment.id
@@ -134,6 +145,16 @@ export default async function PostPage({params:{id}}:PostId) {
             }
         }
     }));
+
+    const getCommentProfileImg = (userId: string) =>{
+        let commentProfileImg = null;
+        const searchCommentUser = commentUserArray.find(commentUser => commentUser.id === userId);
+        if(searchCommentUser){
+            commentProfileImg = searchCommentUser.image;
+        }
+
+        return commentProfileImg;
+    };
 
     const getCommentVotes = (commentId: string, type: "UP" | "DOWN") =>{
         let count = 0;
@@ -289,6 +310,7 @@ export default async function PostPage({params:{id}}:PostId) {
                                 <CommentCard 
                                     comment={comment} 
                                     isLogged={isLogged} 
+                                    commentProfileImg={getCommentProfileImg(comment.userId)}
                                     loggedUserImage={loggedUserImage as string | null}
                                     loggedUserId={loggedUserId as string}
                                     loggedUserName={loggedUserName as string}
