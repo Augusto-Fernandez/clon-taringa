@@ -12,6 +12,7 @@ model Post {
   title String
   body String
   category String
+  banner String?
   link String?
   nsfw Boolean
   author User @relation(fields: [userId], references: [id])

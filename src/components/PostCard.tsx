@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { Post } from "@prisma/client";
+import Image from "next/image";
 
 import { prisma } from "@/app/lib/db/prisma";
+
+import postDefaultBanner from "../../public/postDefaultBanner.png"
 
 interface PostProps{
     post: Post;
@@ -33,7 +36,13 @@ export default async function PostCard({post}:PostProps) {
 
     return(
         <Link href={"/post/"+post.id} className="bg-slate-300 h-14 rounded-lg flex mb-2">
-            <div className=" w-24"></div>
+            <Image 
+                src={post.banner || postDefaultBanner} 
+                width={80}
+                height={80}
+                alt="Banner picture"
+                className="w-24 p-2 rounded-xl"
+            />
             <div className="w-full flex flex-col pl-2 pb-1">
                 <span className="font-semibold text-base">{post.title}</span>
                 <div className="flex space-x-3">

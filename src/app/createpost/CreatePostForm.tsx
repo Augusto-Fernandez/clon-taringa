@@ -3,14 +3,17 @@
 import { useState } from "react";
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import dynamic from 'next/dynamic';
+import { v4 } from "uuid";
 
 import UserButton from "@/components/UserButton";
 import 'react-quill/dist/quill.snow.css';
 import { toolbarOptions } from "./toolBarOptions";
+import { storage } from "../services/firebase/firebaseConfig";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 interface CreatePostFormProps {
     authorId: string;
-    handleCreatePost: (title: string, body: string, category: string, nsfw: boolean, authorId: string, link?: string) => Promise<void>;
+    handleCreatePost: (title: string, body: string, category: string, nsfw: boolean, authorId: string, banner?:string , link?: string) => Promise<void>;
 }
 
 type Input = {
@@ -18,12 +21,14 @@ type Input = {
     body: string;
     category: string;
     author: boolean;
+    banner?: string;
     link?: string;
     nsfw: boolean;
 }
 
 export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostFormProps){
     const [isChecked, setIsChecked] = useState(false);
+    const [imageUpload, setImageUpload] = useState<File | null>(null);
 
     const { register, handleSubmit, formState: { errors }, control } = useForm<Input>();
 
@@ -36,12 +41,114 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
         setCategory(event.target.value);
     };
 
+    const uploadImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0] || null;
+        if (file && !["image/jpeg", "image/jpg"].includes(file.type)) {
+            alert("Solo se permiten imágenes de tipo JPG o JPEG");
+            setImageUpload(null);
+        } else {
+            setImageUpload(file);
+        }
+    };
+
     const createPost:SubmitHandler<Input> = async (data) => {
-        if(isChecked === true){
-            await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId);
-        }else{
+        if (imageUpload === null){
             await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, data.link);
+            setImageUpload(null);
+            return;
+        }
+
+        //hace referencia a la colección y el nombre del archivo donde se va a cargar
+        const imageRef = ref(storage, `post-banner/${v4()}`);
+
+        //hace una instancia de FileReader para leer el contenido cargado
+        const reader = new FileReader();
+
+        //define la función que se ejecutará cuando la lectura del archivo sea exitosa
+        reader.onload = async (e) => {
+            //obtiene el resultado de la lectura del archivo y lo asigna a la variable result.
+            const result = e.target?.result as string;
+            if (!result) {
+                await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, data.link);
+                alert("Ocurrió un error al leer la imagen");
+                setImageUpload(null);
+                return;
+            }
+
+            //crea una nueva instancia de Image y asigna el resultado de la lectura del archivo
+            const img = new window.Image();
+            img.src = result;
+
+            //define la función que se ejecutará cuando la imagen se haya cargado
+            img.onload = async () => {
+                //crea el elemento canvas.
+                const canvas = document.createElement('canvas');
+                //toma el contexto 2d del canvas
+                const ctx = canvas.getContext('2d');
+
+                if (!ctx) {
+                    await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, data.link);
+                    alert("Ocurrió un error al leer la imagen");
+                    setImageUpload(null);
+                    return;
+                }
+
+                //establece las dimensiones del canvas a 360x360 píxeles
+                canvas.width = 960;
+                canvas.height = 130;
+
+                //calcula la relación de aspecto de la imagen
+                // aspectRatio > 1, es mas ancha
+                // aspectRatio < 1, es mas alta
+                // aspectRatio = 1, es mas cuadrada
+                const aspectRatio = img.width / img.height;
+                //srcX y srcY representan las coordenadas del punto superior izquierdo
+                //srcWidht y srcHeight representan las dimensiones de la imagen original
+                let srcX, srcY, srcWidth, srcHeight;
+
+                if (aspectRatio > 1) {// en el caso de que sea mas ancha
+                    srcHeight = img.height;
+                    srcWidth = img.height;
+                    srcX = (img.width - srcWidth) / 2;//centra el recorte horizontalmente 
+                    srcY = 0; //el recorte comienza desde el borde superior
+                } else { // en caso de que sea mas alta o cuadrada 
+                    srcWidth = img.width;
+                    srcHeight = img.width;
+                    srcX = 0;//el recorte comienza desde el borde izquierdo
+                    srcY = (img.height - srcHeight) / 2; //centra el recorte verticalmente
+                }
+
+                //dibuja la imagen en el canvas, recortándola al centro con las dimensiones especificadas
+                ctx.drawImage(img, srcX, srcY, srcWidth, srcHeight, 0, 0, 960, 130);
+
+                //convierte el contenido del canvas a un Blob en formato JPEG.
+                canvas.toBlob(async (blob) => {
+                    if (!blob) {
+                        await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, data.link);
+                        alert("Ocurrió un error al leer la imagen");
+                        setImageUpload(null);
+                        return;
+                    }
+
+                    //Hace el upload a Firebase
+                    try {
+                        await uploadBytes(imageRef, blob);
+                    } catch (e) {
+                        setImageUpload(null);
+                        alert("Ocurrió un error al subir imagen");
+                        return console.log(e);
+                    }
+
+                    //consige el URL de la imagen y se la pasa al servidor para que actualice el campo image de user
+                    const imgUrl = await getDownloadURL(imageRef);
+                    await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, imgUrl, data.link);
+
+                    setImageUpload(null);
+                }, 'image/jpeg'); //define que se tiene que codificar como un JPEG
+            };
         };
+
+        reader.readAsDataURL(imageUpload);
     };
 
     const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
@@ -185,6 +292,14 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                             type="checkbox" 
                             className="checkbox"
                             {...register("nsfw")}
+                        />
+                    </div>
+                    <div className="p-4 space-y-2">
+                        <label className="text-slate-600 text-sm">Agregar Portada (Opcional)</label>
+                        <input 
+                            onChange={uploadImage} 
+                            type="file" 
+                            className="file-input file-input-bordered w-full h-8"
                         />
                     </div>
                     <div className="p-4">

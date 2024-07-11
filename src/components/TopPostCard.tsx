@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { Post } from "@prisma/client";
+import Image from "next/image";
 
 import { prisma } from "@/app/lib/db/prisma";
+
+import postDefaultBanner from "../../public/postDefaultBanner.png";
 
 interface TopPostProps {
     post: Post; 
@@ -17,7 +20,13 @@ export default async function TopPostCard({post, voteRatio}:TopPostProps) {
     
     return (
         <Link href={"/post/" + post.id} className="bg-slate-300 h-[4.3rem] rounded flex">
-            <div className="w-14"></div>
+            <Image 
+                src={post.banner || postDefaultBanner} 
+                width={80}
+                height={80}
+                alt="Banner picture"
+                className="w-12 p-1 rounded-xl"
+            />
             <div className="p-1 flex flex-col">
                 <span className="font-medium text-xs">{post.title}</span>
                 <div className="space-x-2">

@@ -209,9 +209,11 @@ export default async function PostPage({params:{id}}:PostId) {
         <div className="min-h-screen bg-gray-100 py-6">
             <div className="mx-72 min-h-screen bg-white rounded-3xl border">
                 <Image 
-                    src={postDefaultBanner} 
+                    src={post.banner || postDefaultBanner} 
+                    width={200}
+                    height={200}
                     alt="Banner picture"
-                    className="h-32 border-b border-b-gray-300 rounded-t-3xl"
+                    className="h-32 w-full border-b border-b-gray-300 rounded-t-3xl"
                 />
                 <h1 className="min-h-28 h-auto p-10 text-slate-600 font-semibold text-4xl">{post.title}</h1>
                 <div className="pb-10 pl-10 pr-10 flex justify-between h-1">
