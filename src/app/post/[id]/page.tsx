@@ -4,6 +4,7 @@ import { cache } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { getServerSession } from "next-auth";
+import parse from 'html-react-parser';
 
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
@@ -232,8 +233,13 @@ export default async function PostPage({params:{id}}:PostId) {
                     </Link>
                     <span className="text-sm text-slate-500 h-10">{formatDate(post.createdAt)}</span>
                 </div>
-                <div className="mx-10 min-h-96 h-auto pt-5 border-t border-t-gray-100">
-                    <p className="text-slate-800">{post.body}</p>
+                <div 
+                    className="mx-10 min-h-96 h-auto p-5 border-t border-t-gray-100 text-slate-800"
+                    style={{ overflowWrap: 'break-word', whiteSpace: 'normal' }}
+                >
+                    {
+                        parse(post.body)
+                    }
                 </div>
                 {
                     post.link && (
