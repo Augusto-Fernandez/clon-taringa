@@ -1,13 +1,12 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import dynamic from 'next/dynamic';
 import { v4 } from "uuid";
 
 import UserButton from "@/components/UserButton";
 import 'react-quill/dist/quill.snow.css';
-import { toolbarOptions } from "./toolBarOptions";
 import { storage } from "../services/firebase/firebaseConfig";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
@@ -29,6 +28,7 @@ type Input = {
 export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostFormProps){
     const [isChecked, setIsChecked] = useState(false);
     const [imageUpload, setImageUpload] = useState<File | null>(null);
+    const [imageLinkArray, setImageLinkArray] = useState<string[] | null>(null);
 
     const { register, handleSubmit, formState: { errors }, control } = useForm<Input>();
 
@@ -152,6 +152,49 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
     };
 
     const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+
+    const handleQuillmageUpload = function (this: any) {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+    
+        input.onchange = async () => {
+            if (input.files) {
+                const file = input.files[0];
+                const storageRef = ref(storage, `post-images/${v4()}`);
+    
+                try {
+                    await uploadBytes(storageRef, file);
+                    const url = await getDownloadURL(storageRef);
+                    imageLinkArray?.push(url);
+                    const quill = this.quill
+                    const range = quill.getSelection();
+                    if (range) {
+                        quill.insertEmbed(range.index, 'image', url);
+                    } else {
+                        quill.insertEmbed(quill.getLength(), 'image', url);
+                    }
+                } catch (error) {
+                    console.error('Error uploading image: ', error);
+                }
+            }
+        };
+    };
+
+    const toolbarOptions = {
+        container: [
+            ['bold', 'italic', 'underline', 'strike'],
+            ['link', 'image'],
+            [{ 'list': 'ordered' }],
+            [{ 'size': ['small', false, 'large'] }],
+            [{ 'color': [] }],
+            [{ 'align': [] }],
+        ],
+        handlers: {
+            image: handleQuillmageUpload
+        }
+    };
     
     return(
         <form onSubmit={handleSubmit(createPost)}>
