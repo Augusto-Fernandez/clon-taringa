@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import dynamic from 'next/dynamic';
-import { v4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 import UserButton from "@/components/UserButton";
 import 'react-quill/dist/quill.snow.css';
@@ -12,22 +12,33 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 interface CreatePostFormProps {
     authorId: string;
-    handleCreatePost: (title: string, body: string, category: string, nsfw: boolean, authorId: string, banner?:string , link?: string) => Promise<void>;
+    handleCreatePost: (
+        title: string, 
+        body: string, 
+        category: string, 
+        nsfw: boolean, 
+        authorId: string, 
+        banner?:string , 
+        link?: string, 
+        storageRef?: string
+    ) => Promise<void>;
 }
 
 type Input = {
     title: string;
     body: string;
     category: string;
+    nsfw: boolean;
     author: boolean;
     banner?: string;
     link?: string;
-    nsfw: boolean;
+    storageRef?: string;
 }
 
 export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostFormProps){
     const [isChecked, setIsChecked] = useState(false);
-    const [imageUpload, setImageUpload] = useState<File | null>(null);
+    const [bannerUpload, setBannerUpload] = useState<File | null>(null);
+    const [storegeReference, setStoreReference] = useState(`post-${uuidv4()}`);
     const [imageLinkArray, setImageLinkArray] = useState<string[] | null>(null);
 
     const { register, handleSubmit, formState: { errors }, control } = useForm<Input>();
@@ -45,21 +56,21 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
         const file = event.target.files?.[0] || null;
         if (file && !["image/jpeg", "image/jpg"].includes(file.type)) {
             alert("Solo se permiten imágenes de tipo JPG o JPEG");
-            setImageUpload(null);
+            setBannerUpload(null);
         } else {
-            setImageUpload(file);
+            setBannerUpload(file);
         }
     };
 
     const createPost:SubmitHandler<Input> = async (data) => {
-        if (imageUpload === null){
-            await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, data.link);
-            setImageUpload(null);
+        if (bannerUpload === null){
+            await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, undefined, data.link, storegeReference);
+            setBannerUpload(null);
             return;
         }
 
         //hace referencia a la colección y el nombre del archivo donde se va a cargar
-        const imageRef = ref(storage, `post-banner/${v4()}`);
+        const imageRef = ref(storage, `post-banner/${uuidv4()}`);
 
         //hace una instancia de FileReader para leer el contenido cargado
         const reader = new FileReader();
@@ -69,9 +80,9 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
             //obtiene el resultado de la lectura del archivo y lo asigna a la variable result.
             const result = e.target?.result as string;
             if (!result) {
-                await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, data.link);
+                await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, undefined, data.link, storegeReference);
                 alert("Ocurrió un error al leer la imagen");
-                setImageUpload(null);
+                setBannerUpload(null);
                 return;
             }
 
@@ -87,9 +98,9 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                 const ctx = canvas.getContext('2d');
 
                 if (!ctx) {
-                    await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, data.link);
+                    await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, undefined, data.link, storegeReference);
                     alert("Ocurrió un error al leer la imagen");
-                    setImageUpload(null);
+                    setBannerUpload(null);
                     return;
                 }
 
@@ -124,9 +135,9 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                 //convierte el contenido del canvas a un Blob en formato JPEG.
                 canvas.toBlob(async (blob) => {
                     if (!blob) {
-                        await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, data.link);
+                        await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, undefined, data.link, storegeReference);
                         alert("Ocurrió un error al leer la imagen");
-                        setImageUpload(null);
+                        setBannerUpload(null);
                         return;
                     }
 
@@ -134,21 +145,21 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                     try {
                         await uploadBytes(imageRef, blob);
                     } catch (e) {
-                        setImageUpload(null);
+                        setBannerUpload(null);
                         alert("Ocurrió un error al subir imagen");
                         return console.log(e);
                     }
 
                     //consige el URL de la imagen y se la pasa al servidor para que actualice el campo image de user
                     const imgUrl = await getDownloadURL(imageRef);
-                    await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, imgUrl, data.link);
+                    await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, imgUrl, data.link, storegeReference);
 
-                    setImageUpload(null);
+                    setBannerUpload(null);
                 }, 'image/jpeg'); //define que se tiene que codificar como un JPEG
             };
         };
 
-        reader.readAsDataURL(imageUpload);
+        reader.readAsDataURL(bannerUpload);
     };
 
     const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
@@ -162,12 +173,12 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
         input.onchange = async () => {
             if (input.files) {
                 const file = input.files[0];
-                const storageRef = ref(storage, `post-images/${v4()}`);
+                const storageRef = ref(storage, `post-images/${storegeReference}/${uuidv4()}`);
     
                 try {
                     await uploadBytes(storageRef, file);
                     const url = await getDownloadURL(storageRef);
-                    imageLinkArray?.push(url);
+                    setImageLinkArray(prevArray => (prevArray ? [...prevArray, url] : [url]))
                     const quill = this.quill
                     const range = quill.getSelection();
                     if (range) {
