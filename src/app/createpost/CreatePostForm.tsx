@@ -69,27 +69,36 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
     };
 
     const createPost:SubmitHandler<Input> = async (data) => {
-        const foundSrcImg:string[] = [];
-        const unusedImages:StorageReference[] = [];
-
-        const imgTagRegex = /<img[^>]+src="([^">]+)"/g;
-        let match: RegExpExecArray | null;
-
-        while ((match = imgTagRegex.exec(data.body)) !== null) {
-            foundSrcImg.push(match[1].replace(/&amp;/g, '&'));
-        };
-
+        //Esta sección borra de Firebase las imagenes que no se utilizan en el HTML
+        //Verifica si se utilizaron imagenes en el post
         if(imageLinkArray){
+            //Array que guarda los src de las imagenes en data.body
+            const foundSrcImg:string[] = [];
+            //Array que va a guardar la referencia de archivo de las imagenes no utilizadas
+            const unusedImages:StorageReference[] = [];
+
+            //Regex que va a buscar el contenido de src de las etiquetas img
+            const imgTagRegex = /<img[^>]+src="([^">]+)"/g;
+            let match: RegExpExecArray | null;
+
+            //Busca en data.body los src de las img y las pushea al array
+            while ((match = imgTagRegex.exec(data.body)) !== null) {
+                foundSrcImg.push(match[1].replace(/&amp;/g, '&'));
+            };
+
+            //Busca en cada imagen que se haya cargado en el post
+            //Si no están el los src de data.body, las pushea al array de imagenes no utilizadas
             for(let src of imageLinkArray){
                 if(!foundSrcImg.includes(src.imgSrc)){
                     unusedImages.push(src.fileRef);
                 }
             }
-        };
 
-        unusedImages?.forEach(async (src) => {
-            await deleteObject(src);
-        });
+            //Borra una por una las imagenes cargadas no fueron utilizadas en data.body
+            unusedImages?.forEach(async (src) => {
+                await deleteObject(src);
+            });
+        };
 
         if (bannerUpload === null){
             await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, undefined, data.link, storegeReference);
@@ -186,7 +195,7 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                 }, 'image/jpeg'); //define que se tiene que codificar como un JPEG
             };
         };
-
+        //esto ejecuta toda la función que se declaró en reader.onload()
         reader.readAsDataURL(bannerUpload);
     };
 
@@ -201,6 +210,12 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
         input.onchange = async () => {
             if (input.files) {
                 const file = input.files[0];
+
+                if (file && !["image/jpeg", "image/jpg"].includes(file.type)) {
+                    alert("Solo se permiten imágenes de tipo JPG o JPEG");
+                    return;
+                };
+
                 const storageRef = ref(storage, `post-images/${storegeReference}/${uuidv4()}`);
     
                 try {
