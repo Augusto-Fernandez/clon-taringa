@@ -13,12 +13,13 @@ interface ReportCardProps {
     report: Report
     userName: string;
     postTitle?: string;
+    postStorageRef?: string;
     deleteReport: (reportId: string) => Promise<void>;
-    deletePost: (postId: string) => Promise<void>;
+    deletePost: (postId: string, storageRef: string) => Promise<void>;
     deleteComment: (commentId: string) => Promise<void>;
 }
 
-export default function ReportCard({report, userName, postTitle, deleteReport, deletePost, deleteComment}:ReportCardProps) {
+export default function ReportCard({report, userName, postTitle, postStorageRef, deleteReport, deletePost, deleteComment}:ReportCardProps) {
     const [reportBody, setReportBody] = useState(false);
     
     const handleReportDetails = () =>{
@@ -30,7 +31,7 @@ export default function ReportCard({report, userName, postTitle, deleteReport, d
     }
 
     const handleDeletePost = async () => {
-        await deletePost(report.postId);
+        await deletePost(report.postId, postStorageRef as string);
     }
 
     const handleDeleteComment = async () => {

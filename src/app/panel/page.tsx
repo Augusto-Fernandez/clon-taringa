@@ -83,6 +83,11 @@ export default async function PanelPage ({searchParams:{page = "1"}}: PanelPageP
         return findPost?.title as string;
     };
 
+    const getPostStorageRef = (postId: string) => {
+        const findPost = postArray.find(post => post.id === postId);
+        return findPost?.storeRef as string;
+    };
+
     const getUserName = (userId: string) => {
         const findUser = userArray.find(user => user.id === userId);
         return findUser?.userName as string;
@@ -101,7 +106,8 @@ export default async function PanelPage ({searchParams:{page = "1"}}: PanelPageP
                                 key={report.id}
                                 report={report}
                                 userName={getUserName(report.userId)}
-                                postTitle={getPostTitle(report.postId as string)}
+                                postTitle={getPostTitle(report.postId)}
+                                postStorageRef={getPostStorageRef(report.postId)}
                                 deleteReport={deleteReport}
                                 deletePost={deletePost}
                                 deleteComment={deleteComment}

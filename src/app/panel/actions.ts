@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 
 import { prisma } from "../lib/db/prisma";
+import { storage } from "../services/firebase/firebaseConfig";
+import { getDownloadURL, ref, uploadBytes, deleteObject, StorageReference } from "firebase/storage";
 
 export async function deleteReport(reportId: string) {
     await prisma.report.delete({
@@ -14,12 +16,15 @@ export async function deleteReport(reportId: string) {
     revalidatePath("/panel","page");
 };
 
-export async function deletePost(postId: string) {
+export async function deletePost(postId: string, storageRef: string) {
     await prisma.post.delete({
         where: {
             id: postId
         }
     })
+
+    const postStorageRef = ref(storage, `post-images/${storageRef}}`);
+    await deleteObject(postStorageRef);
 
     await prisma.report.deleteMany({
         where:{
