@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import UserButton from "@/components/UserButton";
 import 'react-quill/dist/quill.snow.css';
 import { storage } from "../services/firebase/firebaseConfig";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes, deleteObject, StorageReference } from "firebase/storage";
 
 interface CreatePostFormProps {
     authorId: string;
@@ -39,7 +39,13 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
     const [isChecked, setIsChecked] = useState(false);
     const [bannerUpload, setBannerUpload] = useState<File | null>(null);
     const [storegeReference, setStoreReference] = useState(`post-${uuidv4()}`);
-    const [imageLinkArray, setImageLinkArray] = useState<string[] | null>(null);
+
+    type firebaseObject = {
+        imgSrc: string,
+        fileRef: StorageReference
+    };
+
+    const [imageLinkArray, setImageLinkArray] = useState<firebaseObject[] | null>(null);
 
     const { register, handleSubmit, formState: { errors }, control } = useForm<Input>();
 
@@ -63,11 +69,33 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
     };
 
     const createPost:SubmitHandler<Input> = async (data) => {
+        const foundSrcImg:string[] = [];
+        const unusedImages:StorageReference[] = [];
+
+        const imgTagRegex = /<img[^>]+src="([^">]+)"/g;
+        let match: RegExpExecArray | null;
+
+        while ((match = imgTagRegex.exec(data.body)) !== null) {
+            foundSrcImg.push(match[1].replace(/&amp;/g, '&'));
+        };
+
+        if(imageLinkArray){
+            for(let src of imageLinkArray){
+                if(!foundSrcImg.includes(src.imgSrc)){
+                    unusedImages.push(src.fileRef);
+                }
+            }
+        };
+
+        unusedImages?.forEach(async (src) => {
+            await deleteObject(src);
+        });
+
         if (bannerUpload === null){
             await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, undefined, data.link, storegeReference);
             setBannerUpload(null);
             return;
-        }
+        };
 
         //hace referencia a la colección y el nombre del archivo donde se va a cargar
         const imageRef = ref(storage, `post-banner/${uuidv4()}`);
@@ -178,7 +206,13 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                 try {
                     await uploadBytes(storageRef, file);
                     const url = await getDownloadURL(storageRef);
-                    setImageLinkArray(prevArray => (prevArray ? [...prevArray, url] : [url]))
+                    setImageLinkArray(
+                        prevArray => (prevArray ? 
+                                [...prevArray, {imgSrc: url, fileRef: storageRef }] 
+                            : 
+                                [{imgSrc: url, fileRef: storageRef }]
+                        )
+                    )
                     const quill = this.quill
                     const range = quill.getSelection();
                     if (range) {
