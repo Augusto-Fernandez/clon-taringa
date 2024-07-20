@@ -18,7 +18,7 @@ export default async function AdminPostCard({post}:AdminPostProps) {
     });
     
     return(
-        <Link href={"/post/"+post.id} className="bg-slate-300 h-14 rounded-lg flex mb-2">
+        <Link href={"/post/"+post.id} className="bg-slate-200/[.55] h-14 rounded-lg flex mb-2">
             <Image 
                 src={postDefaultBanner} 
                 width={80}
