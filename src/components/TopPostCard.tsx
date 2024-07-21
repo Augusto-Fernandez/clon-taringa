@@ -19,7 +19,7 @@ export default async function TopPostCard({post, voteRatio}:TopPostProps) {
     });
     
     return (
-        <Link href={"/post/" + post.id} className="bg-slate-200/[.55] h-[4.3rem] rounded flex">
+        <Link href={"/post/" + post.id} className="bg-slate-200/[.55] h-[4.3rem] rounded flex text-slate-700">
             <Image 
                 src={post.banner || postDefaultBanner} 
                 width={80}
