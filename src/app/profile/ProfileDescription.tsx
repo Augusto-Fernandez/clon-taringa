@@ -38,14 +38,14 @@ export default function ProfileDescription({userId, profileDescription, handlePr
             {
                 !profileDescription && textInput === false && (
                     <div className="w-full flex justify-end">
-                        <button onClick={handleProfileDescriptionButton} className="btn w-56">Agregar descripción a perfil</button>
+                        <button onClick={handleProfileDescriptionButton} className="btn w-56 text-slate-700/90">Agregar descripción a perfil</button>
                     </div>
                 )
             }
             {
                 profileDescription && textInput === false && (
                     <>
-                        <p className="text-xs h-12" style={{ overflowWrap: 'break-word', whiteSpace: 'normal' }}>{profileDescription}</p>
+                        <p className="text-xs h-12 text-slate-700/90" style={{ overflowWrap: 'break-word', whiteSpace: 'normal' }}>{profileDescription}</p>
                         <div className="flex justify-end">
                             <button onClick={handleProfileDescriptionButton} className="text-xs bg-slate-400 p-2 rounded text-white hover:bg-slate-500">Modificar</button>
                         </div>
@@ -57,13 +57,13 @@ export default function ProfileDescription({userId, profileDescription, handlePr
                     <>
                         <form onSubmit={handleSubmit(handleProfileDescriptionEvent)} className="w-full flex space-x-4">
                             <textarea 
-                                className="w-5/6 h-16 textarea resize-none hover:no-animation focus:outline-none border border-white bg-slate-300"
+                                className="w-5/6 h-16 textarea resize-none hover:no-animation focus:outline-none border border-white bg-slate-300/10"
                                 {...register("body")}
                             >
                             </textarea>
                             <UserButton
                                 content="Agregar"
-                                width="w-20"
+                                width="w-20 opacity-75"
                             />
                         </form>
                         {errors.body && typeof errors.body.message === 'string' && (

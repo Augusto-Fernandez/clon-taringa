@@ -12,6 +12,6 @@ export default function CreateChatButton({userId, toUserId, handleCreateChat}:Cr
     };
     
     return(
-        <button onClick={handleClickChatButton} className="btn">Enviar Mensaje</button>
+        <button onClick={handleClickChatButton} className="btn bg-slate-300/50 border border-slate-300 hover:bg-slate-400/50 text-slate-700/70">Enviar Mensaje</button>
     );
 }

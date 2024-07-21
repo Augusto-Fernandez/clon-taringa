@@ -139,7 +139,7 @@ export default function ProfileImage({image, userId, loggedUserId, handleProfile
             {
                 inputModal && userId === loggedUserId ? (
                     <div className="fixed inset-0 z-10 flex items-center justify-center">
-                        <div className="flex flex-col bg-slate-300 p-4 space-y-4 items-center rounded-md border-white border-2">
+                        <div className="flex flex-col bg-slate-200/85 p-4 space-y-4 items-center rounded-md border-white border-2">
                             <div className="w-full flex justify-end">
                                 <button onClick={renderInputModal}>
                                     <CloseIcon
@@ -148,7 +148,7 @@ export default function ProfileImage({image, userId, loggedUserId, handleProfile
                                     />
                                 </button>
                             </div>
-                            <p className="text-lg font-bold">Seleccionar imagen</p>
+                            <p className="text-lg font-bold text-slate-700/90">Seleccionar imagen</p>
                             <input 
                                 onChange={uploadImage} 
                                 type="file" 
@@ -161,7 +161,7 @@ export default function ProfileImage({image, userId, loggedUserId, handleProfile
                     <>
                         {
                             userId === loggedUserId && (
-                                <button className="bg-white h-4 w-4 rounded-full flex items-center justify-center" onClick={renderInputModal}>+</button>
+                                <button className="bg-slate-400/60 hover:bg-slate-400/40 text-white h-4 w-4 rounded-full flex items-center justify-center" onClick={renderInputModal}>+</button>
                             )
                         }
                     </>

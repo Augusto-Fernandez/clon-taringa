@@ -42,7 +42,7 @@ export default async function ProfileCommentCard({comment}:CommentProps) {
     return(
         <div className="h-14 rounded-lg flex justify-between mb-2">
             <div className="p-3">
-                <p className="text-slate-600 font-semibold">
+                <p className="text-slate-700/90 font-semibold">
                     <span className="text-blue-600">{author?.userName}</span> comentó &quot;<span>{formatedComment}</span>&quot; en <Link href={`/post/${comment.postId}`} className="text-blue-600">{post?.title}</Link>
                 </p>
             </div>
