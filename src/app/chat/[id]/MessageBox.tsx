@@ -37,14 +37,14 @@ export default function MessageBox ({chatId, userId, otherUserId, handleMessage}
     
     return(
         <>
-            <form id='messageBox' onSubmit={handleSubmit(createComment)} className="mx-10 mt-2 rounded-3xl bg-white p-4 flex space-x-4 border">
+            <form id='messageBox' onSubmit={handleSubmit(createComment)} className="mx-10 mt-2 rounded-3xl bg-slate-300/70 p-4 flex space-x-4">
                 <textarea 
-                    className="w-full hover:no-animation focus:outline-none border border-t-gray-300 rounded-md min-h-16 h-auto"
+                    className="w-full hover:no-animation focus:outline-none border rounded-md min-h-16 h-auto"
                     placeholder="Agregar respuesta"
                     {...register("body")}
                 >
                 </textarea>
-                <UserButton content="Responder" width="w-auto"/>
+                <UserButton content="Responder" width="w-auto opacity-75"/>
             </form>
             {errors.body && typeof errors.body.message === 'string' && (
                 <span className="ml-14  text-red-500 text-sm font-bold">

@@ -29,12 +29,12 @@ export default function MessageBubble ({userImage, userName, body, createdAt, ch
                     </Link>
                 </div>
             </div>
-            <div className="chat-header text-slate-800">
+            <div className="chat-header text-slate-700">
                 {userName}
-                <time className="ml-2 text-xs opacity-50">{createdAt}</time>
+                <time className="ml-2 text-xs opacity-80">{createdAt}</time>
             </div>
             <div 
-                className="chat-bubble bg-slate-300 text-slate-800 w-5/6" 
+                className="chat-bubble bg-slate-300/90 text-slate-700 w-5/6" 
                 style={{ overflowWrap: 'break-word', whiteSpace: 'normal' }}
             >
                 {body}

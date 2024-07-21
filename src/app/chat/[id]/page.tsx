@@ -99,36 +99,38 @@ export default async function ChatPage ({params:{id}}:ChatPageProps){
     }
     
     return (
-        <div className="min-h-[40rem] h-auto bg-gray-100 flex justify-center">
-            <div className="h-auto w-2/3 bg-slate-300 mx-20 rounded-lg justify-center">
-                <div className="pt-10 pl-10 flex">
-                    <h1 className="text-slate-600 font-semibold text-4xl">Chat con <span>{otherUser?.userName}</span></h1>
-                </div>
-                <div className="bg-red-800 min-h-[25rem] h-auto rounded-md mt-10 mx-10 p-3">
+        <main className="bg-gradient-to-r from-purple-100 from-5% via-pink-200 via-30% to-emerald-100 to-95% ...">
+            <div className="min-h-[40rem] h-auto flex justify-center">
+                <div className="h-auto w-2/3 bg-slate-300/50 mx-20 rounded-lg justify-center">
+                    <div className="pt-10 pl-10 flex">
+                        <h1 className="text-slate-700/90 font-semibold text-3xl">Chat con <span>{otherUser?.userName}</span></h1>
+                    </div>
+                    <div className="bg-slate-400/40 min-h-[25rem] h-auto rounded-md mt-10 mx-10 p-3">
+                        {
+                            messages.map(message => (
+                                <MessageBubble
+                                    key={message.id}
+                                    userImage={getUserProfileImg(message.senderId)}
+                                    userName={getUserName(message.senderId)}
+                                    body={message.body as string}
+                                    createdAt={formatDate(message.createdAt)}
+                                    checkSenderId={checkSenderId(message.senderId)}
+                                />
+                            ))
+                        }
+                    </div>
                     {
-                        messages.map(message => (
-                            <MessageBubble
-                                key={message.id}
-                                userImage={getUserProfileImg(message.senderId)}
-                                userName={getUserName(message.senderId)}
-                                body={message.body as string}
-                                createdAt={formatDate(message.createdAt)}
-                                checkSenderId={checkSenderId(message.senderId)}
+                        session?.user && (
+                            <MessageBox
+                                chatId={chat?.id as string}
+                                userId={userLogged?.id as string}
+                                otherUserId={getOtherUserId() as string}
+                                handleMessage={handleMessage}
                             />
-                        ))
+                        )
                     }
                 </div>
-                {
-                    session?.user && (
-                        <MessageBox
-                            chatId={chat?.id as string}
-                            userId={userLogged?.id as string}
-                            otherUserId={getOtherUserId() as string}
-                            handleMessage={handleMessage}
-                        />
-                    )
-                }
             </div>
-        </div>
+        </main>
     );
 };
