@@ -41,9 +41,9 @@ export default function ReportCard({report, userName, postTitle, postStorageRef,
     const formatedPostTitle = postTitle?.length as number > 25 ? report.body.substring(0, 25) + "..." : postTitle;
     
     return(
-        <div className="min-h-14 h-auto rounded-lg bg-slate-300 mb-2 ">
+        <div className="min-h-14 h-auto rounded-lg bg-slate-200/55 mb-2 ">
             <div className="flex justify-between p-3">
-                <Link href={"/post/"+report.postId} className="text-slate-600 font-semibold">
+                <Link href={"/post/"+report.postId} className="text-slate-700/90 font-semibold">
                     {
                         report.subjectType === "POST" ? (
                             <p>El usurio <span className="text-blue-600">{userName}</span> reportó el post <span className="text-blue-600">{formatedPostTitle}</span></p>
@@ -58,14 +58,14 @@ export default function ReportCard({report, userName, postTitle, postStorageRef,
                             <button onClick={handleReportDetails}>
                                 <ReportDownIcon
                                     className="w-8 h-8"
-                                    line="black"
+                                    line="grey"
                                 />
                             </button>
                         ) : (
                             <button onClick={handleReportDetails}>
                                 <ReportUpIcon
                                     className="w-8 h-8"
-                                    line="black"
+                                    line="grey"
                                 />
                             </button>
                         )
@@ -79,7 +79,7 @@ export default function ReportCard({report, userName, postTitle, postStorageRef,
                 reportBody && (
                     <>
                         <p 
-                            className="p-5 text-slate-700 text-sm mx-3 border-t border-slate-400"
+                            className="p-5 text-slate-700/90 text-sm mx-3 border-t border-slate-400"
                             style={{ overflowWrap: 'break-word', whiteSpace: 'normal' }}
                         >
                             {report.body}
