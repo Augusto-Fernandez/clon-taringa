@@ -89,44 +89,46 @@ export default async function NotificationPage ({searchParams:{page = "1"}}: Not
     }
     
     return(
-        <div className="min-h-screen bg-gray-100 flex justify-center">
-            <div className=" min-h-screen w-2/3 bg-slate-300 mx-20 rounded-lg justify-center">
-                <div className="pt-10 pl-10 flex">
-                    <h1 className="text-slate-600 font-semibold text-4xl">Notificaciones</h1>
-                </div>
-                <div className="bg-red-800 h-[41.25rem] rounded-md mt-10 mx-10 mb-2 p-3">
-                    {
-                        notifications.length > 0 ? (
-                            notifications.map(notification => (
-                                <NotificationCard
-                                    key={notification.id}
-                                    notification={notification}
-                                    fromUserName={getFromUserName(notification.fromUserId)}
-                                    postName={getPostName(notification.subjectId)}
-                                    handleNotification={handleNotification}
-                                    handleDeleteNotification={handleDeleteNotification}
+        <main className="bg-gradient-to-r from-purple-100 from-5% via-pink-200 via-30% to-emerald-100 to-95% ...">
+            <div className="min-h-screen flex justify-center">
+                <div className=" min-h-screen w-2/3 bg-slate-300/50 mx-20 rounded-lg justify-center">
+                    <div className="pt-10 pl-10 flex">
+                        <h1 className="text-slate-700/90 font-semibold text-3xl">Notificaciones</h1>
+                    </div>
+                    <div className="bg-slate-400/10 h-[41.25rem] rounded-md mt-10 mx-10 mb-2 p-3">
+                        {
+                            notifications.length > 0 ? (
+                                notifications.map(notification => (
+                                    <NotificationCard
+                                        key={notification.id}
+                                        notification={notification}
+                                        fromUserName={getFromUserName(notification.fromUserId)}
+                                        postName={getPostName(notification.subjectId)}
+                                        handleNotification={handleNotification}
+                                        handleDeleteNotification={handleDeleteNotification}
+                                    />
+                                ))
+                            ) : (
+                                <div className="w-full flex justify-center">
+                                    <p className="p-10 text-5xl font-semibold">No hay notificaciones</p>
+                                </div>
+                            )
+                        }
+                    </div>
+                    <div className="h-14 flex justify-center">
+                        {
+                            totalPages>1 ? (
+                                <PaginationBar 
+                                    currentPage={currentPage} 
+                                    totalPages={totalPages}
                                 />
-                            ))
-                        ) : (
-                            <div className="w-full flex justify-center">
-                                <p className="p-10 text-5xl font-semibold">No hay notificaciones</p>
-                            </div>
-                        )
-                    }
-                </div>
-                <div className="h-14 flex justify-center">
-                    {
-                        totalPages>1 ? (
-                            <PaginationBar 
-                                currentPage={currentPage} 
-                                totalPages={totalPages}
-                            />
-                        ) : (
-                            <div className="join-item btn">1</div>
-                        )
-                    }
+                            ) : (
+                                <div className="join-item btn">1</div>
+                            )
+                        }
+                    </div>
                 </div>
             </div>
-        </div>
+        </main>
     );
 }

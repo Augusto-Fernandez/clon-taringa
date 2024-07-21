@@ -37,8 +37,8 @@ export default function NotificationCard({notification, fromUserName, postName, 
         <>
             {
                 isReaded ? (
-                    <div className="h-14 rounded-lg flex justify-between mb-2 p-3 text-slate-600 font-semibold">
-                        <Link href={`/post/${notification.subjectId}`} className="text-slate-600 font-semibold">
+                    <div className="h-14 rounded-lg flex justify-between mb-2 p-3 text-slate-700/90 font-semibold">
+                        <Link href={`/post/${notification.subjectId}`}>
                             {
                                 notification.subject === "POST" && (
                                     <p><span className="text-blue-600">{fromUserName}</span> comentó en tu post <span className="text-blue-600">{postName}</span></p>
@@ -58,8 +58,8 @@ export default function NotificationCard({notification, fromUserName, postName, 
                         </div>
                     </div>
                 ) : (
-                    <div className="bg-slate-300 h-14 rounded-lg flex justify-between mb-2 p-3 text-slate-600 font-semibold">
-                        <Link onClick={handleNotificationClick} href={`/post/${notification.subjectId}`} className="text-slate-600 font-semibold">
+                    <div className="bg-slate-200/55 h-14 rounded-lg flex justify-between mb-2 p-3 text-slate-700/90 font-semibold">
+                        <Link onClick={handleNotificationClick} href={`/post/${notification.subjectId}`}>
                             {
                                 notification.subject === "POST" && (
                                     <p><span className="text-blue-600">{fromUserName}</span> comentó en tu post <span className="text-blue-600">{postName}</span></p>
