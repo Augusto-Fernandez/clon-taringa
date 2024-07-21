@@ -15,7 +15,7 @@ export default function ChatCard({otherUserName, chatId, messageUserName, body, 
     const formatedComment = body.length > 21 ? body.substring(0, 21) + "..." : body;
     
     return(
-        <button onClick={() => handleChatRedirect(chatId, userId)} className=" w-full bg-slate-300 h-14 rounded-lg flex justify-between mb-2">
+        <button onClick={() => handleChatRedirect(chatId, userId)} className=" w-full bg-slate-200/[.55] text-slate-700/90 h-14 rounded-lg flex justify-between mb-2">
             <div className="py-3 pl-3 flex w-11/12 justify-between">
                 <div className="space-x-4">
                     <span className="font-semibold text-lg">{otherUserName}</span>

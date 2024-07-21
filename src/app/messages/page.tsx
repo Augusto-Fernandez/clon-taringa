@@ -146,54 +146,56 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
     }
     
     return(
-        <div className="min-h-screen bg-gray-100 flex justify-center">
-            <div className=" min-h-screen w-2/3 bg-slate-300 mx-20 rounded-lg justify-center">
-                <div className="pt-10 px-10 flex justify-between">
-                    <h1 className="text-slate-600 font-semibold text-4xl">Mensajes</h1>
-                    <form action={searchChat} className="flex justify-center items-center space-x-1">
-                        <input type="text" placeholder="Buscar chat" name="searchQuery" className="input input-bordered w-24 md:w-auto h-10"/>
-                        <SearchButton
-                            className="btn-ghost h-9 w-9 bg-green-500 rounded-lg hover:bg-green-400"
-                            svgSize="w-7 h-7"
-                        />
-                    </form>
-                </div>
-                <div className="bg-red-800 h-[41.25rem] rounded-md mt-10 mx-10 mb-2 p-3">
-                    {
-                        conversations.length > 0 ? (
-                            conversations.map(chat => (
-                                <ChatCard 
-                                    key={ chat.id}
-                                    otherUserName={getOtherUserName(chat.userIds)}
-                                    chatId={chat.id}
-                                    messageUserName={getMessageUserName(chat.id)}
-                                    body={getLastMessageBody(chat.id)}
-                                    date={getLastMessageDate(chat.id)}
-                                    notifCount={getMessageNotification(chat.id)}
-                                    userId={userLogged?.id as string}
-                                    handleChatRedirect={handleChatRedirect}
-                                />
-                            ))
-                        ) : (
-                            <div className="w-full flex justify-center">
-                                <p className="p-10 text-5xl font-semibold">No hay mensajes</p>
-                            </div>
-                        )
-                    }
-                </div>
-                <div className="h-14 flex justify-center">
-                    {
-                        totalPages>1 ? (
-                            <PaginationBar 
-                                currentPage={currentPage} 
-                                totalPages={totalPages}
+        <main className="bg-gradient-to-r from-purple-100 from-5% via-pink-200 via-30% to-emerald-100 to-95% ...">
+            <div className="min-h-screen flex justify-center">
+                <div className=" min-h-screen w-2/3 bg-slate-300/50 mx-20 rounded-lg justify-center">
+                    <div className="pt-10 px-10 flex justify-between">
+                        <h1 className="text-slate-700/90 font-semibold text-3xl">Mensajes</h1>
+                        <form action={searchChat} className="flex justify-center items-center space-x-1">
+                            <input type="text" placeholder="Buscar chat" name="searchQuery" className="input input-bordered w-24 md:w-auto h-10"/>
+                            <SearchButton
+                                className="btn-ghost h-9 w-9 bg-green-500/50 rounded-lg hover:bg-green-400"
+                                svgSize="w-7 h-7"
                             />
-                        ) : (
-                            <div className="join-item btn">1</div>
-                        )
-                    }
+                        </form>
+                    </div>
+                    <div className="bg-slate-400/40 h-[41.25rem] rounded-md mt-10 mx-10 mb-2 p-3">
+                        {
+                            conversations.length > 0 ? (
+                                conversations.map(chat => (
+                                    <ChatCard 
+                                        key={ chat.id}
+                                        otherUserName={getOtherUserName(chat.userIds)}
+                                        chatId={chat.id}
+                                        messageUserName={getMessageUserName(chat.id)}
+                                        body={getLastMessageBody(chat.id)}
+                                        date={getLastMessageDate(chat.id)}
+                                        notifCount={getMessageNotification(chat.id)}
+                                        userId={userLogged?.id as string}
+                                        handleChatRedirect={handleChatRedirect}
+                                    />
+                                ))
+                            ) : (
+                                <div className="w-full flex justify-center">
+                                    <p className="p-10 text-5xl font-semibold">No hay mensajes</p>
+                                </div>
+                            )
+                        }
+                    </div>
+                    <div className="h-14 flex justify-center">
+                        {
+                            totalPages>1 ? (
+                                <PaginationBar 
+                                    currentPage={currentPage} 
+                                    totalPages={totalPages}
+                                />
+                            ) : (
+                                <div className="join-item btn">1</div>
+                            )
+                        }
+                    </div>
                 </div>
             </div>
-        </div>
+        </main>
     );
 };
