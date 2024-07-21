@@ -152,7 +152,7 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
                     <div className="pt-10 px-10 flex justify-between">
                         <h1 className="text-slate-700/90 font-semibold text-3xl">Mensajes</h1>
                         <form action={searchChat} className="flex justify-center items-center space-x-1">
-                            <input type="text" placeholder="Buscar chat" name="searchQuery" className="input input-bordered w-24 md:w-auto h-10"/>
+                            <input type="text" placeholder="Buscar chat" name="searchQuery" className="input w-24 md:w-auto h-10 border-2 border-slate-300 bg-slate-300/50 placeholder-slate-600 text-slate-700/90"/>
                             <SearchButton
                                 className="btn-ghost h-9 w-9 bg-green-500/50 rounded-lg hover:bg-green-400"
                                 svgSize="w-7 h-7"
