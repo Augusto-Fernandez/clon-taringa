@@ -68,35 +68,37 @@ export default async function SavesPage({searchParams:{page = "1"}}: SavedPagePr
     const totalPages = Math.ceil(totalSavedCount/pageSize);
     
     return(
-        <div className="min-h-screen bg-gray-100 flex justify-center">
-            <div className=" min-h-screen w-2/3 bg-slate-300 mx-20 rounded-lg justify-center">
-                <div className="pt-10 pl-10 flex">
-                    <h1 className="text-slate-600 font-semibold text-4xl">Posts guardados</h1>
-                </div>
-                <div className="bg-red-800 h-[41.25rem] rounded-md mx-10 mt-10 mb-2 p-3">
-                    {savedPostsArray.length > 0 ? (
-                        savedPostsArray.map(post => (
-                            <PostCard post={post} key={post.id}/>
-                        ))
-                    ) : (
-                        <div className="w-full flex justify-center">
-                            <p className="p-10 text-5xl font-semibold">No hay posts guardados</p>
-                        </div>
-                    )}
-                </div>
-                <div className="h-14 flex justify-center">
-                    {
-                        totalPages>1 ? (
-                            <PaginationBar 
-                                currentPage={currentPage} 
-                                totalPages={totalPages}
-                            />
+        <main className="bg-gradient-to-r from-purple-100 from-5% via-pink-200 via-30% to-emerald-100 to-95% ...">
+            <div className="min-h-screen flex justify-center">
+                <div className=" min-h-screen w-2/3 bg-slate-300/50 mx-20 rounded-lg justify-center">
+                    <div className="pt-10 pl-10 flex">
+                        <h1 className="text-slate-700/90 font-semibold text-3xl">Posts guardados</h1>
+                    </div>
+                    <div className="bg-slate-400/10 h-[41.25rem] rounded-md mx-10 mt-10 mb-2 p-3">
+                        {savedPostsArray.length > 0 ? (
+                            savedPostsArray.map(post => (
+                                <PostCard post={post} key={post.id}/>
+                            ))
                         ) : (
-                            <div className="join-item btn">1</div>
-                        )
-                    }
+                            <div className="w-full flex justify-center">
+                                <p className="p-10 text-5xl text-slate-700/90 font-semibold">No hay posts guardados</p>
+                            </div>
+                        )}
+                    </div>
+                    <div className="h-14 flex justify-center">
+                        {
+                            totalPages>1 ? (
+                                <PaginationBar 
+                                    currentPage={currentPage} 
+                                    totalPages={totalPages}
+                                />
+                            ) : (
+                                <div className="join-item btn">1</div>
+                            )
+                        }
+                    </div>
                 </div>
             </div>
-        </div>
+        </main>
     );
 }
