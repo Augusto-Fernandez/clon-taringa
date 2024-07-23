@@ -38,7 +38,7 @@ export default function ProfileDescription({userId, profileDescription, handlePr
             {
                 !profileDescription && textInput === false && (
                     <div className="w-full flex justify-end">
-                        <button onClick={handleProfileDescriptionButton} className="btn w-56 text-slate-700/90">Agregar descripción a perfil</button>
+                        <button onClick={handleProfileDescriptionButton} className="btn bg-slate-200 border-slate-200 text-xs text-slate-700/90">Agregar descripción a perfil</button>
                     </div>
                 )
             }
