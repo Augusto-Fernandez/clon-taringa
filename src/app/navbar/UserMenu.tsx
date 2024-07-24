@@ -8,6 +8,7 @@ import profilePicPlaceholder from "../../../public/profilePicPlaceholder.png"
 import NotificationIcon from "@/components/svgs/NotificationIcon";
 import MessageIcon from "@/components/svgs/MessageIcon";
 import FavoritedIcon from "@/components/svgs/FavoritedIcon";
+import AdminPanelIcon from "@/components/svgs/AdminPanelIcon";
 
 interface UserMenuButtonProps {
     session: Session | null;
@@ -26,16 +27,19 @@ export default function UserMenu({session, notificationCount, messageNotificatio
                 user && isAdmin && (
                     <Link 
                         href={"/panel"}
-                        className="btn text-base font-semibold bg-green-500 border border-green-300/80 text-white hover:bg-green-600" 
+                        className="btn text-sm font-semibold bg-green-400/50 border border-green-300/80 text-white hover:bg-green-500/50" 
                     >
+                        <AdminPanelIcon
+                            className="w-8 h-8"
+                        />
                         Panel de Control
                     </Link>
                 )
             }
             {
                 user ? (
-                    <ul className="flex justify-center items-center h-12 bg-green-400 border border-slate-300 rounded-lg">
-                        <li className="border-r border-r-slate-300 p-2 hover:bg-green-500 rounded-md h-12">
+                    <ul className="flex justify-center items-center h-12 bg-green-400/50 rounded-md">
+                        <li className="border-r border-r-slate-300 p-2 hover:bg-green-500/50 rounded-l-md h-12">
                             <Link href={"/notifications"}>
                                 <div className="indicator">
                                     <NotificationIcon
@@ -54,7 +58,7 @@ export default function UserMenu({session, notificationCount, messageNotificatio
                                 </div>
                             </Link>
                         </li>
-                        <li className="border-r border-r-slate-300 px-2 pt-2 hover:bg-green-500 rounded-md">
+                        <li className="border-r border-r-slate-300 px-2 pt-2 hover:bg-green-500/50">
                             <Link href={"/messages"}>
                                 <div className="indicator">
                                     <MessageIcon/>
@@ -71,7 +75,7 @@ export default function UserMenu({session, notificationCount, messageNotificatio
                                 </div>
                             </Link>
                         </li>
-                        <li  className="p-2 hover:bg-green-500 rounded-md">
+                        <li  className="p-2 hover:bg-green-500/50 rounded-r-md">
                             <Link href={"/saved"}>
                                 <FavoritedIcon className="w-8 h-8" background="none" line="white"/>
                             </Link>

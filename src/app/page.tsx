@@ -107,7 +107,7 @@ export default async function Home({searchParams:{page = "1"}}: HomeProps) {
                     className="dropdown z-[1] menu p-2 shadow bg-slate-200/[.20] w-52 rounded text-slate-700/90"
                   />
                   <SearchButton
-                    className="btn-ghost h-[2rem] w-[2rem] bg-green-500/50 rounded-lg hover:bg-green-400"
+                    className="btn-ghost h-[2rem] w-[2rem] bg-green-500/50 rounded-lg hover:bg-green-600/50"
                     svgSize="w-6 h-6"
                   />
                 </div>

@@ -64,7 +64,7 @@ export default async function Navbar() {
     return (
         <div className="navbar bg-green-300">
             <div className="flex-1">
-                <Link href="/" className="btn btn-ghost text-xl">Taringa?</Link>
+                <Link href="/" className="btn btn-ghost hover:bg-green-400/50 text-white text-2xl">Taringa?</Link>
             </div>
             <div className="gap-2">
                 <UserMenu 
@@ -75,9 +75,9 @@ export default async function Navbar() {
                     isAdmin={isAdmin}
                 />
                 <form action={searchPosts} className="flex justify-center items-center space-x-1">
-                    <input type="text" placeholder="Buscar Post" name="searchQuery" className="input input-bordered w-24 md:w-auto"/>
+                    <input type="text" placeholder="Buscar Post" name="searchQuery" className="input input-bordered h-10 w-24 md:w-auto"/>
                     <SearchButton
-                        className="btn-ghost h-9 w-9 bg-green-500 rounded-lg hover:bg-green-400"
+                        className="btn-ghost h-9 w-9 bg-green-500/50 rounded-lg hover:bg-green-600/50"
                         svgSize="w-7 h-7"
                     />
                 </form>
