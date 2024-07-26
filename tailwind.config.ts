@@ -6,6 +6,16 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  theme: {
+    extend: {
+      screens: {
+        'xs': '320px',
+        'sm': '576px',
+        'md': '768px',
+        'lg': '992px',
+      }
+    }
+  },
   plugins: [require("daisyui")],
 };
 export default config;
