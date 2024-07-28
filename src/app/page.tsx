@@ -96,30 +96,56 @@ export default async function Home({searchParams:{page = "1"}}: HomeProps) {
   
   return (
     <main className="bg-gradient-to-r from-purple-200 from-5% via-pink-200 via-30% to-emerald-100 to-95% ...">
-      <div className="flex min-h-screen items-stretch justify-between bg-slate-300/50 p-5 mx-20 rounded-lg space-x-10">
-        <div className="w-1/2 flex-grow">
-          <div className="h-14 flex justify-between">
-            <form action={sortPosts}>
-              <div className="flex space-x-16">
-                <p className="p-3 text-xl text-slate-700/90 font-bold">Posts</p>
-                <div className="flex items-center space-x-1">
-                  <SelectCategoty
-                    className="dropdown z-[1] menu p-2 shadow bg-slate-200/[.20] w-52 rounded text-slate-700/90"
-                  />
-                  <SearchButton
-                    className="btn-ghost h-[2rem] w-[2rem] bg-green-500/50 rounded-lg hover:bg-green-600/50"
-                    svgSize="w-6 h-6"
-                  />
-                </div>
+      <div 
+        className="
+          min-h-screen items-stretch justify-between bg-slate-300/50 p-5 mx-20 rounded-lg
+          lg:flex lg:space-x-10
+        "
+      >
+        <div 
+          className="
+            flex-grow
+            lg:w-1/2
+          "
+        >
+          <form action={sortPosts}>
+            <div 
+              className="
+                h-32
+                md:flex md:justify-between md:h-14
+              "
+            >
+              <p className="p-3 text-xl text-slate-700/90 font-bold">Posts</p>
+              <div className="flex items-center space-x-1">
+                <SelectCategoty
+                  className="dropdown z-[1] menu p-2 shadow bg-slate-200/[.20] w-52 rounded text-slate-700/90"
+                />
+                <SearchButton
+                  className="btn-ghost h-[2rem] w-[2rem] bg-green-500/50 rounded-lg hover:bg-green-600/50"
+                  svgSize="w-6 h-6"
+                />
               </div>
-            </form>
-            <Link href={"/createpost"}>
-                <button className="btn text-sm font-semibold glass bg-green-500/65 border border-green-300/80 text-white hover:bg-green-600">
-                    + Crear Post
+              <Link href={"/createpost"}>
+                <button 
+                  className="
+                    h-8 text-xs glass rounded-md bg-green-500/65 border border-green-300/80 text-white hover:bg-green-600
+                    xs:w-24 xs:mt-2
+                    md:mt-3 md:h-8
+                    lg:text-sm lg:font-semibold lg:h-10 lg:mt-1
+                  "
+                >
+                  + Crear Post
                 </button>
-            </Link>
-          </div>
-          <div className="bg-slate-400/[.10] h-[41.25rem] p-3 rounded-md">
+              </Link>
+            </div>
+          </form>
+          <div 
+            className="
+              bg-slate-400/[.10] min-h-[41.25rem] p-3 rounded-md
+              md:min-w-[35rem] md:max-w-[49rem]
+              lg:min-w-[27rem]
+            "
+          >
             {
               posts.map(post => (
                 <PostCard post={post} key={post.id}/>
@@ -139,7 +165,12 @@ export default async function Home({searchParams:{page = "1"}}: HomeProps) {
             }
           </div>
         </div>
-        <div className="w-1/4 rounded-md space-y-1">
+        <div 
+          className="
+            rounded-md
+            lg:w-1/4 lg:space-y-1
+          "
+        >
           <div className="space-y-1">
             <p className="p-3 text-xl text-slate-700/90 font-bold">Noticias</p>
             <div className="bg-slate-400/[.10] h-52 rounded-md p-3">
@@ -168,7 +199,12 @@ export default async function Home({searchParams:{page = "1"}}: HomeProps) {
             </div>
           </div>
         </div>
-        <div className="bg-red-800 w-1/4 flex-grow rounded-md">
+        <div 
+          className="
+            w-1/4 flex-grow rounded-md hidden bg-red-800
+            lg:block
+          "
+        >
 
         </div>
       </div>

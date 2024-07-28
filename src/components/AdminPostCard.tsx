@@ -18,13 +18,16 @@ export default async function AdminPostCard({post}:AdminPostProps) {
     });
     
     return(
-        <Link href={"/post/"+post.id} className="bg-slate-200/[.55] h-14 rounded-lg flex mb-2 text-slate-700">
+        <Link href={"/post/"+post.id} className="bg-slate-200/[.55] h-14 rounded-lg flex mb-2 text-slate-700 overflow-hidden">
             <Image 
                 src={postDefaultBanner} 
                 width={80}
                 height={80}
                 alt="Banner picture"
-                className="w-12 p-1 rounded-xl"
+                className="
+                    hidden
+                    md:block md:w-12 md:p-1 md:rounded-xl
+                "
             />
             <div className="flex flex-col pl-1">
                 <span className="font-medium text-xs">{post.title}</span>

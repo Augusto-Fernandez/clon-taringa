@@ -35,16 +35,33 @@ export default async function PostCard({post}:PostProps) {
     });
 
     return(
-        <Link href={"/post/"+post.id} className="bg-slate-200/[.55] h-14 rounded-lg flex mb-2 text-slate-700/90">
+        <Link 
+            href={"/post/"+post.id} 
+            className="
+                bg-slate-200/[.55] h-14 rounded-lg flex mb-2 text-slate-700/90 overflow-hidden
+                lg:min-w-[25rem]
+            "
+        >
             <Image 
                 src={post.banner || postDefaultBanner} 
                 width={80}
                 height={80}
                 alt="Banner picture"
-                className="w-24 p-2 rounded-xl"
+                className="
+                    hidden
+                    md:block md:w-24 md:p-2 md:rounded-xl
+                "
             />
-            <div className="w-full flex flex-col pl-2 pb-1">
-                <span className="font-semibold text-base">{post.title}</span>
+            <div 
+                className="w-full pl-2 pb-1">
+                <span 
+                    className="
+                        text-xs text-wrap
+                        md:font-semibold md:text-base
+                    "
+                >
+                    {post.title}
+                </span>
                 <div className="flex space-x-3">
                     <p className="text-xs">
                         {
@@ -67,7 +84,12 @@ export default async function PostCard({post}:PostProps) {
                         )
                     }
                 </div>
-                <div className="space-x-1 text-xs">
+                <div 
+                    className="
+                        hidden
+                        md:block md:space-x-1 md:text-xs
+                    "
+                >
                     <span className="text-emerald-600">+{likes}</span>
                     <span className="text-red-500">-{dislikes}</span>
                 </div>

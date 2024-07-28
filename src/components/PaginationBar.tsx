@@ -18,7 +18,7 @@ export default function PaginationBar({currentPage, totalPages, query}: Paginati
                 <Link
                     href={"?query="+ query + "&" + "page=" + page}
                     key={page}
-                    className={`join-item btn ${currentPage === page ? "btn-active pointer-events-none" : ""}`}
+                    className={`bg-slate-400/25 text-slate-500 border border-slate-400 join-item btn ${currentPage === page ? "btn-active pointer-events-none" : ""}`}
                 >
                     {page}
                 </Link>
@@ -30,7 +30,7 @@ export default function PaginationBar({currentPage, totalPages, query}: Paginati
                 <Link
                     href={"?page=" + page}
                     key={page}
-                    className={`join-item btn ${currentPage === page ? "btn-active pointer-events-none" : ""}`}
+                    className={`bg-slate-300/25 text-slate-500 border border-slate-400  join-item btn ${currentPage === page ? "btn-active pointer-events-none" : ""}`}
                 >
                     {page}
                 </Link>
@@ -52,11 +52,11 @@ export default function PaginationBar({currentPage, totalPages, query}: Paginati
                                     «
                                 </Link>
                             )}
-                            <button className="join-item btn pointer-events-none">
+                            <button className="bg-slate-400/25 text-slate-500 border border-slate-400  join-item btn pointer-events-none">
                                 Page {currentPage}
                             </button>
                             {currentPage < totalPages && (
-                                <Link href={"?query=" + query + "&" + "page=" + (currentPage + 1)} className="join-item btn">
+                                <Link href={"?query=" + query + "&" + "page=" + (currentPage + 1)} className="bg-slate-300/25 text-slate-500 border border-slate-400  join-item btn">
                                     »
                                 </Link>
                             )}
@@ -73,11 +73,11 @@ export default function PaginationBar({currentPage, totalPages, query}: Paginati
                                 «
                             </Link>
                         )}
-                        <button className="join-item btn pointer-events-none">
+                        <button className="bg-slate-300/25 text-slate-500 border border-slate-400  join-item btn pointer-events-none">
                             Page {currentPage}
                         </button>
                         {currentPage < totalPages && (
-                            <Link href={"?page=" + (currentPage + 1)} className="join-item btn">
+                            <Link href={"?page=" + (currentPage + 1)} className="bg-slate-300/25 text-slate-500 border border-slate-400  join-item btn">
                                 »
                             </Link>
                         )}
