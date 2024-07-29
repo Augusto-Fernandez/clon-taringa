@@ -114,17 +114,6 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
         return getOtherUserName?.userName as string;
     }
 
-    const getMessageUserName = (chatId: string) => {
-        const message = lastMessageArray.find(message => message.conversationId === chatId);
-
-        if(message?.senderId === userLogged.id){
-            return userLogged.userName;
-        }
-
-        const getUserName = otherUserArray.find(user => user.id === message?.senderId)
-        return getUserName?.userName as string;
-    };
-
     const getLastMessageBody = (chatId: string) => {
         const message = lastMessageArray.find(message => message.conversationId === chatId);
         return message?.body as string;
@@ -150,11 +139,27 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
             <div className="min-h-screen flex justify-center">
                 <div className=" min-h-screen w-2/3 bg-slate-300/50 mx-20 rounded-lg justify-center">
                     <div className="pt-10 px-10 flex justify-between">
-                        <h1 className="text-slate-700/90 font-semibold text-3xl">Mensajes</h1>
+                        <h1 
+                            className="
+                                text-slate-700/90 font-semibold text-xl
+                                md:text-2xl
+                                lg:text-3xl
+                            "
+                        >
+                            Mensajes
+                        </h1>
                         <form action={searchChat} className="flex justify-center items-center space-x-1">
-                            <input type="text" placeholder="Buscar chat" name="searchQuery" className="input w-24 md:w-auto h-10 border-2 border-slate-300 bg-slate-300/50 placeholder-slate-600 text-slate-700/90"/>
+                            <input type="text" placeholder="Buscar chat" name="searchQuery" 
+                                className="
+                                    input w-16 h-7 border-slate-300 bg-slate-300/50 placeholder-slate-600 text-slate-700/90
+                                    md:w-auto md:h-10 md:border-2
+                                "
+                            />
                             <SearchButton
-                                className="btn-ghost h-9 w-9 bg-green-500/50 rounded-lg hover:bg-green-400"
+                                className="
+                                    btn-ghost h-7 w-7 bg-green-500/50 rounded-lg hover:bg-green-400
+                                    md:h-9 md:w-9
+                                "
                                 svgSize="w-7 h-7"
                             />
                         </form>
@@ -167,7 +172,6 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
                                         key={ chat.id}
                                         otherUserName={getOtherUserName(chat.userIds)}
                                         chatId={chat.id}
-                                        messageUserName={getMessageUserName(chat.id)}
                                         body={getLastMessageBody(chat.id)}
                                         date={getLastMessageDate(chat.id)}
                                         notifCount={getMessageNotification(chat.id)}
@@ -190,7 +194,7 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
                                     totalPages={totalPages}
                                 />
                             ) : (
-                                <div className="join-item btn">1</div>
+                                <div className="bg-slate-300/25 hover:bg-slate-400/25 text-slate-500 border border-slate-400 join-item btn">1</div>
                             )
                         }
                     </div>
