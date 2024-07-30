@@ -93,9 +93,17 @@ export default async function NotificationPage ({searchParams:{page = "1"}}: Not
             <div className="min-h-screen flex justify-center">
                 <div className=" min-h-screen w-2/3 bg-slate-300/50 mx-20 rounded-lg justify-center">
                     <div className="pt-10 pl-10 flex">
-                        <h1 className="text-slate-700/90 font-semibold text-3xl">Notificaciones</h1>
+                        <h1 
+                            className="
+                                text-slate-700/90 font-semibold text-xl
+                                md:text-2xl
+                                lg:text-3xl
+                            "
+                        >
+                            Notificaciones
+                        </h1>
                     </div>
-                    <div className="bg-slate-400/10 h-[41.25rem] rounded-md mt-10 mx-10 mb-2 p-3">
+                    <div className="bg-slate-400/10 min-h-[41.25rem] h-auto rounded-md mt-10 mx-10 mb-2 p-3">
                         {
                             notifications.length > 0 ? (
                                 notifications.map(notification => (

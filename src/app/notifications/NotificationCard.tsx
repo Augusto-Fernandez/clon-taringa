@@ -37,7 +37,13 @@ export default function NotificationCard({notification, fromUserName, postName, 
         <>
             {
                 isReaded ? (
-                    <div className="h-14 rounded-lg flex justify-between mb-2 p-3 text-slate-700/90 font-semibold">
+                    <div 
+                        className="
+                            text-[0.5rem] h-14 rounded-lg justify-between mb-2 p-1 text-slate-700/90
+                            md:flex md:p-2 md:text-sm
+                            lg:p-3 lg:font-semibold lg:text-base
+                        "
+                    >
                         <Link href={`/post/${notification.subjectId}`}>
                             {
                                 notification.subject === "POST" && (
@@ -50,15 +56,36 @@ export default function NotificationCard({notification, fromUserName, postName, 
                                 )
                             }
                         </Link>
-                        <div className="flex space-x-4">
-                            <CheckedIcon/>
+                        <div 
+                            className="
+                                flex justify-end
+                                lg:space-x-4
+                            "
+                        >
+                            <CheckedIcon
+                                className="
+                                    w-4 h-4
+                                    md:w-8 md:h-8
+                                "
+                            />
                             <button onClick={handleDeleteNotificationClick}>
-                                <DeleteIcon/>
+                                <DeleteIcon
+                                    className="
+                                        w-4 h-4
+                                        md:w-8 md:h-8
+                                    "
+                                />
                             </button>
                         </div>
                     </div>
                 ) : (
-                    <div className="bg-slate-200/55 h-14 rounded-lg flex justify-between mb-2 p-3 text-slate-700/90 font-semibold">
+                    <div 
+                        className="
+                            bg-slate-200/55 text-[0.5rem] h-14 rounded-lg justify-between mb-2 p-1 text-slate-700/90
+                            md:flex md:p-2 md:text-sm
+                            lg:p-3 lg:font-semibold lg:text-base
+                        "
+                    >
                         <Link onClick={handleNotificationClick} href={`/post/${notification.subjectId}`}>
                             {
                                 notification.subject === "POST" && (
@@ -71,14 +98,28 @@ export default function NotificationCard({notification, fromUserName, postName, 
                                 )
                             }
                         </Link>
-                        <div className="flex space-x-4">
+                        <div 
+                            className="
+                                flex justify-end
+                                lg:space-x-4
+                            "
+                        >
                             <button onClick={handleNotificationClick}>
                                 <NotificationIcon
-                                    line="black"
+                                    className="
+                                        w-4 h-4
+                                        md:w-8 md:h-8
+                                    "
+                                    line="grey"
                                 />
                             </button>
                             <button onClick={handleDeleteNotificationClick}>
-                                <DeleteIcon/>
+                                <DeleteIcon
+                                    className="
+                                        w-4 h-4
+                                        md:w-8 md:h-8
+                                    "
+                                />
                             </button>
                         </div>
                     </div>

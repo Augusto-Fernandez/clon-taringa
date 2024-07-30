@@ -1,7 +1,10 @@
+interface IconProps {
+    className: string
+}
 
-export default function DeleteIcon() {
+export default function DeleteIcon({className}:IconProps) {
     return(
-        <svg width="2rem" height="2rem" viewBox="0 0 24 24" fill="none">
+        <svg className={className} viewBox="0 0 24 24" fill="none">
             <path 
                 d="M5 7.5H19L18 21H6L5 7.5Z" 
                 stroke="rgb(220, 38, 38)" 

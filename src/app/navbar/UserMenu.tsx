@@ -43,6 +43,7 @@ export default function UserMenu({session, notificationCount, messageNotificatio
                             <Link href={"/notifications"}>
                                 <div className="indicator">
                                     <NotificationIcon
+                                        className="w-8 h-8"
                                         line="rgb(255, 255, 255)"
                                     />
                                     {
