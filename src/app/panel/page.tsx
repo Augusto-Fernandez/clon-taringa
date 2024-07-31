@@ -132,7 +132,7 @@ export default async function PanelPage ({searchParams:{page = "1"}}: PanelPageP
                                     totalPages={totalPages}
                                 />
                             ) : (
-                                <div className="join-item btn">1</div>
+                                <div className="bg-slate-300/25 hover:bg-slate-400/25 text-slate-500 border border-slate-400 join-item btn">1</div>
                             )
                         }
                     </div>
