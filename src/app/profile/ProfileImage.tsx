@@ -135,7 +135,12 @@ export default function ProfileImage({image, userId, loggedUserId, handleProfile
 
     return(
         <div className="flex flex-col">
-            <Image src={image || profilePicPlaceholder} alt="Profile picture" width={40} height={40} className="w-20 h-20 rounded-full"/>
+            <Image 
+                src={image || profilePicPlaceholder} 
+                alt="Profile picture" 
+                width={40} height={40} 
+                className="min-w-20 min-h-20 rounded-full"
+            />
             {
                 inputModal && userId === loggedUserId ? (
                     <div className="fixed inset-0 z-10 flex items-center justify-center">

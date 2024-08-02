@@ -77,7 +77,7 @@ export default async function ProfilePage({searchParams: { query, page = "1" }}:
             <div className="min-h-screen flex justify-center">
                 <div className=" min-h-screen w-2/3 bg-slate-300/50 mx-20 rounded-lg justify-center">
                     <div className="pt-10 pl-10 flex justify-between">
-                        <div className="flex">
+                        <div className="md:flex">
                             <ProfileImage
                                 image={user?.image as string}
                                 userId={user?.id as string}
@@ -85,7 +85,15 @@ export default async function ProfilePage({searchParams: { query, page = "1" }}:
                                 handleProfileImage={handleProfileImage}
                             />
                             <div className="p-2">
-                                <h1 className="text-3xl text-slate-700/90">{user?.userName}</h1>
+                                <h1 
+                                    className="
+                                        text-xl text-slate-700/90
+                                        md:text-2xl
+                                        lg:text-3xl
+                                    "
+                                >
+                                    {user?.userName}
+                                </h1>
                                 {
                                     session?.user && loggedUserId === user?.id ? 
                                     (
@@ -95,8 +103,22 @@ export default async function ProfilePage({searchParams: { query, page = "1" }}:
                                             handleProfileDescription={handleProfileDescription}
                                         />
                                     ) : (
-                                        <div className="w-[51rem] h-16">
-                                            <p className="text-slate-700/90 text-xs h-12" style={{ overflowWrap: 'break-word', whiteSpace: 'normal' }}>{user?.profileDescription}</p>
+                                        <div 
+                                            className="
+                                                min-h-18 h-auto max-w-[13rem]
+                                                md:max-w-[22rem]
+                                                lg:max-w-[30rem]
+                                            "
+                                        >
+                                            <p 
+                                                className="
+                                                    text-slate-700/90 text-[0.5rem]
+                                                    lg:text-xs
+                                                " 
+                                                style={{ overflowWrap: 'break-word', whiteSpace: 'normal' }}
+                                            >
+                                                {user?.profileDescription}
+                                            </p>
                                         </div>
                                     )
                                 }
@@ -114,7 +136,7 @@ export default async function ProfilePage({searchParams: { query, page = "1" }}:
                             )
                         }
                     </div>
-                    <div className="bg-slate-400/10 h-[41.25rem] rounded-md mt-3 mx-10 mb-2 p-3">
+                    <div className="bg-slate-400/10 min-h-[41.25rem] h-auto rounded-md mt-3 mx-10 mb-2 p-3">
                         {userActivityPage.length > 0 ? (
                                 userActivityPage.map((activity, index) => {
                                     if ("type" in activity && activity.type === "comment") {
@@ -138,7 +160,7 @@ export default async function ProfilePage({searchParams: { query, page = "1" }}:
                                     query={query}
                                 />
                             ) : (
-                                <div className="join-item btn">1</div>
+                                <div className="bg-slate-300/25 hover:bg-slate-400/25 text-slate-500 border border-slate-400 join-item btn">1</div>
                             )
                         }
                     </div>
