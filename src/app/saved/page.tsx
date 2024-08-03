@@ -72,7 +72,15 @@ export default async function SavesPage({searchParams:{page = "1"}}: SavedPagePr
             <div className="min-h-screen flex justify-center">
                 <div className=" min-h-screen w-2/3 bg-slate-300/50 mx-20 rounded-lg justify-center">
                     <div className="pt-10 pl-10 flex">
-                        <h1 className="text-slate-700/90 font-semibold text-3xl">Posts guardados</h1>
+                        <h1 
+                            className="
+                                text-slate-700/90 font-semibold text-xl
+                                md:text-2xl
+                                lg:text-3xl
+                            "
+                        >
+                            Posts guardados
+                        </h1>
                     </div>
                     <div className="bg-slate-400/10 h-[41.25rem] rounded-md mx-10 mt-10 mb-2 p-3">
                         {savedPostsArray.length > 0 ? (
@@ -81,7 +89,15 @@ export default async function SavesPage({searchParams:{page = "1"}}: SavedPagePr
                             ))
                         ) : (
                             <div className="w-full flex justify-center">
-                                <p className="p-10 text-5xl text-slate-700/90 font-semibold">No hay posts guardados</p>
+                                <p 
+                                    className="
+                                        p-10 text-slate-700/90 font-semibold text-3xl
+                                        md:text-4xl
+                                        lg:text-5xl
+                                    "
+                                >
+                                    No hay posts guardados
+                                </p>
                             </div>
                         )}
                     </div>
@@ -93,7 +109,7 @@ export default async function SavesPage({searchParams:{page = "1"}}: SavedPagePr
                                     totalPages={totalPages}
                                 />
                             ) : (
-                                <div className="join-item btn">1</div>
+                                <div className="bg-slate-300/25 hover:bg-slate-400/25 text-slate-500 border border-slate-400 join-item btn">1</div>
                             )
                         }
                     </div>
