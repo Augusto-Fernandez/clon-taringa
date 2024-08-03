@@ -147,7 +147,15 @@ export default async function ProfilePage({searchParams: { query, page = "1" }}:
                                 })
                             ) : (
                                 <div className="w-full flex justify-center">
-                                    <p className="p-10 text-5xl font-semibold">No hay actividad de este usuario</p>
+                                    <p 
+                                        className="
+                                            p-10 text-base
+                                            md:text-2xl
+                                            lg:text-4xl lg:font-semibold
+                                        "
+                                    >
+                                        No hay actividad de este usuario
+                                    </p>
                                 </div>
                         )}
                     </div>

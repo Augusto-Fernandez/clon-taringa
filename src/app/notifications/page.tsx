@@ -118,7 +118,15 @@ export default async function NotificationPage ({searchParams:{page = "1"}}: Not
                                 ))
                             ) : (
                                 <div className="w-full flex justify-center">
-                                    <p className="p-10 text-5xl font-semibold">No hay notificaciones</p>
+                                    <p 
+                                        className="
+                                            p-10 text-base
+                                            md:text-2xl
+                                            lg:text-4xl lg:font-semibold
+                                        "
+                                    >
+                                        No hay notificaciones
+                                    </p>
                                 </div>
                             )
                         }

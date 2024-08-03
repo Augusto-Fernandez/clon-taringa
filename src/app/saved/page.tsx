@@ -91,9 +91,9 @@ export default async function SavesPage({searchParams:{page = "1"}}: SavedPagePr
                             <div className="w-full flex justify-center">
                                 <p 
                                     className="
-                                        p-10 text-slate-700/90 font-semibold text-3xl
-                                        md:text-4xl
-                                        lg:text-5xl
+                                        p-10 text-slate-700/90 text-base
+                                        md:text-2xl
+                                        lg:text-4xl lg:font-semibold
                                     "
                                 >
                                     No hay posts guardados

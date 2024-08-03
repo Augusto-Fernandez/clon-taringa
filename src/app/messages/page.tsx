@@ -181,7 +181,15 @@ export default async function MessagesPage ({searchParams:{page = "1"}}:Messages
                                 ))
                             ) : (
                                 <div className="w-full flex justify-center">
-                                    <p className="p-10 text-5xl font-semibold">No hay mensajes</p>
+                                    <p 
+                                        className="
+                                            p-10 text-base
+                                            md:text-2xl
+                                            lg:text-4xl lg:font-semibold
+                                        "
+                                    >
+                                        No hay mensajes
+                                    </p>
                                 </div>
                             )
                         }
