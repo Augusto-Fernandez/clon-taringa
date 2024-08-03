@@ -51,7 +51,15 @@ export default async function SearchPage({searchParams: { query, page = "1" }}: 
                                 ))
                             ) : (
                                 <div className="w-full flex justify-center">
-                                    <p className="p-10 text-5xl font-semibold text-slate-700/90">No se encontró post</p>
+                                    <p 
+                                        className="
+                                            p-10 text-slate-700/90 text-base
+                                            md:text-2xl
+                                            lg:text-4xl lg:font-semibold
+                                        "
+                                    >
+                                        No se encontró post
+                                    </p>
                                 </div>
                             )}
                     </div>
@@ -64,7 +72,7 @@ export default async function SearchPage({searchParams: { query, page = "1" }}: 
                                     query={query}
                                 />
                             ) : (
-                                <div className="join-item btn">1</div>
+                                <div className="bg-slate-300/25 hover:bg-slate-400/25 text-slate-500 border border-slate-400 join-item btn">1</div>
                             )
                         }
                     </div>
