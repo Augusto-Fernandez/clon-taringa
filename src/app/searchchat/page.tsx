@@ -114,17 +114,6 @@ export default async function MessagesPage ({searchParams:{query, page = "1"}}:M
         return getOtherUserName?.userName as string;
     }
 
-    const getMessageUserName = (chatId: string) => {
-        const message = lastMessageArray.find(message => message.conversationId === chatId);
-
-        if(message?.senderId === userLogged.id){
-            return userLogged.userName;
-        }
-
-        const getUserName = otherUserArray.find(user => user.id === message?.senderId)
-        return getUserName?.userName as string;
-    };
-
     const getLastMessageBody = (chatId: string) => {
         const message = lastMessageArray.find(message => message.conversationId === chatId);
         return message?.body as string;
@@ -150,7 +139,15 @@ export default async function MessagesPage ({searchParams:{query, page = "1"}}:M
             <div className="min-h-screen flex justify-center">
                 <div className=" min-h-screen w-2/3 bg-slate-300/50 mx-20 rounded-lg justify-center">
                     <div className="pt-10 pl-10 flex">
-                        <h1 className="text-slate-700/90 font-semibold text-3xl">Mensajes</h1>
+                        <h1 
+                            className="
+                                text-slate-700/90 font-semibold text-xl
+                                md:text-2xl
+                                lg:text-3xl
+                            "
+                        >
+                            Mensajes
+                        </h1>
                     </div>
                     <div className="bg-slate-400/10 h-[41.25rem] rounded-md mt-10 mx-10 mb-2 p-3">
                         {
@@ -160,7 +157,6 @@ export default async function MessagesPage ({searchParams:{query, page = "1"}}:M
                                         key={ chat.id}
                                         otherUserName={getOtherUserName(chat.userIds)}
                                         chatId={chat.id}
-                                        messageUserName={getMessageUserName(chat.id)}
                                         body={getLastMessageBody(chat.id)}
                                         date={getLastMessageDate(chat.id)}
                                         notifCount={getMessageNotification(chat.id)}
@@ -170,7 +166,15 @@ export default async function MessagesPage ({searchParams:{query, page = "1"}}:M
                                 ))
                             ) : (
                                 <div className="w-full flex justify-center">
-                                    <p className="p-10 text-5xl font-semibold">No se encontró chat</p>
+                                    <p 
+                                        className="
+                                            p-10 text-slate-700/90 text-base
+                                            md:text-2xl
+                                            lg:text-4xl lg:font-semibold
+                                        "
+                                    >
+                                        No se encontró chat
+                                    </p>
                                 </div>
                             )
                         }
@@ -184,7 +188,7 @@ export default async function MessagesPage ({searchParams:{query, page = "1"}}:M
                                     query={query}
                                 />
                             ) : (
-                                <div className="join-item btn">1</div>
+                                <div className="bg-slate-300/25 hover:bg-slate-400/25 text-slate-500 border border-slate-400 join-item btn">1</div>
                             )
                         }
                     </div>
