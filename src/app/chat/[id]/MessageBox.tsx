@@ -37,14 +37,33 @@ export default function MessageBox ({chatId, userId, otherUserId, handleMessage}
     
     return(
         <>
-            <form id='messageBox' onSubmit={handleSubmit(createComment)} className="mx-10 mt-2 rounded-3xl bg-slate-300/70 p-4 flex space-x-4">
+            <form 
+                id='messageBox' 
+                onSubmit={handleSubmit(createComment)} 
+                className="
+                    mx-10 mt-2 rounded-3xl bg-slate-300/70 p-4 space-x-1
+                    md:space-x-2 md:flex
+                    lg:space-x-4
+                "
+            >
                 <textarea 
-                    className="w-full hover:no-animation focus:outline-none border rounded-md min-h-16 h-auto"
+                    className="
+                        w-full hover:no-animation focus:outline-none border rounded-md min-h-16 h-auto text-xs
+                        md:text-base
+                    "
                     placeholder="Agregar respuesta"
                     {...register("body")}
                 >
                 </textarea>
-                <UserButton content="Responder" width="w-auto opacity-75"/>
+                <button 
+                    type="submit" 
+                    className="
+                        btn bg-green-500 border border-green-300/80 text-white hover:bg-green-600 mt-2 opacity-75 w-20 text-xs
+                        md:w-auto md:text-base md:font-semibold
+                    "
+                >
+                    Responder
+                </button>
             </form>
             {errors.body && typeof errors.body.message === 'string' && (
                 <span className="ml-14  text-red-500 text-sm font-bold">
