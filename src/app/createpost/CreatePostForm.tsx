@@ -258,8 +258,18 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
     
     return(
         <form onSubmit={handleSubmit(createPost)}>
-            <div className="flex space-x-3">
-                <div className="w-2/3 bg-white rounded-md border border-gray-400">
+            <div 
+                className="
+                    space-y-4
+                    md:flex md:space-x-3 md:space-y-0
+                "
+            >
+                <div 
+                    className="
+                        bg-white rounded-md border border-gray-400
+                        md:w-2/3
+                    "
+                >
                     <input 
                         placeholder="Título (obligatorio)" 
                         className="input h-14 hover:no-animation focus:outline-none w-full border border-b-gray-300 rounded-b-none" 
@@ -319,7 +329,12 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                         </span>
                     )}
                 </div>
-                <div className="w-1/3 bg-white rounded-md border border-gray-400">
+                <div 
+                    className="
+                        bg-white rounded-md border border-gray-400
+                        md:w-1/3
+                    "
+                >
                     <p className="border border-b-gray-300 h-14 p-4 text-slate-600 font-semibold">Completar post</p>
                     <div className="flex p-4 space-x-3">
                         <input 
@@ -331,10 +346,22 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                         />
                         <label className="text-slate-600 text-sm">El post es de mi autoria</label> 
                     </div>
-                    <label className="text-slate-600 pl-4 py-2 text-sm">Acreditar informacion de terceros utilizada.</label>
+                    <label 
+                    className="
+                        text-slate-600 pl-4 py-2
+                        md:text-[0.65rem]
+                        lg:text-sm
+                    "
+                    >
+                        Acreditar informacion de terceros utilizada.
+                    </label>
                     <input 
                         placeholder="http://" 
-                        className="input h-8 hover:no-animation focus:outline-none w-72 border border-gray-300 ml-4 rounded"
+                        className="
+                            input h-8 hover:no-animation focus:outline-none border border-gray-300 ml-4 rounded
+                            md:w-52
+                            lg:w-72
+                        "
                         disabled={isChecked}
                         {...register("link", {
                             required: !isChecked && {
@@ -352,10 +379,27 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                             {errors.link.message}
                         </span>
                     )}
-                    <div className="flex p-4 space-x-8">
-                        <p className="py-4 text-slate-600 text-sm">Categoria:</p>
+                    <div 
+                        className="
+                            flex p-4 space-x-2
+                            md:space-x-4
+                            lg:space-x-8
+                        "
+                    >
+                        <p 
+                            className="
+                                py-4 text-slate-600 text-xs
+                                lg:text-sm
+                            "
+                        >
+                            Categoria:
+                        </p>
                         <select
-                            className="border border-gray-300 h-9 mt-2 bg-white rounded w-[11.8rem] text-gray-500 pl-4"
+                            className="
+                                border border-gray-300 h-9 mt-2 bg-white rounded text-gray-500 pl-4
+                                md:w-[8.2rem]
+                                lg:w-[11.8rem]
+                            "
                             value={category}
                             {...register("category", {
                                 required: {
