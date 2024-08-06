@@ -4,7 +4,6 @@ import Image from "next/image";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import UserButton from "@/components/UserButton";
 import profilePicPlaceholder from "../../../../public/profilePicPlaceholder.png"
 import { textInputSchema } from "@/app/lib/validations/textInputSchema";
 
@@ -33,7 +32,14 @@ export default function CommentBox ({image, postId, userId, userName, handleComm
 
     return(
         <>
-            <form onSubmit={handleSubmit(createComment)} className="mx-72 my-8 rounded-3xl bg-white p-4 flex space-x-4 border">
+            <form 
+                onSubmit={handleSubmit(createComment)} 
+                className="
+                    my-8 rounded-3xl bg-white p-4 flex space-x-4 border
+                    md:mx-36
+                    lg:mx-72
+                "
+            >
                 <Image
                     src={image || profilePicPlaceholder}
                     alt="Profile picture"
@@ -43,15 +49,32 @@ export default function CommentBox ({image, postId, userId, userName, handleComm
                     className="w-12 h-12 rounded-full mt-2"
                 />
                 <textarea 
-                    className="w-full hover:no-animation focus:outline-none border border-t-gray-300 rounded-md min-h-16 h-auto"
+                    className="
+                        w-full hover:no-animation focus:outline-none border border-t-gray-300 rounded-md min-h-16 h-auto text-xs
+                        md:text-base
+                    "
                     placeholder="Agregar comentario"
                     {...register("body")}
                 >
                 </textarea>
-                <UserButton content="Comentar" width="w-auto"/>
+                <button 
+                    type="submit" 
+                    className="
+                        btn text-xs bg-green-500 border border-green-300/80 text-white hover:bg-green-600 mt-2
+                        lg:text-base lg:font-semibold
+                    "
+                >
+                    Responder
+                </button>
             </form>
             {errors.body && typeof errors.body.message === 'string' && (
-                <span className="ml-96 text-red-500 text-sm font-bold">
+                <span 
+                    className="
+                        ml-20 text-red-500 text-sm font-bold
+                        md:ml-44
+                        lg:ml-96
+                    "
+                >
                     {errors.body.message}
                 </span>
             )}

@@ -73,7 +73,15 @@ export default function ReportBox({postId, userId, isReported, reportPost, delet
                             className="bg-white border-2 p-8 rounded-md border-slate-400 flex flex-col space-y-4"
                         >
                             <div className="flex justify-between">
-                                <label className="text-slate-600 font-semibold text-4xl">Motivo de denuncia</label>
+                                <label 
+                                    className="
+                                        text-slate-600 font-semibold text-xl
+                                        md:text-2xl
+                                        lg:text-4xl
+                                    "
+                                >
+                                    Motivo de denuncia
+                                </label>
                                 <button onClick={handleModal}>
                                     <CloseIcon
                                         className="w-10 h-10"
@@ -82,9 +90,14 @@ export default function ReportBox({postId, userId, isReported, reportPost, delet
                                 </button>
                             </div>
                             <textarea 
-                                className="w-[40rem] min-h-[20rem] max-h-[20rem] border border-gray-300 rounded hover:no-animation focus:outline-none"
+                                className="
+                                    w-[24rem] min-h-[10rem] max-h-[10rem] border border-gray-300 rounded hover:no-animation focus:outline-none
+                                    md:w-[27rem] md:min-h-[15rem] md:max-h-[15rem] 
+                                    lg:w-[40rem] lg:min-h-[20rem] lg:max-h-[20rem]
+                                "
                                 {...register("reportBody")}
-                            ></textarea>
+                            >
+                            </textarea>
                             {errors.reportBody && typeof errors.reportBody.message === 'string' && (
                                 <span className="text-red-500 text-xs font-bold">
                                     {errors.reportBody.message}

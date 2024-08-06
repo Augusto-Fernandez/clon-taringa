@@ -114,15 +114,30 @@ export default function CommentCard({comment, isLogged, commentProfileImg, logge
                         priority={true}
                         width={20}
                         height={20}
-                        className="w-10 h-10 rounded-full mt-3"
+                        className="min-w-10 min-h-10 rounded-full mt-3"
                     />
                 </Link>
-                <div className="p-2 w-[54.5rem]">
+                <div className="p-2 min-w-[22rem] max-w-[54.5rem]">
                     <Link href={"/profile?query="+comment.userName}> 
-                        <span className="pt-1 text-blue-600 text-2xl">{comment.userName}</span>
+                        <span 
+                            className="
+                                pt-1 text-blue-600 text-base
+                                md:text-2xl
+                            "
+                        >
+                            {comment.userName}
+                        </span>
                     </Link>
                     <span className="text-xs text-slate-500 pl-6">{formatDate(comment.createdAt)}</span>
-                    <p className="text-slate-800 min-h-6 h-auto text-lg" style={{ overflowWrap: 'break-word', whiteSpace: 'normal' }}>{comment.message}</p>
+                    <p 
+                        className="
+                            text-slate-800 min-h-6 h-auto text-sm
+                            md:text-lg
+                        " 
+                        style={{ overflowWrap: 'break-word', whiteSpace: 'normal' }}
+                    >
+                        {comment.message}
+                    </p>
                     {
                         isLogged && (
                             <div className="flex justify-end space-x-1 mt-4 h-6">
@@ -225,7 +240,15 @@ export default function CommentCard({comment, isLogged, commentProfileImg, logge
                                     className="bg-white border-2 p-8 rounded-md border-slate-400 flex flex-col space-y-4"
                                 >
                                     <div className="flex justify-between">
-                                        <label className="text-slate-600 font-semibold text-4xl">Motivo de denuncia</label>
+                                        <label 
+                                            className="
+                                                text-slate-600 font-semibold text-xl
+                                                md:text-2xl
+                                                lg:text-4xl
+                                            "
+                                        >
+                                            Motivo de denuncia
+                                        </label>
                                         <button onClick={handleModal}>
                                             <CloseIcon
                                                 className="w-10 h-10"
@@ -234,9 +257,14 @@ export default function CommentCard({comment, isLogged, commentProfileImg, logge
                                         </button>
                                     </div>
                                     <textarea 
-                                        className="w-[40rem] min-h-[20rem] max-h-[20rem] border border-gray-300 rounded hover:no-animation focus:outline-none"
+                                        className="
+                                            w-[24rem] min-h-[10rem] max-h-[10rem] border border-gray-300 rounded hover:no-animation focus:outline-none
+                                            md:w-[27rem] md:min-h-[15rem] md:max-h-[15rem] 
+                                            lg:w-[40rem] lg:min-h-[20rem] lg:max-h-[20rem]
+                                        "
                                         {...registerReport("reportBody")}
-                                    ></textarea>
+                                    >
+                                    </textarea>
                                     {errorsReport.reportBody && typeof errorsReport.reportBody.message === 'string' && (
                                         <span className="text-red-500 text-xs font-bold">
                                             {errorsReport.reportBody.message}

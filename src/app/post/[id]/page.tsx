@@ -208,7 +208,13 @@ export default async function PostPage({params:{id}}:PostId) {
 
     return(
         <div className="min-h-screen bg-gray-100 py-6">
-            <div className="mx-72 min-h-screen bg-white rounded-3xl border">
+            <div 
+                className="
+                    min-h-screen bg-white rounded-3xl border
+                    md:mx-36
+                    lg:mx-72 
+                "
+            >
                 <Image 
                     src={post.banner || postDefaultBanner} 
                     width={200}
@@ -216,7 +222,16 @@ export default async function PostPage({params:{id}}:PostId) {
                     alt="Banner picture"
                     className="h-32 w-full border-b border-b-gray-300 rounded-t-3xl"
                 />
-                <h1 className="min-h-28 h-auto p-10 text-slate-600 font-semibold text-4xl">{post.title}</h1>
+                <h1 
+                    className="
+                        min-h-28 h-auto p-10 text-slate-600 font-semibold text-xl
+                        md:text-2xl
+                        lg:text-4xl
+                    "
+                    style={{ overflowWrap: 'break-word', whiteSpace: 'normal' }}
+                >
+                    {post.title}
+                </h1>
                 <div className="pb-10 pl-10 pr-10 flex justify-between h-1">
                     <Link href={"/profile?query="+author?.userName} className=" h-10 flex space-x-2">
                         <Image
@@ -244,8 +259,26 @@ export default async function PostPage({params:{id}}:PostId) {
                 {
                     post.link && (
                         <div className="border-y border-y-gray-100 pl-8 py-4">
-                            <p className="text-slate-600 font-semibold text-lg">Link externo:</p>
-                            <a href={post.link} rel="noopener noreferrer" className="text-blue-500 underline">{post.link}</a>
+                            <p 
+                                className="
+                                    text-slate-600 font-semibold text-sm
+                                    md:text-base
+                                    lg:text-lg
+                                "
+                            >
+                                Link externo:
+                            </p>
+                            <a 
+                                href={post.link} 
+                                rel="noopener noreferrer" 
+                                className="
+                                    text-blue-500 underline text-sm
+                                    md:text-base
+                                    lg:text-lg
+                                "
+                            >
+                                {post.link}
+                            </a>
                         </div>
                     )
                 }
@@ -312,7 +345,13 @@ export default async function PostPage({params:{id}}:PostId) {
             }
             {
                 comments.length > 0 && !author?.isAdmin && (
-                    <div className="bg-white rounded-3xl mt-8 mx-72 p-4 space-y-4">
+                    <div 
+                        className="
+                            bg-white rounded-3xl mt-8 p-4 space-y-4
+                            md:mx-36
+                            lg:mx-72
+                        "
+                    >
                         {
                             commentsSortedByVotes.map(comment => (
                                 <CommentCard 
