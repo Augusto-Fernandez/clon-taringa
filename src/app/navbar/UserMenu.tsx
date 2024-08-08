@@ -168,12 +168,22 @@ export default function UserMenu({session, notificationCount, messageNotificatio
                                 height={20}
                                 className="min-w-10 min-h-10 rounded-full"
                             />
-                            <ul tabIndex={0} className="dropdown-content z-[2] menu p-2 shadow bg-slate-300/70 rounded-box w-36 space-y-1">
+                            <ul tabIndex={0} className="dropdown-content z-[2] menu p-2 shadow bg-slate-300/90 rounded-box w-36 space-y-1">
                                 <li>
-                                    <Link href={"/profile?query="+user.name} className="btn text-slate-500 border border-slate-400">Perfil</Link>
+                                    <Link 
+                                        href={"/profile?query="+user.name} 
+                                        className="btn text-slate-500 border border-slate-400 bg-slate-300 hover:bg-slate-400 hover:text-white"
+                                    >
+                                        Perfil
+                                    </Link>
                                 </li>
                                 <li>
-                                    <button className="btn text-slate-500 border border-slate-400" onClick={() => signOut({ callbackUrl: "/" })}>Cerrar Sesión</button>
+                                    <button 
+                                        className="btn text-slate-500 border border-slate-400 bg-slate-300 hover:bg-slate-400 hover:text-white" 
+                                        onClick={() => signOut({ callbackUrl: "/" })}
+                                    >
+                                        Cerrar Sesión
+                                    </button>
                                 </li>
                             </ul>
                         </div>
