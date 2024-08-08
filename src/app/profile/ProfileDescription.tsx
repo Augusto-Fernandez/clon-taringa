@@ -47,7 +47,7 @@ export default function ProfileDescription({userId, profileDescription, handlePr
                             <button 
                                 onClick={handleProfileDescriptionButton} 
                                 className="
-                                    btn bg-slate-200 border-slate-200 text-slate-700/90 text-[0.5rem]
+                                    btn bg-slate-300/25 border border-slate-400 text-slate-500 text-[0.5rem] hover:bg-slate-400/25
                                     md:text-xs
                                 "
                             >
@@ -83,9 +83,19 @@ export default function ProfileDescription({userId, profileDescription, handlePr
                 {
                     textInput === true && (
                         <>
-                            <form onSubmit={handleSubmit(handleProfileDescriptionEvent)} className="w-full flex space-x-4">
+                            <form 
+                                onSubmit={handleSubmit(handleProfileDescriptionEvent)} 
+                                className="
+                                    w-full
+                                    md:flex md:space-x-4
+                                "
+                            >
                                 <textarea 
-                                    className="w-5/6 h-16 textarea resize-none hover:no-animation focus:outline-none border border-white bg-slate-300/10"
+                                    className="
+                                        h-16 textarea resize-none hover:no-animation focus:outline-none border border-white bg-slate-300/10 text-xs
+                                        md:w-60
+                                        lg:w-96 lg:text-base
+                                    "
                                     {...register("body")}
                                 >
                                 </textarea>
@@ -95,7 +105,7 @@ export default function ProfileDescription({userId, profileDescription, handlePr
                                 />
                             </form>
                             {errors.body && typeof errors.body.message === 'string' && (
-                                <span className="ml-14  text-red-500 text-sx">
+                                <span className="text-red-500 text-[0.75rem] text-xs">
                                     {errors.body.message}
                                 </span>
                             )}
