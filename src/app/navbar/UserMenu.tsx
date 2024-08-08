@@ -31,9 +31,19 @@ export default function UserMenu({session, notificationCount, messageNotificatio
                         className="btn text-sm font-semibold bg-green-400/50 border border-green-300/80 text-white hover:bg-green-500/50" 
                     >
                         <AdminPanelIcon
-                            className="w-8 h-8"
+                            className="
+                                h-6 w-6
+                                md:w-8 md:h-8
+                            "
                         />
-                        Panel de Control
+                        <span
+                            className="
+                                hidden
+                                lg:block
+                            "
+                        >
+                            Panel de Control
+                        </span>
                     </Link>
                 )
             }
@@ -156,7 +166,7 @@ export default function UserMenu({session, notificationCount, messageNotificatio
                                 alt="Profile picture"
                                 width={20}
                                 height={20}
-                                className="w-10 h-10 rounded-full"
+                                className="min-w-10 min-h-10 rounded-full"
                             />
                             <ul tabIndex={0} className="dropdown-content z-[2] menu p-2 shadow bg-slate-300/70 rounded-box w-36 space-y-1">
                                 <li>
