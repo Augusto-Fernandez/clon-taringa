@@ -13,7 +13,7 @@ interface NotificationPageProps{
 }
 
 export const metadata = {
-    title: "Notifications"
+    title: "Notificaciones"
 }
 
 export default async function NotificationPage ({searchParams:{page = "1"}}: NotificationPageProps){

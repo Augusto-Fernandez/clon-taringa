@@ -13,7 +13,7 @@ interface SavedPageProps{
 }
 
 export const metadata = {
-    title: "Saved Posts"
+    title: "Posts guardados"
 }
 
 export default async function SavesPage({searchParams:{page = "1"}}: SavedPageProps) {   

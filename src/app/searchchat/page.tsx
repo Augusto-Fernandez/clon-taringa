@@ -1,4 +1,5 @@
 import { getServerSession } from "next-auth";
+import { Metadata } from "next";
 
 import { prisma } from "../lib/db/prisma";
 import { authOptions } from "../api/auth/[...nextauth]/route";
@@ -11,6 +12,12 @@ import { handleChatRedirect } from "./actions";
 
 interface MessagesPageProps{
     searchParams: { query: string, page: string };
+}
+
+export function generateMetadata({searchParams: { query }}: MessagesPageProps): Metadata {
+    return { 
+      title: `Chats: ${query} - Taringa`,
+    };
 }
 
 export default async function MessagesPage ({searchParams:{query, page = "1"}}:MessagesPageProps){

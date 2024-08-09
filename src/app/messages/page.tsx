@@ -11,6 +11,10 @@ import formatDate from "../lib/formatDate";
 import { handleChatRedirect } from "./actions";
 import SearchButton from "@/components/SearchButton";
 
+export const metadata = {
+    title: "Mensajes"
+}
+
 interface MessagesPageProps{
     searchParams: {page: string};
 }

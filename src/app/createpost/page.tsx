@@ -7,7 +7,7 @@ import { handleCreatePost } from "./actions";
 import CreatePostForm from "./CreatePostForm";
 
 export const metadata = {
-    title: "Create Post"
+    title: "Crear Post"
 }
 
 export default async function CreatePost (){
