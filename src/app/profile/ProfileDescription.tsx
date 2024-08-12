@@ -19,6 +19,7 @@ type Input = {
 
 export default function ProfileDescription({userId, profileDescription, handleProfileDescription}:ProfileDescriptionButtonProps){
     const [textInput, setTextInput] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const { register, handleSubmit, formState: { errors } } = useForm<Input>({
         resolver: zodResolver(textInputSchema)
@@ -29,7 +30,9 @@ export default function ProfileDescription({userId, profileDescription, handlePr
     };
 
     const handleProfileDescriptionEvent:SubmitHandler<Input> = async (data) => {
+        setIsLoading(true);
         await handleProfileDescription(userId, data.body);
+        setIsLoading(false);
         setTextInput(false);
     };
     
@@ -99,10 +102,21 @@ export default function ProfileDescription({userId, profileDescription, handlePr
                                     {...register("body")}
                                 >
                                 </textarea>
-                                <UserButton
-                                    content="Agregar"
-                                    width="w-20 opacity-75"
-                                />
+                                {
+                                    isLoading ? (
+                                        <button 
+                                            disabled
+                                            className="btn mt-2 w-20 bg-white border border-gray-300"
+                                        >
+                                            <span className="bg-slate-700/50 loading loading-spinner loading-md m-auto block h-11"/>
+                                        </button>
+                                    ) : (
+                                        <UserButton
+                                            content="Agregar"
+                                            width="w-20 opacity-75"
+                                        />
+                                    )
+                                }
                             </form>
                             {errors.body && typeof errors.body.message === 'string' && (
                                 <span className="text-red-500 text-[0.75rem] text-xs">

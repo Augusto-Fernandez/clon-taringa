@@ -17,6 +17,7 @@ interface ProfileImageProps{
 export default function ProfileImage({image, userId, loggedUserId, handleProfileImage}:ProfileImageProps){
     const [inputModal, setInputModal] = useState(false);
     const [imageUpload, setImageUpload] = useState<File | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         setInputModal(false);
@@ -38,6 +39,8 @@ export default function ProfileImage({image, userId, loggedUserId, handleProfile
     };
 
     const handleUpload = async () => {
+        setIsLoading(true);
+        
         //verifica si que cargó una imagen
         if (imageUpload === null){
             setInputModal(false);
@@ -56,6 +59,7 @@ export default function ProfileImage({image, userId, loggedUserId, handleProfile
             const result = e.target?.result as string;
             if (!result) {
                 alert("Ocurrió un error al leer la imagen");
+                setIsLoading(false);
                 return;
             }
 
@@ -72,6 +76,7 @@ export default function ProfileImage({image, userId, loggedUserId, handleProfile
 
                 if (!ctx) {
                     alert("Ocurrió un error al leer la imagen");
+                    setIsLoading(false);
                     return;
                 }
 
@@ -107,15 +112,18 @@ export default function ProfileImage({image, userId, loggedUserId, handleProfile
                 canvas.toBlob(async (blob) => {
                     if (!blob) {
                         alert("Ocurrió un error al leer la imagen");
+                        setIsLoading(false);
                         return;
                     }
 
                     //Hace el upload a Firebase
                     try {
                         await uploadBytes(imageRef, blob);
+                        setIsLoading(false);
                     } catch (e) {
                         setImageUpload(null);
                         alert("Ocurrió un error al subir imagen");
+                        setIsLoading(false);
                         return console.log(e);
                     }
 
@@ -124,6 +132,7 @@ export default function ProfileImage({image, userId, loggedUserId, handleProfile
                     await handleProfileImage(userId, imgUrl);
 
                     setImageUpload(null);
+                    setIsLoading(false);
                     setInputModal(false);
                 }, 'image/jpeg'); //define que se tiene que codificar como un JPEG
             };
@@ -159,7 +168,18 @@ export default function ProfileImage({image, userId, loggedUserId, handleProfile
                                 type="file" 
                                 className="file-input file-input-bordered max-w-xs"
                             />
-                            <button onClick={handleUpload} className="btn">Cargar</button>
+                            {
+                                isLoading ? (
+                                    <button 
+                                        disabled
+                                        className="btn mt-2 w-20 bg-white border border-gray-300"
+                                    >
+                                        <span className="bg-slate-700/50 loading loading-spinner loading-md m-auto block h-11"/>
+                                    </button>
+                                ) : (
+                                    <button onClick={handleUpload} className="btn">Cargar</button>
+                                )
+                            }
                         </div>
                     </div>
                 ) : (

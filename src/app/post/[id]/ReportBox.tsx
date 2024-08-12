@@ -24,6 +24,7 @@ type Input = {
 export default function ReportBox({postId, userId, isReported, reportPost, deleteReport}:ReportBoxProps){
     const [reported, setReported] = useState(isReported);
     const [modal, setModal] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         setReported(isReported);
@@ -42,7 +43,9 @@ export default function ReportBox({postId, userId, isReported, reportPost, delet
     });
 
     const handleReportForm:SubmitHandler<Input> = async (data) => {
+        setIsLoading(true);
         await reportPost(postId, userId, data.reportBody);
+        setIsLoading(false);
         setModal(!modal);
     }
     
@@ -104,10 +107,21 @@ export default function ReportBox({postId, userId, isReported, reportPost, delet
                                 </span>
                             )}
                             <div className="flex justify-end w-full">
-                                <UserButton
-                                    content="Denunciar"
-                                    width="w-24"
-                                />
+                                {
+                                    isLoading ? (
+                                        <button 
+                                            disabled
+                                            className="btn mt-2 w-24 bg-white border border-gray-300"
+                                        >
+                                            <span className="bg-slate-700/50 loading loading-spinner loading-md m-auto block h-11"/>
+                                        </button>
+                                    ) : (
+                                        <UserButton
+                                            content="Denunciar"
+                                            width="w-24"
+                                        />
+                                    )
+                                }
                             </div>
                         </form>
                     </div>

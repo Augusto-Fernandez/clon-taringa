@@ -39,6 +39,7 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
     const [isChecked, setIsChecked] = useState(false);
     const [bannerUpload, setBannerUpload] = useState<File | null>(null);
     const [storegeReference, setStoreReference] = useState(`post-${uuidv4()}`);
+    const [isLoading, setIsLoading] = useState(false);
 
     type firebaseObject = {
         imgSrc: string,
@@ -69,6 +70,7 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
     };
 
     const createPost:SubmitHandler<Input> = async (data) => {
+        setIsLoading(true);
         //Esta sección borra de Firebase las imagenes que no se utilizan en el HTML
         //Verifica si se utilizaron imagenes en el post
         if(imageLinkArray){
@@ -103,6 +105,7 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
         if (bannerUpload === null){
             await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, undefined, data.link, storegeReference);
             setBannerUpload(null);
+            setIsLoading(false);
             return;
         };
 
@@ -120,6 +123,7 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                 await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, undefined, data.link, storegeReference);
                 alert("Ocurrió un error al leer la imagen");
                 setBannerUpload(null);
+                setIsLoading(false);
                 return;
             }
 
@@ -138,6 +142,7 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                     await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, undefined, data.link, storegeReference);
                     alert("Ocurrió un error al leer la imagen");
                     setBannerUpload(null);
+                    setIsLoading(false);
                     return;
                 }
 
@@ -175,6 +180,7 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                         await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, undefined, data.link, storegeReference);
                         alert("Ocurrió un error al leer la imagen");
                         setBannerUpload(null);
+                        setIsLoading(false);
                         return;
                     }
 
@@ -183,6 +189,7 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                         await uploadBytes(imageRef, blob);
                     } catch (e) {
                         setBannerUpload(null);
+                        setIsLoading(false);
                         alert("Ocurrió un error al subir imagen");
                         return console.log(e);
                     }
@@ -192,6 +199,7 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                     await handleCreatePost(data.title, data.body, data.category, data.nsfw, authorId, imgUrl, data.link, storegeReference);
 
                     setBannerUpload(null);
+                    setIsLoading(false);
                 }, 'image/jpeg'); //define que se tiene que codificar como un JPEG
             };
         };
@@ -450,7 +458,18 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                         />
                     </div>
                     <div className="p-4">
-                        <UserButton content="Publicar" width="w-full"/>
+                        {
+                            isLoading ? (
+                                <button 
+                                    disabled
+                                    className="mt-2 w-full bg-white border border-gray-300"
+                                >
+                                    <span className="bg-slate-700/50 loading loading-spinner loading-md m-auto block h-11"/>
+                                </button>
+                            ) : (
+                                <UserButton content="Publicar" width="w-full"/>
+                            )
+                        }
                     </div>
                 </div>
             </div>

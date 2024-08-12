@@ -1,10 +1,9 @@
 "use client"
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import UserButton from "@/components/UserButton"
 import { textInputSchema } from '@/app/lib/validations/textInputSchema';
 
 interface MessageBoxProps {
@@ -19,13 +18,17 @@ type Input = {
 };
 
 export default function MessageBox ({chatId, userId, otherUserId, handleMessage}: MessageBoxProps){
+    const [isLoading, setIsLoading] = useState(false);
+    
     const { register, handleSubmit, setValue, formState: { errors } } = useForm<Input>({
         resolver: zodResolver(textInputSchema)
     });
 
     const createComment:SubmitHandler<Input> = async (data) => {
+        setIsLoading(true);
         await handleMessage(data.body, chatId, userId, otherUserId);
         setValue("body", "");
+        setIsLoading(false);
     };
 
     useEffect(() => {
@@ -55,15 +58,29 @@ export default function MessageBox ({chatId, userId, otherUserId, handleMessage}
                     {...register("body")}
                 >
                 </textarea>
-                <button 
-                    type="submit" 
-                    className="
-                        btn bg-green-500 border border-green-300/80 text-white hover:bg-green-600 mt-2 opacity-75 w-20 text-xs
-                        md:w-auto md:text-base md:font-semibold
-                    "
-                >
-                    Responder
-                </button>
+                {
+                    isLoading ? (
+                        <button 
+                            disabled
+                            className="
+                                btn mt-2 w-20 bg-white border border-gray-300
+                                md:w-28
+                            "
+                        >
+                            <span className="bg-slate-700/50 loading loading-spinner loading-md m-auto block h-11"/>
+                        </button>
+                    ) : (
+                        <button 
+                            type="submit" 
+                            className="
+                                btn bg-green-500 border border-green-300/80 text-white hover:bg-green-600 mt-2 opacity-75 w-20 text-xs
+                                md:w-auto md:text-base md:font-semibold
+                            "
+                        >
+                            Responder
+                        </button>
+                    )
+                }
             </form>
             {errors.body && typeof errors.body.message === 'string' && (
                 <span className="ml-14  text-red-500 text-sm font-bold">

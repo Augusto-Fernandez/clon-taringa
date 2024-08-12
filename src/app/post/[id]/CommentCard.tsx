@@ -45,6 +45,7 @@ type InputReport = {
 export default function CommentCard({comment, isLogged, commentProfileImg, loggedUserImage, loggedUserId, loggedUserName, handleResponse, commentLikes, commentDislikes, alreadyVotedComment, handleCommentVote, isReported, reportComment, deleteReport}:CommentProps) {    
     const [responseBox, setResponseBox] = useState(false);
     const [votedComment, setVotedComment] = useState(alreadyVotedComment);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         setResponseBox(false);
@@ -82,14 +83,18 @@ export default function CommentCard({comment, isLogged, commentProfileImg, logge
     });
 
     const handleReportForm: SubmitHandler<InputReport> = async (data) => {
+        setIsLoading(true);
         await reportComment(comment.id, comment.postId, loggedUserId, data.reportBody);
+        setIsLoading(false);
         setModal(!modal);
     };
 
     const createResponse:SubmitHandler<InputResponse> = async (data) => {
+        setIsLoading(true);
         await handleResponse(comment.postId, loggedUserId, loggedUserName, data.body, comment.id);
         setValueResponse("body", "");
         setResponseBox(false);
+        setIsLoading(false);
     };
 
     return(
@@ -117,7 +122,7 @@ export default function CommentCard({comment, isLogged, commentProfileImg, logge
                         className="min-w-10 min-h-10 rounded-full mt-3"
                     />
                 </Link>
-                <div className="p-2 min-w-[22rem] max-w-[54.5rem]">
+                <div className="p-2 min-w-[22rem] max-w-[54.5rem] w-full">
                     <Link href={"/profile?query="+comment.userName}> 
                         <span 
                             className="
@@ -271,10 +276,21 @@ export default function CommentCard({comment, isLogged, commentProfileImg, logge
                                         </span>
                                     )}
                                     <div className="flex justify-end w-full">
-                                        <UserButton
-                                            content="Denunciar"
-                                            width="w-24"
-                                        />
+                                        {
+                                            isLoading ? (
+                                                <button 
+                                                    disabled
+                                                    className="btn mt-2 w-24 bg-white border border-gray-300"
+                                                >
+                                                    <span className="bg-slate-700/50 loading loading-spinner loading-md m-auto block h-11"/>
+                                                </button>
+                                            ) : (
+                                                <UserButton
+                                                    content="Denunciar"
+                                                    width="w-24"
+                                                />
+                                            )
+                                        }
                                     </div>
                                 </form>
                             </div>
@@ -300,7 +316,20 @@ export default function CommentCard({comment, isLogged, commentProfileImg, logge
                                 {...registerResponse("body")}
                             >
                             </textarea>
-                            <UserButton content="Responder" width="w-auto" />
+                            {
+                                isLoading ? (
+                                    <button 
+                                        disabled
+                                        className="
+                                            btn mt-2 w-28 bg-white border border-gray-300
+                                        "
+                                    >
+                                        <span className="bg-slate-700/50 loading loading-spinner loading-md m-auto block h-11"/>
+                                    </button>
+                                ) : (
+                                    <UserButton content="Responder" width="w-auto" />
+                                )
+                            }
                         </form>
                         {errorsResponse.body && typeof errorsResponse.body.message === 'string' && (
                             <span className="m-16 text-red-500 text-xs font-bold">

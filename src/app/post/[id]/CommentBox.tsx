@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useState } from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import profilePicPlaceholder from "../../../../public/profilePicPlaceholder.png"
@@ -21,13 +22,17 @@ type Input = {
 };
 
 export default function CommentBox ({image, postId, userId, userName, handleComment, postAuthorId}:CommentBoxProps){
+    const [isLoading, setIsLoading] = useState(false);
+    
     const { register, handleSubmit, setValue, formState: { errors } } = useForm<Input>({
         resolver: zodResolver(textInputSchema)
     });
 
     const createComment:SubmitHandler<Input> = async (data) => {
+        setIsLoading(true);
         await handleComment(postId, userId, userName, data.body, postAuthorId);
         setValue("body", "");
+        setIsLoading(false);
     };
 
     return(
@@ -57,15 +62,29 @@ export default function CommentBox ({image, postId, userId, userName, handleComm
                     {...register("body")}
                 >
                 </textarea>
-                <button 
-                    type="submit" 
-                    className="
-                        btn text-xs bg-green-500 border border-green-300/80 text-white hover:bg-green-600 mt-2
-                        lg:text-base lg:font-semibold
-                    "
-                >
-                    Responder
-                </button>
+                {
+                    isLoading ? (
+                        <button 
+                            disabled
+                            className="
+                                btn mt-2 w-20 bg-white border border-gray-300
+                                md:w-28
+                            "
+                        >
+                            <span className="bg-slate-700/50 loading loading-spinner loading-md m-auto block h-11"/>
+                        </button>
+                    ) : (
+                        <button 
+                            type="submit" 
+                            className="
+                                btn text-xs bg-green-500 border border-green-300/80 text-white hover:bg-green-600 mt-2
+                                lg:text-base lg:font-semibold
+                            "
+                        >
+                            Responder
+                        </button>
+                    )
+                }
             </form>
             {errors.body && typeof errors.body.message === 'string' && (
                 <span 
