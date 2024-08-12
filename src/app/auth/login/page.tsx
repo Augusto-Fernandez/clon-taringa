@@ -13,11 +13,14 @@ type Inputs = {
 };
 
 export default function LoginPage() {
+    const [isLoading, setIsLoading] = useState(false);
+
     const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
     const router = useRouter()
-    const [error, setError] = useState<string | null>(null)
 
     const onSubmit:SubmitHandler<Inputs> = async (data) => {
+        setIsLoading(true);
+        
         const res = await signIn("credentials", {
             username: data.username,
             password: data.password,
@@ -25,8 +28,10 @@ export default function LoginPage() {
         });
 
         if (res?.error) {
-            setError(res.error)
+            alert("Nombre de usuario y/o contraseña son incorrectos")
+            setIsLoading(false);
         } else {
+            setIsLoading(false);
             router.push("/")
             router.refresh()
         }
@@ -34,13 +39,27 @@ export default function LoginPage() {
 
     return (
         <div className="min-h-screen max-h-screen flex justify-center items-center bg-gray-100">
-            <form onSubmit={handleSubmit(onSubmit)} className="w-1/4 bg-white p-10 rounded-md border border-gray-400">
-                <h1 className="text-slate-600 font-bold text-4xl mb-4">Iniciar Sesión</h1>
+            <form 
+                onSubmit={handleSubmit(onSubmit)} 
+                className="
+                    w-1/2 bg-white p-10 rounded-md border border-gray-400
+                    md:w-1/3
+                "
+            >
+                <h1 
+                    className="
+                        text-slate-600 font-bold text-xl mb-4
+                        md:text-2xl
+                        lg:text-4xl
+                    "
+                >
+                    Iniciar Sesión
+                </h1>
                 <div className="mb-4 space-y-2">
                     <label className="text-slate-600 block text-sm">Nombre de usuario:</label>
                     <input
                         type="text"
-                        className="input p-3 rounded block w-full border border-gray-300 hover:no-animation focus:outline-non"
+                        className="input p-3 rounded block w-full border border-gray-300 hover:no-animation focus:outline-none"
                         placeholder="Nombre de Usuario"
                         {...register("username", {
                             required: {
@@ -74,7 +93,20 @@ export default function LoginPage() {
                         </span>
                     )}
                 </div>
-                <UserButton content="Ingresar" width="w-full mb-4"/>
+                {
+                    isLoading ? (
+                        <button 
+                            disabled
+                            className="
+                                btn mt-2 w-full bg-white border border-gray-300
+                            "
+                        >
+                            <span className="bg-slate-700/50 loading loading-spinner loading-md m-auto block h-11"/>
+                        </button>
+                    ) : (
+                        <UserButton content="Ingresar" width="w-full mb-4"/>
+                    )
+                }
                 <div className="border-t border-gray-300 flex justify-center pt-3">
                     <Link href={"/auth/register"} className="text-blue-600">
                         Crear Cuenta
