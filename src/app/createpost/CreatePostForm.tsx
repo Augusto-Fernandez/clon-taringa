@@ -5,7 +5,7 @@ import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import dynamic from 'next/dynamic';
 import { v4 as uuidv4 } from "uuid";
 
-import UserButton from "@/components/UserButton";
+import SubmitButton from "@/components/SubmitButton";
 import 'react-quill/dist/quill.snow.css';
 import { storage } from "../services/firebase/firebaseConfig";
 import { getDownloadURL, ref, uploadBytes, deleteObject, StorageReference } from "firebase/storage";
@@ -467,7 +467,7 @@ export default function CreatePostForm ({authorId, handleCreatePost}:CreatePostF
                                     <span className="bg-slate-700/50 loading loading-spinner loading-md m-auto block h-11"/>
                                 </button>
                             ) : (
-                                <UserButton content="Publicar" width="w-full"/>
+                                <SubmitButton content="Publicar" width="w-full"/>
                             )
                         }
                     </div>

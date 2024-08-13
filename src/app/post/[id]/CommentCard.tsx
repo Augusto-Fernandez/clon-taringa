@@ -11,7 +11,7 @@ import profilePicPlaceholder from "../../../../public/profilePicPlaceholder.png"
 import ResponseIcon from "@/components/svgs/ResponseIcon";
 import Upvote from "@/components/svgs/Upvote";
 import Downvote from "@/components/svgs/Downvote";
-import UserButton from "@/components/UserButton";
+import SubmitButton from "@/components/SubmitButton";
 import FlagIcon from "@/components/svgs/FlagIcon";
 import CloseIcon from "@/components/svgs/CloseIcon";
 import { textInputSchema } from "@/app/lib/validations/textInputSchema";
@@ -285,7 +285,7 @@ export default function CommentCard({comment, isLogged, commentProfileImg, logge
                                                     <span className="bg-slate-700/50 loading loading-spinner loading-md m-auto block h-11"/>
                                                 </button>
                                             ) : (
-                                                <UserButton
+                                                <SubmitButton
                                                     content="Denunciar"
                                                     width="w-24"
                                                 />
@@ -327,7 +327,7 @@ export default function CommentCard({comment, isLogged, commentProfileImg, logge
                                         <span className="bg-slate-700/50 loading loading-spinner loading-md m-auto block h-11"/>
                                     </button>
                                 ) : (
-                                    <UserButton content="Responder" width="w-auto" />
+                                    <SubmitButton content="Responder" width="w-auto" />
                                 )
                             }
                         </form>

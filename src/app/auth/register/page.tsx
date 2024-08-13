@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 
 import { registerSchema } from "@/app/lib/validations/registerSchema";
-import UserButton from "@/components/UserButton";
+import SubmitButton from "@/components/SubmitButton";
 
 
 type Inputs = {
@@ -141,7 +141,7 @@ export default function RegisterPage() {
                             <span className="bg-slate-700/50 loading loading-spinner loading-md m-auto block h-11"/>
                         </button>
                     ) : (
-                        <UserButton content="Registrar" width="w-full"/>
+                        <SubmitButton content="Registrar" width="w-full"/>
                     )
                 }
             </form>

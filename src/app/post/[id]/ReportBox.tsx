@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 
 import FlagIcon from "@/components/svgs/FlagIcon";
-import UserButton from "@/components/UserButton";
+import SubmitButton from "@/components/SubmitButton";
 import CloseIcon from "@/components/svgs/CloseIcon";
 import { reportInputSchema } from "@/app/lib/validations/reportInputSchema";
 
@@ -116,7 +116,7 @@ export default function ReportBox({postId, userId, isReported, reportPost, delet
                                             <span className="bg-slate-700/50 loading loading-spinner loading-md m-auto block h-11"/>
                                         </button>
                                     ) : (
-                                        <UserButton
+                                        <SubmitButton
                                             content="Denunciar"
                                             width="w-24"
                                         />

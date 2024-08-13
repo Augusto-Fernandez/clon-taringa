@@ -4,7 +4,7 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import UserButton from "@/components/UserButton";
+import SubmitButton from "@/components/SubmitButton";
 import { textInputSchema } from "../lib/validations/textInputSchema";
 
 interface ProfileDescriptionButtonProps {
@@ -111,7 +111,7 @@ export default function ProfileDescription({userId, profileDescription, handlePr
                                             <span className="bg-slate-700/50 loading loading-spinner loading-md m-auto block h-11"/>
                                         </button>
                                     ) : (
-                                        <UserButton
+                                        <SubmitButton
                                             content="Agregar"
                                             width="w-20 opacity-75"
                                         />

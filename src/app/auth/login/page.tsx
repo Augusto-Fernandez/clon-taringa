@@ -5,7 +5,7 @@ import {useState} from 'react'
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 
-import UserButton from "@/components/UserButton";
+import SubmitButton from "@/components/SubmitButton";
 
 type Inputs = {
     username: string
@@ -104,7 +104,7 @@ export default function LoginPage() {
                             <span className="bg-slate-700/50 loading loading-spinner loading-md m-auto block h-11"/>
                         </button>
                     ) : (
-                        <UserButton content="Ingresar" width="w-full mb-4"/>
+                        <SubmitButton content="Ingresar" width="w-full mb-4"/>
                     )
                 }
                 <div className="border-t border-gray-300 flex justify-center pt-3">
