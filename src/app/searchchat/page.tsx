@@ -2,7 +2,6 @@ import { getServerSession } from "next-auth";
 import { Metadata } from "next";
 
 import { prisma } from "../lib/db/prisma";
-import { authOptions } from "../api/auth/[...nextauth]/route";
 
 import PaginationBar from "@/components/PaginationBar";
 import { Conversation, Message, MessageNotification, User } from "@prisma/client";
@@ -21,7 +20,7 @@ export function generateMetadata({searchParams: { query }}: MessagesPageProps): 
 }
 
 export default async function MessagesPage ({searchParams:{query, page = "1"}}:MessagesPageProps){
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
 
     const currentPage = parseInt(page);
     const pageSize = 10;

@@ -1,8 +1,6 @@
 import { prisma } from "@/app/lib/db/prisma";
 import { getServerSession } from "next-auth";
 
-import { authOptions } from "../api/auth/[...nextauth]/route";
-
 import { handleCreatePost } from "./actions";
 import CreatePostForm from "./CreatePostForm";
 
@@ -11,7 +9,7 @@ export const metadata = {
 }
 
 export default async function CreatePost (){
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
 
     const userLogged = await prisma.user.findUnique({
         where:{

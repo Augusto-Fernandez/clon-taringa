@@ -6,8 +6,6 @@ import Image from "next/image";
 import { getServerSession } from "next-auth";
 import parse from 'html-react-parser';
 
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-
 import formatDate from "@/app/lib/formatDate";
 
 import profilePicPlaceholder from "../../../../public/profilePicPlaceholder.png"
@@ -49,7 +47,7 @@ export default async function PostPage({params:{id}}:PostId) {
     let isLogged = false;
     let postReported = false;
 
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
     
     if(session?.user){
         const userLogged = await prisma.user.findUnique({

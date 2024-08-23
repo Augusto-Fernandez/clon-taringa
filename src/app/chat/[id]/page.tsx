@@ -1,7 +1,6 @@
 import { getServerSession } from "next-auth";
 
 import { prisma } from "@/app/lib/db/prisma";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 import MessageBox from "./MessageBox";
 import { handleMessage } from "./actions";
@@ -16,7 +15,7 @@ interface ChatPageProps {
 }
 
 export default async function ChatPage ({params:{id}}:ChatPageProps){
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
 
     const userLogged = await prisma.user.findUnique({
         where: {

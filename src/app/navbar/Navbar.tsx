@@ -2,7 +2,6 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
 import { prisma } from "../lib/db/prisma";
-import { authOptions } from "../api/auth/[...nextauth]/route";
 
 import UserMenu from "./UserMenu";
 import SearchButton from "@/components/SearchButton";
@@ -19,7 +18,7 @@ async function searchPosts(formData: FormData) {
 }
 
 export default async function Navbar() {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
 
     let notificationCount = 0;
     let messageNotificationCount = 0;

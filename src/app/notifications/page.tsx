@@ -1,7 +1,6 @@
 import { getServerSession } from "next-auth";
 import { Post, User } from "@prisma/client";
 
-import { authOptions } from "../api/auth/[...nextauth]/route";
 import { prisma } from "../lib/db/prisma";
 
 import PaginationBar from "@/components/PaginationBar";
@@ -17,7 +16,7 @@ export const metadata = {
 }
 
 export default async function NotificationPage ({searchParams:{page = "1"}}: NotificationPageProps){
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
 
     const userLogged = await prisma.user.findUnique({
         where:{

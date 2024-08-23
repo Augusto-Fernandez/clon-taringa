@@ -2,7 +2,6 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
 import { prisma } from "../lib/db/prisma";
-import { authOptions } from "../api/auth/[...nextauth]/route";
 
 import PaginationBar from "@/components/PaginationBar";
 import { Message, MessageNotification, User } from "@prisma/client";
@@ -30,7 +29,7 @@ async function searchChat(formData: FormData) {
 }
 
 export default async function MessagesPage ({searchParams:{page = "1"}}:MessagesPageProps){
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
 
     const currentPage = parseInt(page);
     const pageSize = 10;

@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 
 import { prisma } from "../lib/db/prisma";
-import { authOptions } from "../api/auth/[...nextauth]/route";
 
 import PostCard from "@/components/PostCard";
 import ProfileCommentCard from "./ProfileCommentCard";
@@ -24,7 +23,7 @@ export function generateMetadata({searchParams: { query }}: ProfilePageProps): M
 }
 
 export default async function ProfilePage({searchParams: { query, page = "1" }}: ProfilePageProps) {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
 
     let loggedUserId = null;
     let loggedUserDescription = null;

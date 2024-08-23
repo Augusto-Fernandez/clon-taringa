@@ -1,6 +1,5 @@
 import { getServerSession } from "next-auth";
 
-import { authOptions } from "../api/auth/[...nextauth]/route";
 import { prisma } from "../lib/db/prisma";
 import { Post, User } from "@prisma/client";
 
@@ -17,7 +16,7 @@ export const metadata = {
 }
 
 export default async function PanelPage ({searchParams:{page = "1"}}: PanelPageProps){
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
 
     const getAdmin = await prisma.user.findUnique({
         where:{
