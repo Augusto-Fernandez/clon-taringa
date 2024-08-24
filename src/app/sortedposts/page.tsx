@@ -181,7 +181,7 @@ export default async function SortedPosts({searchParams: { query, page = "1" }}:
                   totalPages={totalPages}
                 />
               ) : (
-                <div className="join-item btn">1</div>
+                <div className="bg-slate-300/25 text-slate-500 border border-slate-400 hover:bg-slate-400/25 join-item btn">1</div>
               )
             }
           </div>
@@ -222,11 +222,11 @@ export default async function SortedPosts({searchParams: { query, page = "1" }}:
         </div>
         <div 
           className="
-            w-1/4 flex-grow rounded-md hidden bg-red-800
-            lg:block
+            w-1/4 flex-grow rounded-md hidden bg-white
+            lg:flex lg:items-center lg:justify-center
           "
         >
-
+          <p className="text-xs">Acá iría la publicidad</p>
         </div>
       </div>
     </main>
