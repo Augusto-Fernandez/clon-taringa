@@ -13,7 +13,7 @@ model Post {
   body String
   category String
   nsfw Boolean
-  author User @relation(fields: [userId], references: [id])
+  author User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @db.ObjectId
   banner String?
   link String?
@@ -59,9 +59,9 @@ enum VoteType {
 
 model Vote {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @db.ObjectId @unique
-  post Post @relation(fields: [postId], references: [id])
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String @db.ObjectId @unique
   type VoteType
 
@@ -71,10 +71,10 @@ model Vote {
 model Comment {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   message String
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @db.ObjectId @unique
   userName String @unique
-  post Post @relation(fields: [postId], references: [id])
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String @db.ObjectId @unique
   parent Comment?  @relation("ParentChild", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   parentId String? @db.ObjectId @unique
@@ -89,9 +89,9 @@ model Comment {
 
 model CommentVote {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @db.ObjectId @unique
-  comment Comment @relation(fields: [commentId], references: [id])
+  comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
   commentId String @db.ObjectId @unique
   type VoteType
 
@@ -100,9 +100,9 @@ model CommentVote {
 
 model SavedPost {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @db.ObjectId @unique
-  post Post @relation(fields: [postId], references: [id])
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String @db.ObjectId @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -117,7 +117,7 @@ enum SubjectType {
 
 model Notification {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @db.ObjectId @unique
   subject SubjectType
   subjectId String @db.ObjectId @unique
@@ -162,9 +162,9 @@ model Conversation {
 
 model MessageNotification {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @db.ObjectId @unique
-  conversation Conversation @relation(fields: [conversationId], references: [id])
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   conversationId String @db.ObjectId @unique
   count Int @default(1)
 
@@ -176,12 +176,12 @@ model MessageNotification {
 
 model Report {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @db.ObjectId @unique
   subjectType SubjectType
-  post Post @relation(fields: [postId], references: [id])
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String @db.ObjectId @unique
-  comment Comment? @relation(fields: [commentId], references: [id])
+  comment Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
   commentId String? @db.ObjectId @unique
   body String
   createdAt DateTime @default(now())
